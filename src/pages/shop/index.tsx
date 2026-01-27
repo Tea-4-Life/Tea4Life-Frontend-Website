@@ -1,0 +1,718 @@
+"use client";
+
+import { useState, useMemo } from "react";
+import { useSearchParams } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Search,
+  SlidersHorizontal,
+  Star,
+  X,
+  ChevronLeft,
+  ChevronRight,
+  Filter,
+} from "lucide-react";
+
+// Filter options
+const brands = [
+  { value: "all", label: "Tất cả" },
+  { value: "tea4life", label: "Tea4Life" },
+  { value: "cozy", label: "Cozy" },
+  { value: "phuc-long", label: "Phúc Long" },
+  { value: "highlands", label: "Highlands" },
+];
+
+const regions = [
+  { value: "all", label: "Tất cả" },
+  { value: "thai-nguyen", label: "Thái Nguyên" },
+  { value: "lam-dong", label: "Lâm Đồng" },
+  { value: "ha-giang", label: "Hà Giang" },
+  { value: "tay-ho", label: "Tây Hồ" },
+  { value: "moc-chau", label: "Mộc Châu" },
+];
+
+const sizes = [
+  { value: "all", label: "Tất cả" },
+  { value: "50g", label: "50g" },
+  { value: "100g", label: "100g" },
+  { value: "200g", label: "200g" },
+  { value: "500g", label: "500g" },
+];
+
+// Mock products data
+const allProducts = [
+  {
+    id: 1,
+    name: "Trà Ô Long Cao Cấp",
+    price: 350000,
+    size: "100g",
+    brand: "tea4life",
+    region: "lam-dong",
+    rating: 5,
+    image:
+      "https://images.unsplash.com/photo-1564890369478-c89ca6d9cde9?w=400&h=400&fit=crop",
+  },
+  {
+    id: 2,
+    name: "Trà Xanh Thái Nguyên",
+    price: 280000,
+    size: "100g",
+    brand: "tea4life",
+    region: "thai-nguyen",
+    rating: 5,
+    image:
+      "https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=400&h=400&fit=crop",
+  },
+  {
+    id: 3,
+    name: "Trà Sen Tây Hồ",
+    price: 420000,
+    size: "200g",
+    brand: "tea4life",
+    region: "tay-ho",
+    rating: 5,
+    image:
+      "https://images.unsplash.com/photo-1597318181409-cf64d0b5d8a2?w=400&h=400&fit=crop",
+  },
+  {
+    id: 4,
+    name: "Trà Hoa Cúc",
+    price: 220000,
+    size: "50g",
+    brand: "cozy",
+    region: "ha-giang",
+    rating: 4,
+    image:
+      "https://images.unsplash.com/photo-1563911892437-1feda0179e1b?w=400&h=400&fit=crop",
+  },
+  {
+    id: 5,
+    name: "Trà Ô Long Đặc Biệt",
+    price: 480000,
+    size: "200g",
+    brand: "phuc-long",
+    region: "lam-dong",
+    rating: 5,
+    image:
+      "https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=400&h=400&fit=crop",
+  },
+  {
+    id: 6,
+    name: "Trà Xanh Mộc Châu",
+    price: 320000,
+    size: "100g",
+    brand: "highlands",
+    region: "moc-chau",
+    rating: 4,
+    image:
+      "https://images.unsplash.com/photo-1582793988951-9aed5509eb97?w=400&h=400&fit=crop",
+  },
+  {
+    id: 7,
+    name: "Trà Đen Premium",
+    price: 380000,
+    size: "100g",
+    brand: "cozy",
+    region: "thai-nguyen",
+    rating: 5,
+    image:
+      "https://images.unsplash.com/photo-1571934811356-5cc061b6821f?w=400&h=400&fit=crop",
+  },
+  {
+    id: 8,
+    name: "Trà Thảo Mộc Detox",
+    price: 250000,
+    size: "50g",
+    brand: "tea4life",
+    region: "ha-giang",
+    rating: 4,
+    image:
+      "https://images.unsplash.com/photo-1576092768241-dec231879fc3?w=400&h=400&fit=crop",
+  },
+  {
+    id: 9,
+    name: "Trà Sen Đặc Biệt",
+    price: 550000,
+    size: "500g",
+    brand: "phuc-long",
+    region: "tay-ho",
+    rating: 5,
+    image:
+      "https://images.unsplash.com/photo-1558160074-4d7d8bdf4256?w=400&h=400&fit=crop",
+  },
+  {
+    id: 10,
+    name: "Trà Xanh Hảo Hạng",
+    price: 400000,
+    size: "200g",
+    brand: "tea4life",
+    region: "thai-nguyen",
+    rating: 5,
+    image:
+      "https://images.unsplash.com/photo-1627435601361-ec25f5b1d0e5?w=400&h=400&fit=crop",
+  },
+  {
+    id: 11,
+    name: "Trà Ô Long Lâm Đồng",
+    price: 300000,
+    size: "100g",
+    brand: "highlands",
+    region: "lam-dong",
+    rating: 4,
+    image:
+      "https://images.unsplash.com/photo-1594631252845-29fc4cc8cde9?w=400&h=400&fit=crop",
+  },
+  {
+    id: 12,
+    name: "Trà Đen Cổ Điển",
+    price: 290000,
+    size: "100g",
+    brand: "tea4life",
+    region: "thai-nguyen",
+    rating: 4,
+    image:
+      "https://images.unsplash.com/photo-1571934811356-5cc061b6821f?w=400&h=400&fit=crop",
+  },
+  {
+    id: 13,
+    name: "Trà Hoa Nhài",
+    price: 260000,
+    size: "50g",
+    brand: "cozy",
+    region: "ha-giang",
+    rating: 5,
+    image:
+      "https://images.unsplash.com/photo-1563911892437-1feda0179e1b?w=400&h=400&fit=crop",
+  },
+  {
+    id: 14,
+    name: "Trà Xanh Matcha",
+    price: 450000,
+    size: "200g",
+    brand: "phuc-long",
+    region: "lam-dong",
+    rating: 5,
+    image:
+      "https://images.unsplash.com/photo-1582793988951-9aed5509eb97?w=400&h=400&fit=crop",
+  },
+  {
+    id: 15,
+    name: "Trà Ô Long Truyền Thống",
+    price: 340000,
+    size: "100g",
+    brand: "tea4life",
+    region: "lam-dong",
+    rating: 4,
+    image:
+      "https://images.unsplash.com/photo-1564890369478-c89ca6d9cde9?w=400&h=400&fit=crop",
+  },
+  {
+    id: 16,
+    name: "Trà Sen Thanh Mát",
+    price: 380000,
+    size: "200g",
+    brand: "highlands",
+    region: "tay-ho",
+    rating: 4,
+    image:
+      "https://images.unsplash.com/photo-1597318181409-cf64d0b5d8a2?w=400&h=400&fit=crop",
+  },
+  {
+    id: 17,
+    name: "Trà Ô Long Hảo Hạng",
+    price: 520000,
+    size: "500g",
+    brand: "tea4life",
+    region: "lam-dong",
+    rating: 5,
+    image:
+      "https://images.unsplash.com/photo-1564890369478-c89ca6d9cde9?w=400&h=400&fit=crop",
+  },
+  {
+    id: 18,
+    name: "Trà Xanh Organic",
+    price: 360000,
+    size: "100g",
+    brand: "cozy",
+    region: "moc-chau",
+    rating: 5,
+    image:
+      "https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=400&h=400&fit=crop",
+  },
+  {
+    id: 19,
+    name: "Trà Đen Earl Grey",
+    price: 310000,
+    size: "100g",
+    brand: "highlands",
+    region: "thai-nguyen",
+    rating: 4,
+    image:
+      "https://images.unsplash.com/photo-1571934811356-5cc061b6821f?w=400&h=400&fit=crop",
+  },
+  {
+    id: 20,
+    name: "Trà Thảo Mộc An Thần",
+    price: 280000,
+    size: "50g",
+    brand: "phuc-long",
+    region: "ha-giang",
+    rating: 5,
+    image:
+      "https://images.unsplash.com/photo-1576092768241-dec231879fc3?w=400&h=400&fit=crop",
+  },
+];
+
+const PAGE_SIZE = 8;
+
+export default function ShopPage() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [showMobileFilter, setShowMobileFilter] = useState(false);
+
+  // Get filter values from URL: /shop?name=x&brand=x&region=x&size=x&page=x
+  const name = searchParams.get("name") || "";
+  const brand = searchParams.get("brand") || "all";
+  const region = searchParams.get("region") || "all";
+  const size = searchParams.get("size") || "all";
+  const page = parseInt(searchParams.get("page") || "1");
+
+  // Local state for name input
+  const [nameInput, setNameInput] = useState(name);
+
+  // Update URL params
+  const updateParams = (updates: Record<string, string>) => {
+    const newParams = new URLSearchParams(searchParams);
+
+    Object.entries(updates).forEach(([key, value]) => {
+      if (value && value !== "all" && value !== "") {
+        newParams.set(key, value);
+      } else {
+        newParams.delete(key);
+      }
+    });
+
+    // Reset to page 1 when filters change (except when changing page)
+    if (!("page" in updates)) {
+      newParams.set("page", "1");
+    }
+
+    setSearchParams(newParams);
+  };
+
+  // Filter products
+  const filteredProducts = useMemo(() => {
+    return allProducts.filter((product) => {
+      if (name && !product.name.toLowerCase().includes(name.toLowerCase())) {
+        return false;
+      }
+      if (brand !== "all" && product.brand !== brand) {
+        return false;
+      }
+      if (region !== "all" && product.region !== region) {
+        return false;
+      }
+      if (size !== "all" && product.size !== size) {
+        return false;
+      }
+      return true;
+    });
+  }, [name, brand, region, size]);
+
+  // Pagination
+  const totalPages = Math.ceil(filteredProducts.length / PAGE_SIZE);
+  const paginatedProducts = filteredProducts.slice(
+    (page - 1) * PAGE_SIZE,
+    page * PAGE_SIZE,
+  );
+
+  // Handle name search submit
+  const handleSearch = () => {
+    updateParams({ name: nameInput });
+  };
+
+  // Clear all filters
+  const clearFilters = () => {
+    setNameInput("");
+    setSearchParams(new URLSearchParams());
+  };
+
+  // Check if any filter is active
+  const hasActiveFilters =
+    name || brand !== "all" || region !== "all" || size !== "all";
+
+  // Format price
+  const formatPrice = (price: number) => {
+    return new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    }).format(price);
+  };
+
+  const FilterSidebar = () => (
+    <div className="space-y-6">
+      {/* Name Search */}
+      <div className="space-y-2">
+        <Label className="text-emerald-900 font-medium">Tên sản phẩm</Label>
+        <div className="flex gap-2">
+          <Input
+            placeholder="Tìm theo tên..."
+            value={nameInput}
+            onChange={(e) => setNameInput(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+            className="border-emerald-200 focus-visible:ring-emerald-500"
+          />
+          <Button
+            size="icon"
+            onClick={handleSearch}
+            className="bg-emerald-500 hover:bg-emerald-600 shrink-0"
+          >
+            <Search className="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
+
+      {/* Brand */}
+      <div className="space-y-2">
+        <Label className="text-emerald-900 font-medium">Thương hiệu</Label>
+        <Select
+          value={brand}
+          onValueChange={(value) => updateParams({ brand: value })}
+        >
+          <SelectTrigger className="border-emerald-200 focus:ring-emerald-500">
+            <SelectValue placeholder="Chọn thương hiệu" />
+          </SelectTrigger>
+          <SelectContent>
+            {brands.map((b) => (
+              <SelectItem key={b.value} value={b.value}>
+                {b.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* Region */}
+      <div className="space-y-2">
+        <Label className="text-emerald-900 font-medium">Vùng miền</Label>
+        <Select
+          value={region}
+          onValueChange={(value) => updateParams({ region: value })}
+        >
+          <SelectTrigger className="border-emerald-200 focus:ring-emerald-500">
+            <SelectValue placeholder="Chọn vùng miền" />
+          </SelectTrigger>
+          <SelectContent>
+            {regions.map((r) => (
+              <SelectItem key={r.value} value={r.value}>
+                {r.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* Size */}
+      <div className="space-y-2">
+        <Label className="text-emerald-900 font-medium">Kích cỡ</Label>
+        <Select
+          value={size}
+          onValueChange={(value) => updateParams({ size: value })}
+        >
+          <SelectTrigger className="border-emerald-200 focus:ring-emerald-500">
+            <SelectValue placeholder="Chọn kích cỡ" />
+          </SelectTrigger>
+          <SelectContent>
+            {sizes.map((s) => (
+              <SelectItem key={s.value} value={s.value}>
+                {s.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* Clear Filters */}
+      {hasActiveFilters && (
+        <Button
+          onClick={clearFilters}
+          variant="outline"
+          className="w-full border-red-300 text-red-600 hover:bg-red-50 bg-transparent"
+        >
+          <X className="h-4 w-4 mr-2" />
+          Xóa bộ lọc
+        </Button>
+      )}
+    </div>
+  );
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-emerald-50/50 to-white">
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-emerald-900 sm:text-4xl">
+            Cửa hàng
+          </h1>
+          <p className="mt-2 text-emerald-700">
+            Khám phá bộ sưu tập trà đa dạng của chúng tôi
+          </p>
+        </div>
+
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* Desktop Sidebar */}
+          <aside className="hidden lg:block w-64 shrink-0">
+            <div className="sticky top-24 bg-white rounded-xl border border-emerald-100 p-6 shadow-sm">
+              <div className="flex items-center gap-2 mb-6">
+                <SlidersHorizontal className="h-5 w-5 text-emerald-600" />
+                <h2 className="font-semibold text-emerald-900">Bộ lọc</h2>
+              </div>
+              <FilterSidebar />
+            </div>
+          </aside>
+
+          {/* Mobile Filter Button */}
+          <div className="lg:hidden">
+            <Button
+              onClick={() => setShowMobileFilter(true)}
+              variant="outline"
+              className="w-full border-emerald-300 text-emerald-700 bg-transparent"
+            >
+              <Filter className="h-4 w-4 mr-2" />
+              Bộ lọc
+              {hasActiveFilters && (
+                <span className="ml-2 bg-emerald-500 text-white text-xs px-2 py-0.5 rounded-full">
+                  Đang lọc
+                </span>
+              )}
+            </Button>
+          </div>
+
+          {/* Mobile Filter Modal */}
+          {showMobileFilter && (
+            <div className="fixed inset-0 z-50 lg:hidden">
+              <div
+                className="absolute inset-0 bg-black/50"
+                onClick={() => setShowMobileFilter(false)}
+              />
+              <div className="absolute right-0 top-0 h-full w-80 max-w-full bg-white p-6 shadow-xl overflow-y-auto">
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center gap-2">
+                    <SlidersHorizontal className="h-5 w-5 text-emerald-600" />
+                    <h2 className="font-semibold text-emerald-900">Bộ lọc</h2>
+                  </div>
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    onClick={() => setShowMobileFilter(false)}
+                  >
+                    <X className="h-5 w-5" />
+                  </Button>
+                </div>
+                <FilterSidebar />
+              </div>
+            </div>
+          )}
+
+          {/* Products */}
+          <main className="flex-1">
+            {/* Results Info */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+              <p className="text-emerald-700">
+                Hiển thị{" "}
+                <span className="font-medium text-emerald-900">
+                  {paginatedProducts.length}
+                </span>{" "}
+                trong{" "}
+                <span className="font-medium text-emerald-900">
+                  {filteredProducts.length}
+                </span>{" "}
+                sản phẩm
+              </p>
+            </div>
+
+            {/* Active Filters Tags */}
+            {hasActiveFilters && (
+              <div className="flex flex-wrap gap-2 mb-6">
+                {name && (
+                  <span className="inline-flex items-center gap-1 bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-sm">
+                    Tên: {name}
+                    <button
+                      onClick={() => {
+                        setNameInput("");
+                        updateParams({ name: "" });
+                      }}
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  </span>
+                )}
+                {brand !== "all" && (
+                  <span className="inline-flex items-center gap-1 bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-sm">
+                    {brands.find((b) => b.value === brand)?.label}
+                    <button onClick={() => updateParams({ brand: "all" })}>
+                      <X className="h-3 w-3" />
+                    </button>
+                  </span>
+                )}
+                {region !== "all" && (
+                  <span className="inline-flex items-center gap-1 bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-sm">
+                    {regions.find((r) => r.value === region)?.label}
+                    <button onClick={() => updateParams({ region: "all" })}>
+                      <X className="h-3 w-3" />
+                    </button>
+                  </span>
+                )}
+                {size !== "all" && (
+                  <span className="inline-flex items-center gap-1 bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-sm">
+                    {sizes.find((s) => s.value === size)?.label}
+                    <button onClick={() => updateParams({ size: "all" })}>
+                      <X className="h-3 w-3" />
+                    </button>
+                  </span>
+                )}
+              </div>
+            )}
+
+            {/* Product Grid */}
+            {paginatedProducts.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {paginatedProducts.map((product) => (
+                  <Card
+                    key={product.id}
+                    className="group overflow-hidden border-emerald-100 transition-all hover:-translate-y-1 hover:shadow-xl"
+                  >
+                    <div className="relative aspect-square overflow-hidden">
+                      <img
+                        src={product.image || "/placeholder.svg"}
+                        alt={product.name}
+                        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      />
+                      <span className="absolute top-2 right-2 bg-emerald-500 text-white text-xs px-2 py-1 rounded-full">
+                        {product.size}
+                      </span>
+                    </div>
+                    <CardContent className="p-4">
+                      <div className="mb-2 flex items-center gap-0.5">
+                        {Array.from({ length: 5 }).map((_, i) => (
+                          <Star
+                            key={i}
+                            className={`h-4 w-4 ${
+                              i < product.rating
+                                ? "fill-amber-400 text-amber-400"
+                                : "text-gray-300"
+                            }`}
+                          />
+                        ))}
+                      </div>
+                      <h3 className="font-semibold text-emerald-900 line-clamp-2">
+                        {product.name}
+                      </h3>
+                      <p className="mt-1 text-sm text-emerald-600">
+                        {brands.find((b) => b.value === product.brand)?.label} -{" "}
+                        {regions.find((r) => r.value === product.region)?.label}
+                      </p>
+                      <p className="mt-2 text-lg font-bold text-emerald-600">
+                        {formatPrice(product.price)}
+                      </p>
+                      <Button className="mt-4 w-full bg-gradient-to-r from-emerald-500 to-green-500 text-white hover:from-emerald-600 hover:to-green-600">
+                        Thêm vào giỏ
+                      </Button>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-16">
+                <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-emerald-100">
+                  <Search className="h-10 w-10 text-emerald-400" />
+                </div>
+                <h3 className="text-lg font-semibold text-emerald-900">
+                  Không tìm thấy sản phẩm
+                </h3>
+                <p className="mt-2 text-emerald-700">
+                  Hãy thử thay đổi bộ lọc để tìm sản phẩm phù hợp
+                </p>
+                <Button
+                  onClick={clearFilters}
+                  className="mt-4 bg-emerald-500 hover:bg-emerald-600"
+                >
+                  Xóa bộ lọc
+                </Button>
+              </div>
+            )}
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="mt-8 flex items-center justify-center gap-2">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  disabled={page <= 1}
+                  onClick={() => updateParams({ page: String(page - 1) })}
+                  className="border-emerald-200 text-emerald-700 hover:bg-emerald-50 bg-transparent disabled:opacity-50"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </Button>
+
+                {Array.from({ length: totalPages }).map((_, i) => {
+                  const pageNum = i + 1;
+                  // Show first, last, current, and adjacent pages
+                  if (
+                    pageNum === 1 ||
+                    pageNum === totalPages ||
+                    (pageNum >= page - 1 && pageNum <= page + 1)
+                  ) {
+                    return (
+                      <Button
+                        key={pageNum}
+                        variant={page === pageNum ? "default" : "outline"}
+                        size="icon"
+                        onClick={() => updateParams({ page: String(pageNum) })}
+                        className={
+                          page === pageNum
+                            ? "bg-emerald-500 hover:bg-emerald-600"
+                            : "border-emerald-200 text-emerald-700 hover:bg-emerald-50 bg-transparent"
+                        }
+                      >
+                        {pageNum}
+                      </Button>
+                    );
+                  }
+                  // Show ellipsis
+                  if (pageNum === page - 2 || pageNum === page + 2) {
+                    return (
+                      <span key={pageNum} className="px-2 text-emerald-400">
+                        ...
+                      </span>
+                    );
+                  }
+                  return null;
+                })}
+
+                <Button
+                  variant="outline"
+                  size="icon"
+                  disabled={page >= totalPages}
+                  onClick={() => updateParams({ page: String(page + 1) })}
+                  className="border-emerald-200 text-emerald-700 hover:bg-emerald-50 bg-transparent disabled:opacity-50"
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+              </div>
+            )}
+          </main>
+        </div>
+      </div>
+    </div>
+  );
+}
