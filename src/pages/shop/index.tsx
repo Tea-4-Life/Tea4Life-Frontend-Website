@@ -1,18 +1,9 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import {
   Search,
   SlidersHorizontal,
@@ -22,32 +13,11 @@ import {
   ChevronRight,
   Filter,
 } from "lucide-react";
-
-// Filter options
-const brands = [
-  { value: "all", label: "Tất cả" },
-  { value: "tea4life", label: "Tea4Life" },
-  { value: "cozy", label: "Cozy" },
-  { value: "phuc-long", label: "Phúc Long" },
-  { value: "highlands", label: "Highlands" },
-];
-
-const regions = [
-  { value: "all", label: "Tất cả" },
-  { value: "thai-nguyen", label: "Thái Nguyên" },
-  { value: "lam-dong", label: "Lâm Đồng" },
-  { value: "ha-giang", label: "Hà Giang" },
-  { value: "tay-ho", label: "Tây Hồ" },
-  { value: "moc-chau", label: "Mộc Châu" },
-];
-
-const sizes = [
-  { value: "all", label: "Tất cả" },
-  { value: "50g", label: "50g" },
-  { value: "100g", label: "100g" },
-  { value: "200g", label: "200g" },
-  { value: "500g", label: "500g" },
-];
+import FilterSidebar, {
+  brands,
+  regions,
+  sizes,
+} from "./components/FilterSidebar";
 
 // Mock products data
 const allProducts = [
@@ -115,7 +85,7 @@ const allProducts = [
     region: "moc-chau",
     rating: 4,
     image:
-      "https://images.unsplash.com/photo-1582793988951-9aed5509eb97?w=400&h=400&fit=crop",
+      "https://images.unsplash.com/photo-1582793988951-dec231879fc3?w=400&h=400&fit=crop",
   },
   {
     id: 7,
@@ -148,7 +118,7 @@ const allProducts = [
     region: "tay-ho",
     rating: 5,
     image:
-      "https://images.unsplash.com/photo-1558160074-4d7d8bdf4256?w=400&h=400&fit=crop",
+      "https://images.unsplash.com/photo-1558160074456-29fc4cc8cde9?w=400&h=400&fit=crop",
   },
   {
     id: 10,
@@ -273,6 +243,8 @@ const allProducts = [
   },
 ];
 
+export { allProducts };
+
 const PAGE_SIZE = 8;
 
 export default function ShopPage() {
@@ -358,103 +330,6 @@ export default function ShopPage() {
     }).format(price);
   };
 
-  const FilterSidebar = () => (
-    <div className="space-y-6">
-      {/* Name Search */}
-      <div className="space-y-2">
-        <Label className="text-emerald-900 font-medium">Tên sản phẩm</Label>
-        <div className="flex gap-2">
-          <Input
-            placeholder="Tìm theo tên..."
-            value={nameInput}
-            onChange={(e) => setNameInput(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-            className="border-emerald-200 focus-visible:ring-emerald-500"
-          />
-          <Button
-            size="icon"
-            onClick={handleSearch}
-            className="bg-emerald-500 hover:bg-emerald-600 shrink-0"
-          >
-            <Search className="h-4 w-4" />
-          </Button>
-        </div>
-      </div>
-
-      {/* Brand */}
-      <div className="space-y-2">
-        <Label className="text-emerald-900 font-medium">Thương hiệu</Label>
-        <Select
-          value={brand}
-          onValueChange={(value) => updateParams({ brand: value })}
-        >
-          <SelectTrigger className="border-emerald-200 focus:ring-emerald-500">
-            <SelectValue placeholder="Chọn thương hiệu" />
-          </SelectTrigger>
-          <SelectContent>
-            {brands.map((b) => (
-              <SelectItem key={b.value} value={b.value}>
-                {b.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      {/* Region */}
-      <div className="space-y-2">
-        <Label className="text-emerald-900 font-medium">Vùng miền</Label>
-        <Select
-          value={region}
-          onValueChange={(value) => updateParams({ region: value })}
-        >
-          <SelectTrigger className="border-emerald-200 focus:ring-emerald-500">
-            <SelectValue placeholder="Chọn vùng miền" />
-          </SelectTrigger>
-          <SelectContent>
-            {regions.map((r) => (
-              <SelectItem key={r.value} value={r.value}>
-                {r.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      {/* Size */}
-      <div className="space-y-2">
-        <Label className="text-emerald-900 font-medium">Kích cỡ</Label>
-        <Select
-          value={size}
-          onValueChange={(value) => updateParams({ size: value })}
-        >
-          <SelectTrigger className="border-emerald-200 focus:ring-emerald-500">
-            <SelectValue placeholder="Chọn kích cỡ" />
-          </SelectTrigger>
-          <SelectContent>
-            {sizes.map((s) => (
-              <SelectItem key={s.value} value={s.value}>
-                {s.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      {/* Clear Filters */}
-      {hasActiveFilters && (
-        <Button
-          onClick={clearFilters}
-          variant="outline"
-          className="w-full border-red-300 text-red-600 hover:bg-red-50 bg-transparent"
-        >
-          <X className="h-4 w-4 mr-2" />
-          Xóa bộ lọc
-        </Button>
-      )}
-    </div>
-  );
-
   return (
     <div className="min-h-screen bg-gradient-to-b from-emerald-50/50 to-white">
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
@@ -476,7 +351,17 @@ export default function ShopPage() {
                 <SlidersHorizontal className="h-5 w-5 text-emerald-600" />
                 <h2 className="font-semibold text-emerald-900">Bộ lọc</h2>
               </div>
-              <FilterSidebar />
+              <FilterSidebar
+                nameInput={nameInput}
+                setNameInput={setNameInput}
+                brand={brand}
+                region={region}
+                size={size}
+                hasActiveFilters={hasActiveFilters}
+                onSearch={handleSearch}
+                onUpdateParams={updateParams}
+                onClearFilters={clearFilters}
+              />
             </div>
           </aside>
 
@@ -518,7 +403,17 @@ export default function ShopPage() {
                     <X className="h-5 w-5" />
                   </Button>
                 </div>
-                <FilterSidebar />
+                <FilterSidebar
+                  nameInput={nameInput}
+                  setNameInput={setNameInput}
+                  brand={brand}
+                  region={region}
+                  size={size}
+                  hasActiveFilters={hasActiveFilters}
+                  onSearch={handleSearch}
+                  onUpdateParams={updateParams}
+                  onClearFilters={clearFilters}
+                />
               </div>
             </div>
           )}
@@ -591,16 +486,18 @@ export default function ShopPage() {
                     key={product.id}
                     className="group overflow-hidden border-emerald-100 transition-all hover:-translate-y-1 hover:shadow-xl"
                   >
-                    <div className="relative aspect-square overflow-hidden">
-                      <img
-                        src={product.image || "/placeholder.svg"}
-                        alt={product.name}
-                        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                      />
-                      <span className="absolute top-2 right-2 bg-emerald-500 text-white text-xs px-2 py-1 rounded-full">
-                        {product.size}
-                      </span>
-                    </div>
+                    <Link to={`/shop/products/${product.id}`}>
+                      <div className="relative aspect-square overflow-hidden">
+                        <img
+                          src={product.image || "/placeholder.svg"}
+                          alt={product.name}
+                          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        />
+                        <span className="absolute top-2 right-2 bg-emerald-500 text-white text-xs px-2 py-1 rounded-full">
+                          {product.size}
+                        </span>
+                      </div>
+                    </Link>
                     <CardContent className="p-4">
                       <div className="mb-2 flex items-center gap-0.5">
                         {Array.from({ length: 5 }).map((_, i) => (
@@ -614,9 +511,11 @@ export default function ShopPage() {
                           />
                         ))}
                       </div>
-                      <h3 className="font-semibold text-emerald-900 line-clamp-2">
-                        {product.name}
-                      </h3>
+                      <Link to={`/shop/products/${product.id}`}>
+                        <h3 className="font-semibold text-emerald-900 line-clamp-2 hover:text-emerald-700">
+                          {product.name}
+                        </h3>
+                      </Link>
                       <p className="mt-1 text-sm text-emerald-600">
                         {brands.find((b) => b.value === product.brand)?.label} -{" "}
                         {regions.find((r) => r.value === product.region)?.label}
