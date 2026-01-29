@@ -24,6 +24,33 @@ export const sizes = [
   { value: "500g", label: "500g" },
 ];
 
+export const categories = [
+  {
+    value: "tra-xanh",
+    label: "Trà Xanh",
+    description: "Hương vị tươi mát, giàu chất chống oxy hóa.",
+    icon: "Leaf",
+  },
+  {
+    value: "tra-o-long",
+    label: "Trà Ô Long",
+    description: "Hương thơm nồng nàn, hậu vị ngọt sâu.",
+    icon: "Coffee",
+  },
+  {
+    value: "tra-thao-moc",
+    label: "Trà Thảo Mộc",
+    description: "Thư giãn tinh thần, hỗ trợ sức khỏe.",
+    icon: "Flower2",
+  },
+  {
+    value: "tra-sen",
+    label: "Trà Sen",
+    description: "Sự kết hợp tinh tế, đậm đà bản sắc Việt.",
+    icon: "Sprout",
+  },
+];
+
 // Mock products data
 export const allProducts = [
   {

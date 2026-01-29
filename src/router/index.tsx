@@ -9,6 +9,8 @@ import OrderDetailPage from "@/pages/order-details";
 import ProfilePage from "@/pages/profile";
 import CartPage from "@/pages/cart";
 import CheckoutPage from "@/pages/checkout";
+import BrandsListPage from "@/pages/brands";
+import CategoriesPage from "@/pages/categories";
 
 export const router = createBrowserRouter([
   {
@@ -24,6 +26,8 @@ export const router = createBrowserRouter([
       { path: "profile", element: <ProfilePage /> },
       { path: "cart", element: <CartPage /> },
       { path: "checkout", element: <CheckoutPage /> },
+      { path: "brands", element: <BrandsListPage /> },
+      { path: "categories", element: <CategoriesPage /> },
     ],
   },
 ]);
