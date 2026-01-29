@@ -1,314 +1,272 @@
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Leaf, Shield, Truck, Heart, Star, ArrowRight } from "lucide-react";
+"use client";
 
-const features = [
+import * as React from "react";
+import { Link } from "react-router-dom";
+import Autoplay from "embla-carousel-autoplay";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Star, ShoppingCart, ArrowRight } from "lucide-react";
+
+// --- Dữ liệu Banner ---
+const banners = [
   {
-    icon: Leaf,
-    title: "100% Tự nhiên",
-    description: "Trà được thu hoạch từ những vùng đất cao nguyên tinh khiết",
+    title: "TRÀ XANH THÁI NGUYÊN",
+    subtitle: "Đệ nhất danh trà Việt",
+    description: "Hương thơm cốm non, vị chát dịu ngọt hậu đặc trưng.",
+    image:
+      "https://images.unsplash.com/photo-1597318181409-cf64d0b5d8a2?q=80&w=1200&auto=format&fit=crop",
+    bgColor: "bg-[#14532d]", // Green 900
   },
   {
-    icon: Shield,
-    title: "Chất lượng cao",
-    description: "Quy trình sản xuất nghiêm ngặt, đạt chuẩn quốc tế",
+    title: "TRÀ THẢO MỘC",
+    subtitle: "An nhiên trong từng nhịp thở",
+    description:
+      "Sự hòa quyện của hoa cúc, kỷ tử và táo đỏ, giúp thanh lọc cơ thể và thư giãn tâm trí.",
+    image:
+      "https://images.unsplash.com/photo-1563911892437-1feda0179e1b?q=80&w=1200&auto=format&fit=crop",
+    bgColor: "bg-[#78350f]", // Amber 900 (Màu ấm của thảo mộc)
   },
   {
-    icon: Truck,
-    title: "Giao hàng nhanh",
-    description: "Miễn phí vận chuyển cho đơn hàng từ 500.000đ",
+    title: "TRÀ TUYẾT CỔ THỤ",
+    subtitle: "Báu vật từ đỉnh Tây Côn Lĩnh",
+    description:
+      "Thu hoạch từ những cây trà hàng trăm năm tuổi, phủ trắng lớp lông tuyết mịn màng.",
+    image:
+      "https://images.unsplash.com/photo-1594631252845-29fc4cc8cde9?q=80&w=1200&auto=format&fit=crop",
+    bgColor: "bg-[#0c4a6e]", // Blue 900 (Vibe núi cao, sương mù)
   },
   {
-    icon: Heart,
-    title: "Tận tâm phục vụ",
-    description: "Đội ngũ tư vấn nhiệt tình, hỗ trợ 24/7",
+    title: "TRÀ SEN TÂY HỒ",
+    subtitle: "Quốc ẩm trong từng chén trà",
+    description:
+      "Sự kết hợp hoàn hảo giữa trà xanh Tân Cương thượng hạng và hương sen bách diệp hồ Tây.",
+    image:
+      "https://images.unsplash.com/photo-1576092768241-dec231879fc3?q=80&w=1200&auto=format&fit=crop",
+    bgColor: "bg-[#831843]", // Pink 900 (Hợp màu hoa sen)
   },
 ];
 
-const products = [
+// --- Dữ liệu Danh mục (Circle Style) ---
+const categories = [
+  { name: "Trà Xanh", icon: "🍃", color: "bg-emerald-100" },
+  { name: "Trà Ô Long", icon: "🍵", color: "bg-green-100" },
+  { name: "Trà Sen", icon: "🪷", color: "bg-rose-100" },
+  { name: "Trà Thảo Mộc", icon: "🌸", color: "bg-amber-100" },
+  { name: "Phụ Kiện", icon: "🏺", color: "bg-slate-100" },
+  { name: "Quà Tặng", icon: "🎁", color: "bg-red-100" },
+];
+
+// --- Dữ liệu Sản phẩm Ưu đãi (Best Deals) ---
+const bestDeals = [
   {
-    name: "Trà Ô Long Cao Cấp",
+    name: "Trà Ô Long Mộc Châu",
     price: "350.000đ",
+    oldPrice: "580.000đ",
+    discount: "40%",
     image:
-      "https://images.unsplash.com/photo-1564890369478-c89ca6d9cde9?w=400&h=400&fit=crop",
-    rating: 5,
+      "https://images.unsplash.com/photo-1564890369478-c89ca6d9cde9?q=80&w=400&auto=format&fit=crop",
   },
   {
     name: "Trà Xanh Thái Nguyên",
-    price: "280.000đ",
+    price: "220.000đ",
+    oldPrice: "280.000đ",
+    discount: "21%",
     image:
-      "https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=400&h=400&fit=crop",
-    rating: 5,
+      "https://images.unsplash.com/photo-1556679343-c7306c1976bc?q=80&w=400&auto=format&fit=crop",
   },
   {
     name: "Trà Sen Tây Hồ",
-    price: "420.000đ",
+    price: "450.000đ",
+    oldPrice: "550.000đ",
+    discount: "18%",
     image:
-      "https://images.unsplash.com/photo-1597318181409-cf64d0b5d8a2?w=400&h=400&fit=crop",
-    rating: 5,
+      "https://images.unsplash.com/photo-1594631252845-29fc4cc8cde9?q=80&w=400&auto=format&fit=crop",
   },
   {
-    name: "Trà Hoa Cúc",
-    price: "220.000đ",
+    name: "Trà Tuyết Cổ Thụ",
+    price: "890.000đ",
+    oldPrice: "1.100.000đ",
+    discount: "19%",
     image:
-      "https://images.unsplash.com/photo-1563911892437-1feda0179e1b?w=400&h=400&fit=crop",
-    rating: 4,
-  },
-];
-
-const testimonials = [
-  {
-    name: "Nguyễn Minh Anh",
-    role: "Khách hàng thân thiết",
-    content:
-      "Trà của Tea4Life thực sự rất thơm ngon, mỗi buổi sáng của tôi đều bắt đầu với một tách trà ấm.",
-    avatar:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop",
+      "https://images.unsplash.com/photo-1576092768241-dec231879fc3?q=80&w=400&auto=format&fit=crop",
   },
   {
-    name: "Trần Văn Đức",
-    role: "Doanh nhân",
-    content:
-      "Chất lượng sản phẩm tuyệt vời, đóng gói cẩn thận. Tôi đã giới thiệu cho nhiều bạn bè.",
-    avatar:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop",
-  },
-  {
-    name: "Lê Thu Hằng",
-    role: "Giáo viên",
-    content:
-      "Dịch vụ khách hàng rất chu đáo, giao hàng nhanh chóng. Sẽ tiếp tục ủng hộ Tea4Life.",
-    avatar:
-      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop",
+    name: "Trà Hoa Cúc Vàng",
+    price: "185.000đ",
+    oldPrice: "230.000đ",
+    discount: "20%",
+    image:
+      "https://images.unsplash.com/photo-1563911892437-1feda0179e1b?q=80&w=400&auto=format&fit=crop",
   },
 ];
 
 export default function LandingPage() {
-  return (
-    <div className="flex flex-col">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-emerald-50 via-white to-green-50">
-        <div className="absolute inset-0 opacity-30">
-          <div className="absolute -left-20 -top-20 h-72 w-72 rounded-full bg-emerald-200 blur-3xl" />
-          <div className="absolute -bottom-20 -right-20 h-72 w-72 rounded-full bg-green-200 blur-3xl" />
-        </div>
-        <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8 lg:py-32">
-          <div className="grid items-center gap-12 lg:grid-cols-2">
-            <div className="text-center lg:text-left">
-              <span className="inline-block rounded-full bg-emerald-100 px-4 py-1.5 text-sm font-medium text-emerald-700">
-                Chào mừng đến với Tea4Life
-              </span>
-              <h1 className="mt-6 text-pretty text-4xl font-bold leading-tight tracking-tight text-emerald-900 sm:text-5xl lg:text-6xl">
-                Giữa nhịp sống vội, trà từ tay cho{" "}
-                <span className="bg-gradient-to-r from-emerald-500 to-green-500 bg-clip-text text-transparent">
-                  an yên
-                </span>
-              </h1>
-              <p className="mt-6 text-lg leading-relaxed text-emerald-700">
-                Khám phá bộ sưu tập trà cao cấp được tuyển chọn kỹ lưỡng từ
-                những vùng đất tinh khiết nhất Việt Nam. Mỗi tách trà là một
-                hành trình trở về với thiên nhiên.
-              </p>
-              <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:justify-center lg:justify-start">
-                <Button
-                  size="lg"
-                  className="bg-gradient-to-r from-emerald-500 to-green-500 text-white hover:from-emerald-600 hover:to-green-600"
-                >
-                  Khám phá ngay
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="border-emerald-300 text-emerald-700 hover:bg-emerald-50 bg-transparent"
-                >
-                  Tìm hiểu thêm
-                </Button>
-              </div>
-            </div>
-            <div className="relative">
-              <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-emerald-500/20 to-green-500/20 blur-2xl" />
-              <img
-                src="https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=600&h=600&fit=crop"
-                alt="Tách trà xanh thơm ngon"
-                className="relative mx-auto aspect-square w-full max-w-md rounded-3xl object-cover shadow-2xl"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
+  const plugin = React.useRef(
+    Autoplay({ delay: 4000, stopOnInteraction: true }),
+  );
 
-      {/* Features Section */}
-      <section className="bg-white py-20">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h2 className="text-3xl font-bold tracking-tight text-emerald-900 sm:text-4xl">
-              Tại sao chọn Tea4Life?
-            </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-lg text-emerald-700">
-              Chúng tôi mang đến trải nghiệm trà hoàn hảo nhất cho bạn
-            </p>
-          </div>
-          <div className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-            {features.map((feature) => (
-              <Card
-                key={feature.title}
-                className="border-emerald-100 bg-emerald-50/50 transition-all hover:-translate-y-1 hover:shadow-lg"
-              >
-                <CardContent className="p-6 text-center">
-                  <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-green-500">
-                    <feature.icon className="h-7 w-7 text-white" />
+  return (
+    <div className="min-h-screen bg-[#f8fafc] pb-20 font-sans">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-12 pt-6">
+        {/* --- SECTION 1: HERO CAROUSEL --- */}
+        <section className="relative group overflow-hidden rounded-3xl shadow-2xl">
+          <Carousel
+            plugins={[plugin.current]}
+            className="w-full"
+            onMouseEnter={plugin.current.stop}
+            onMouseLeave={plugin.current.reset}
+          >
+            <CarouselContent>
+              {banners.map((banner, index) => (
+                <CarouselItem key={index}>
+                  <div
+                    className={`relative h-[350px] md:h-[450px] w-full ${banner.bgColor}`}
+                  >
+                    <div className="absolute inset-0 flex items-center px-10 md:px-20 text-white z-10">
+                      <div className="max-w-xl space-y-4">
+                        <Badge className="bg-emerald-500/20 text-emerald-300 border-none px-3 py-1 text-sm">
+                          {banner.subtitle}
+                        </Badge>
+                        <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter leading-tight">
+                          {banner.title}
+                        </h2>
+                        <p className="text-emerald-100/70 text-lg">
+                          {banner.description}
+                        </p>
+                        <Button
+                          size="lg"
+                          className="bg-white text-emerald-900 hover:bg-emerald-50 font-bold px-10 rounded-xl transition-all hover:scale-105"
+                        >
+                          Mua Ngay
+                        </Button>
+                      </div>
+                    </div>
+                    {/* Background Image Layer */}
+                    <div className="absolute right-0 top-0 h-full w-full md:w-3/5 select-none overflow-hidden">
+                      <div className="absolute inset-0 bg-gradient-to-r from-inherit via-transparent to-transparent z-[1]" />
+                      <img
+                        src={banner.image}
+                        className="h-full w-full object-cover opacity-60 md:opacity-80 transition-transform duration-[5000ms] hover:scale-110"
+                        alt={banner.title}
+                      />
+                    </div>
                   </div>
-                  <h3 className="mb-2 text-lg font-semibold text-emerald-900">
-                    {feature.title}
-                  </h3>
-                  <p className="text-sm leading-relaxed text-emerald-700">
-                    {feature.description}
-                  </p>
-                </CardContent>
-              </Card>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <div className="hidden group-hover:block">
+              <CarouselPrevious className="left-6 bg-white/10 border-none text-white hover:bg-white/30 backdrop-blur-md" />
+              <CarouselNext className="right-6 bg-white/10 border-none text-white hover:bg-white/30 backdrop-blur-md" />
+            </div>
+          </Carousel>
+        </section>
+
+        {/* --- SECTION 2: SHOP BY CATEGORIES --- */}
+        <section className="space-y-6">
+          <div className="flex items-center justify-between border-b border-slate-200 pb-4">
+            <h3 className="text-2xl font-black text-slate-800 uppercase tracking-tight">
+              Danh Mục Trà
+            </h3>
+            <Link
+              to="/categories"
+              className="text-sm font-bold text-emerald-600 hover:text-emerald-700 flex items-center gap-1 group"
+            >
+              Xem tất cả{" "}
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+            </Link>
+          </div>
+          <div className="flex justify-between gap-4 overflow-x-auto pb-4 no-scrollbar">
+            {categories.map((cat) => (
+              <div
+                key={cat.name}
+                className="flex flex-col items-center gap-4 min-w-[110px] cursor-pointer group"
+              >
+                <div
+                  className={`h-24 w-24 ${cat.color} rounded-full flex items-center justify-center text-4xl shadow-sm transition-all duration-300 group-hover:-translate-y-2 group-hover:shadow-xl border-4 border-white`}
+                >
+                  {cat.icon}
+                </div>
+                <span className="text-sm font-bold text-slate-600 group-hover:text-emerald-600 transition-colors uppercase tracking-tighter">
+                  {cat.name}
+                </span>
+              </div>
             ))}
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Products Section */}
-      <section className="bg-gradient-to-b from-emerald-50 to-white py-20">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
-            <div>
-              <h2 className="text-3xl font-bold tracking-tight text-emerald-900 sm:text-4xl">
-                Sản phẩm nổi bật
-              </h2>
-              <p className="mt-2 text-lg text-emerald-700">
-                Những loại trà được yêu thích nhất
-              </p>
-            </div>
-            <Button
-              variant="outline"
-              className="border-emerald-300 text-emerald-700 hover:bg-emerald-50 bg-transparent"
+        {/* --- SECTION 3: BEST DEALS (Grid Layout) --- */}
+        <section className="space-y-6">
+          <div className="flex items-center justify-between border-b border-slate-200 pb-4">
+            <h3 className="text-2xl font-black text-slate-800 uppercase tracking-tight">
+              Ưu Đãi Lớn Nhất
+            </h3>
+            <Link
+              to="/shop"
+              className="text-sm font-bold text-emerald-600 hover:text-emerald-700"
             >
               Xem tất cả
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
+            </Link>
           </div>
-          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {products.map((product) => (
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
+            {bestDeals.map((item) => (
               <Card
-                key={product.name}
-                className="group overflow-hidden border-emerald-100 transition-all hover:-translate-y-1 hover:shadow-xl"
+                key={item.name}
+                className="group border-none shadow-sm hover:shadow-2xl transition-all duration-300 bg-white rounded-3xl overflow-hidden relative"
               >
-                <div className="relative aspect-square overflow-hidden">
-                  <img
-                    src={product.image || "/placeholder.svg"}
-                    alt={product.name}
-                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                  />
-                </div>
-                <CardContent className="p-4">
-                  <div className="mb-2 flex items-center gap-0.5">
-                    {Array.from({ length: 5 }).map((_, i) => (
-                      <Star
-                        key={i}
-                        className={`h-4 w-4 ${
-                          i < product.rating
-                            ? "fill-amber-400 text-amber-400"
-                            : "text-gray-300"
-                        }`}
-                      />
-                    ))}
-                  </div>
-                  <h3 className="font-semibold text-emerald-900">
-                    {product.name}
-                  </h3>
-                  <p className="mt-1 text-lg font-bold text-emerald-600">
-                    {product.price}
-                  </p>
-                  <Button className="mt-4 w-full bg-gradient-to-r from-emerald-500 to-green-500 text-white hover:from-emerald-600 hover:to-green-600">
-                    Thêm vào giỏ
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials Section */}
-      <section className="bg-white py-20">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h2 className="text-3xl font-bold tracking-tight text-emerald-900 sm:text-4xl">
-              Khách hàng nói gì về chúng tôi
-            </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-lg text-emerald-700">
-              Sự hài lòng của khách hàng là động lực để chúng tôi phát triển
-            </p>
-          </div>
-          <div className="mt-16 grid gap-8 md:grid-cols-3">
-            {testimonials.map((testimonial) => (
-              <Card
-                key={testimonial.name}
-                className="border-emerald-100 bg-gradient-to-br from-emerald-50 to-white"
-              >
-                <CardContent className="p-6">
-                  <div className="mb-4 flex items-center gap-0.5">
-                    {Array.from({ length: 5 }).map((_, i) => (
-                      <Star
-                        key={i}
-                        className="h-4 w-4 fill-amber-400 text-amber-400"
-                      />
-                    ))}
-                  </div>
-                  <p className="mb-6 leading-relaxed text-emerald-700">
-                    "{testimonial.content}"
-                  </p>
-                  <div className="flex items-center gap-3">
+                <Badge className="absolute top-0 right-0 z-10 bg-red-500 text-white rounded-bl-2xl rounded-tr-none px-3 py-2 font-black text-xs">
+                  SALE {item.discount}
+                </Badge>
+                <CardContent className="p-0">
+                  <div className="aspect-square bg-slate-50 overflow-hidden relative">
                     <img
-                      src={testimonial.avatar || "/placeholder.svg"}
-                      alt={testimonial.name}
-                      className="h-12 w-12 rounded-full object-cover"
+                      src={item.image}
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      alt={item.name}
                     />
-                    <div>
-                      <p className="font-semibold text-emerald-900">
-                        {testimonial.name}
-                      </p>
-                      <p className="text-sm text-emerald-600">
-                        {testimonial.role}
-                      </p>
+                    <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <Button
+                        size="icon"
+                        className="rounded-full bg-emerald-600 hover:bg-emerald-700 shadow-xl"
+                      >
+                        <ShoppingCart className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                  <div className="p-5 space-y-1">
+                    <h4 className="text-sm font-bold text-slate-800 line-clamp-1 group-hover:text-emerald-700 transition-colors uppercase">
+                      {item.name}
+                    </h4>
+                    <div className="flex items-center gap-2">
+                      <span className="text-lg font-black text-emerald-600">
+                        {item.price}
+                      </span>
+                      <span className="text-xs text-slate-400 line-through font-medium">
+                        {item.oldPrice}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-0.5 pt-1">
+                      {[1, 2, 3, 4, 5].map((i) => (
+                        <Star
+                          key={i}
+                          className="h-3 w-3 fill-amber-400 text-amber-400"
+                        />
+                      ))}
                     </div>
                   </div>
                 </CardContent>
               </Card>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="bg-gradient-to-r from-emerald-500 to-green-500 py-20">
-        <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-            Sẵn sàng trải nghiệm?
-          </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-lg text-emerald-100">
-            Đăng ký ngay hôm nay để nhận ưu đãi giảm 20% cho đơn hàng đầu tiên
-          </p>
-          <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <input
-              type="email"
-              placeholder="Nhập email của bạn"
-              className="w-full max-w-sm rounded-lg border-0 bg-white/20 px-4 py-3 text-white placeholder-emerald-100 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-white"
-            />
-            <Button
-              size="lg"
-              className="w-full bg-white text-emerald-600 hover:bg-emerald-50 sm:w-auto"
-            >
-              Đăng ký ngay
-            </Button>
-          </div>
-        </div>
-      </section>
+        </section>
+      </div>
     </div>
   );
 }
