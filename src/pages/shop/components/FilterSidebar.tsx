@@ -11,32 +11,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Search, X } from "lucide-react";
-
-// Filter options
-export const brands = [
-  { value: "all", label: "Tất cả" },
-  { value: "tea4life", label: "Tea4Life" },
-  { value: "cozy", label: "Cozy" },
-  { value: "phuc-long", label: "Phúc Long" },
-  { value: "highlands", label: "Highlands" },
-];
-
-export const regions = [
-  { value: "all", label: "Tất cả" },
-  { value: "thai-nguyen", label: "Thái Nguyên" },
-  { value: "lam-dong", label: "Lâm Đồng" },
-  { value: "ha-giang", label: "Hà Giang" },
-  { value: "tay-ho", label: "Tây Hồ" },
-  { value: "moc-chau", label: "Mộc Châu" },
-];
-
-export const sizes = [
-  { value: "all", label: "Tất cả" },
-  { value: "50g", label: "50g" },
-  { value: "100g", label: "100g" },
-  { value: "200g", label: "200g" },
-  { value: "500g", label: "500g" },
-];
+import { brands, regions, sizes } from "../constants";
 
 interface FilterSidebarProps {
   nameInput: string;
@@ -65,10 +40,10 @@ export default function FilterSidebar({
     <div className="space-y-6">
       {/* Name Search */}
       <div className="space-y-2">
-        <Label className="text-emerald-900 font-medium">Tên sản phẩm</Label>
+        <Label className="text-emerald-900 font-medium">Ten san pham</Label>
         <div className="flex gap-2">
           <Input
-            placeholder="Tìm theo tên..."
+            placeholder="Tim theo ten..."
             value={nameInput}
             onChange={(e) => setNameInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && onSearch()}
@@ -86,13 +61,13 @@ export default function FilterSidebar({
 
       {/* Brand */}
       <div className="space-y-2">
-        <Label className="text-emerald-900 font-medium">Thương hiệu</Label>
+        <Label className="text-emerald-900 font-medium">Thuong hieu</Label>
         <Select
           value={brand}
           onValueChange={(value) => onUpdateParams({ brand: value })}
         >
           <SelectTrigger className="border-emerald-200 focus:ring-emerald-500">
-            <SelectValue placeholder="Chọn thương hiệu" />
+            <SelectValue placeholder="Chon thuong hieu" />
           </SelectTrigger>
           <SelectContent>
             {brands.map((b) => (
@@ -106,13 +81,13 @@ export default function FilterSidebar({
 
       {/* Region */}
       <div className="space-y-2">
-        <Label className="text-emerald-900 font-medium">Vùng miền</Label>
+        <Label className="text-emerald-900 font-medium">Vung mien</Label>
         <Select
           value={region}
           onValueChange={(value) => onUpdateParams({ region: value })}
         >
           <SelectTrigger className="border-emerald-200 focus:ring-emerald-500">
-            <SelectValue placeholder="Chọn vùng miền" />
+            <SelectValue placeholder="Chon vung mien" />
           </SelectTrigger>
           <SelectContent>
             {regions.map((r) => (
@@ -126,13 +101,13 @@ export default function FilterSidebar({
 
       {/* Size */}
       <div className="space-y-2">
-        <Label className="text-emerald-900 font-medium">Kích cỡ</Label>
+        <Label className="text-emerald-900 font-medium">Kich co</Label>
         <Select
           value={size}
           onValueChange={(value) => onUpdateParams({ size: value })}
         >
           <SelectTrigger className="border-emerald-200 focus:ring-emerald-500">
-            <SelectValue placeholder="Chọn kích cỡ" />
+            <SelectValue placeholder="Chon kich co" />
           </SelectTrigger>
           <SelectContent>
             {sizes.map((s) => (
@@ -152,7 +127,7 @@ export default function FilterSidebar({
           className="w-full border-red-300 text-red-600 hover:bg-red-50 bg-transparent"
         >
           <X className="h-4 w-4 mr-2" />
-          Xóa bộ lọc
+          Xoa bo loc
         </Button>
       )}
     </div>
