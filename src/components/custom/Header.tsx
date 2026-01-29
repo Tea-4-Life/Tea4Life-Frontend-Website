@@ -1,13 +1,12 @@
-"use client";
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Menu, X, Leaf } from "lucide-react";
 
+// Cập nhật href để khớp với cấu hình router trong index.tsx
 const navLinks = [
   { name: "Trang chủ", href: "/" },
-  { name: "Sản phẩm", href: "/san-pham" },
+  { name: "Cửa hàng", href: "/shop" }, // Đã sửa từ /san-pham thành /shop
   { name: "Về chúng tôi", href: "/ve-chung-toi" },
   { name: "Liên hệ", href: "/lien-he" },
 ];
@@ -21,7 +20,8 @@ export default function Header() {
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-green-500">
+            {/* Cập nhật bg-linear-to-br cho Tailwind v4 */}
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-linear-to-br from-emerald-500 to-green-500">
               <Leaf className="h-5 w-5 text-white" />
             </div>
             <span className="text-xl font-bold text-emerald-800">Tea4Life</span>
@@ -42,9 +42,11 @@ export default function Header() {
 
           {/* CTA Button */}
           <div className="hidden md:block">
-            <Button className="bg-gradient-to-r from-emerald-500 to-green-500 text-white hover:from-emerald-600 hover:to-green-600">
-              Mua ngay
-            </Button>
+            <Link to="/shop">
+              <Button className="bg-linear-to-r from-emerald-500 to-green-500 text-white hover:from-emerald-600 hover:to-green-600">
+                Mua ngay
+              </Button>
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -75,9 +77,11 @@ export default function Header() {
                   {link.name}
                 </Link>
               ))}
-              <Button className="mt-2 w-full bg-gradient-to-r from-emerald-500 to-green-500 text-white hover:from-emerald-600 hover:to-green-600">
-                Mua ngay
-              </Button>
+              <Link to="/shop" onClick={() => setMobileMenuOpen(false)}>
+                <Button className="mt-2 w-full bg-linear-to-r from-emerald-500 to-green-500 text-white hover:from-emerald-600 hover:to-green-600">
+                  Mua ngay
+                </Button>
+              </Link>
             </nav>
           </div>
         )}
