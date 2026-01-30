@@ -2,7 +2,7 @@
 
 import { Link, Outlet, useLocation } from "react-router-dom";
 import { User, MapPin, Lock, Camera } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils.ts";
 
 const menuItems = [
   { name: "Thông tin chung", href: "/profile/general", icon: User },

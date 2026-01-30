@@ -1,20 +1,28 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
+
+// Layouts
 import RootLayout from "@/layouts/RootLayout";
-import LandingPage from "@/pages/landing";
-import AuthPage from "@/pages/auth";
-import ShopPage from "@/pages/shop";
-import ProductDetail from "@/pages/product-details/index.tsx";
-import OrderPage from "@/pages/orders";
-import OrderDetailPage from "@/pages/order-details";
-import CartPage from "@/pages/cart";
-import CheckoutPage from "@/pages/checkout";
-import BrandsListPage from "@/pages/brands";
-import CategoriesPage from "@/pages/categories";
-import ProfileLayout from "@/pages/profile/layout";
-import GeneralPage from "@/pages/profile/general";
-import AddressPage from "@/pages/profile/address";
-import SecurityPage from "@/pages/profile/security";
 import AdminLayout from "@/layouts/AdminLayout";
+import ProfileLayout from "@/pages/customer-route-pages/profile/layout";
+
+// Public Pages
+import LandingPage from "@/pages/public-route-pages/landing";
+import AuthPage from "@/pages/public-route-pages/auth";
+import ShopPage from "@/pages/public-route-pages/shop";
+import ProductDetail from "@/pages/public-route-pages/product-details/index.tsx";
+import CartPage from "@/pages/public-route-pages/cart";
+import BrandsListPage from "@/pages/public-route-pages/brands";
+import CategoriesPage from "@/pages/public-route-pages/categories";
+
+// Customer Pages
+import OrderPage from "@/pages/customer-route-pages/orders";
+import OrderDetailPage from "@/pages/customer-route-pages/order-details";
+import CheckoutPage from "@/pages/customer-route-pages/checkout";
+import GeneralPage from "@/pages/customer-route-pages/profile/general";
+import AddressPage from "@/pages/customer-route-pages/profile/address";
+import SecurityPage from "@/pages/customer-route-pages/profile/security";
+
+// Admin Pages
 import AdminDashboard from "@/pages/admin-route-pages/dashboard";
 import AdminProductsPage from "@/pages/admin-route-pages/products";
 import AdminOrdersPage from "@/pages/admin-route-pages/orders";
@@ -24,47 +32,57 @@ import AdminRegionsPage from "@/pages/admin-route-pages/regions";
 import AdminCategoriesPage from "@/pages/admin-route-pages/categories";
 import AdminBrandsPage from "@/pages/admin-route-pages/brands";
 
+// --- 1. NHÓM ROUTE CÔNG KHAI (PUBLIC) ---
+const publicRoutes = [
+  { index: true, element: <LandingPage /> },
+  { path: "auth", element: <AuthPage /> },
+  { path: "shop", element: <ShopPage /> },
+  { path: "shop/products/:id", element: <ProductDetail /> },
+  { path: "cart", element: <CartPage /> },
+  { path: "brands", element: <BrandsListPage /> },
+  { path: "categories", element: <CategoriesPage /> },
+];
+
+// --- 2. NHÓM ROUTE KHÁCH HÀNG (CUSTOMER) ---
+const customerRoutes = [
+  { path: "order", element: <OrderPage /> },
+  { path: "order/:id", element: <OrderDetailPage /> },
+  { path: "checkout", element: <CheckoutPage /> },
+  {
+    path: "profile",
+    element: <ProfileLayout />,
+    children: [
+      { index: true, element: <Navigate to="general" replace /> },
+      { path: "general", element: <GeneralPage /> },
+      { path: "address", element: <AddressPage /> },
+      { path: "security", element: <SecurityPage /> },
+    ],
+  },
+];
+
+// --- 3. NHÓM ROUTE QUẢN TRỊ (ADMIN) ---
+const adminRoutes = [
+  { index: true, element: <Navigate to="dashboard" replace /> },
+  { path: "dashboard", element: <AdminDashboard /> },
+  { path: "products", element: <AdminProductsPage /> },
+  { path: "orders", element: <AdminOrdersPage /> },
+  { path: "categories", element: <AdminCategoriesPage /> },
+  { path: "regions", element: <AdminRegionsPage /> },
+  { path: "brands", element: <AdminBrandsPage /> },
+  { path: "users", element: <AdminUsersPage /> },
+  { path: "reports", element: <AdminReportsPage /> },
+];
+
+// --- CẤU TRÌNH ROUTER CHÍNH ---
 export const router = createBrowserRouter([
   {
     path: "/",
     element: <RootLayout />,
-    children: [
-      { index: true, element: <LandingPage /> },
-      { path: "auth", element: <AuthPage /> },
-      { path: "shop", element: <ShopPage /> },
-      { path: "shop/products/:id", element: <ProductDetail /> },
-      { path: "order", element: <OrderPage /> },
-      { path: "order/:id", element: <OrderDetailPage /> },
-      {
-        path: "profile",
-        element: <ProfileLayout />,
-        children: [
-          { index: true, element: <Navigate to="general" replace /> },
-          { path: "general", element: <GeneralPage /> },
-          { path: "address", element: <AddressPage /> },
-          { path: "security", element: <SecurityPage /> },
-        ],
-      },
-      { path: "cart", element: <CartPage /> },
-      { path: "checkout", element: <CheckoutPage /> },
-      { path: "brands", element: <BrandsListPage /> },
-      { path: "categories", element: <CategoriesPage /> },
-    ],
+    children: [...publicRoutes, ...customerRoutes],
   },
-
   {
     path: "/admin",
     element: <AdminLayout />,
-    children: [
-      { index: true, element: <Navigate to="dashboard" replace /> },
-      { path: "dashboard", element: <AdminDashboard /> },
-      { path: "products", element: <AdminProductsPage /> },
-      { path: "orders", element: <AdminOrdersPage /> },
-      { path: "categories", element: <AdminCategoriesPage /> },
-      { path: "regions", element: <AdminRegionsPage /> },
-      { path: "brands", element: <AdminBrandsPage /> },
-      { path: "users", element: <AdminUsersPage /> },
-      { path: "reports", element: <AdminReportsPage /> },
-    ],
+    children: adminRoutes,
   },
 ]);

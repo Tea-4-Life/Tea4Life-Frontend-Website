@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { useSearchParams, Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button.tsx";
+import { Card, CardContent } from "@/components/ui/card.tsx";
 import {
   Search,
   SlidersHorizontal,
@@ -11,8 +11,8 @@ import {
   ChevronRight,
   Filter,
 } from "lucide-react";
-import FilterSidebar from "./components/FilterSidebar";
-import { brands, regions, sizes, allProducts } from "./constants";
+import FilterSidebar from "./components/FilterSidebar.tsx";
+import { brands, regions, sizes, allProducts } from "./constants.ts";
 
 const PAGE_SIZE = 8;
 

@@ -1,10 +1,10 @@
 "use client";
 
 import { useNavigate } from "react-router-dom";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card.tsx";
+import { Button } from "@/components/ui/button.tsx";
 import { Leaf, Coffee, Flower2, Sprout, ArrowRight } from "lucide-react";
-import { categories } from "@/pages/public-route-pages/shop/constants";
+import { categories } from "@/pages/public-route-pages/shop/constants.ts";
 
 const iconMap = {
   Leaf: Leaf,
