@@ -3,6 +3,7 @@ import { createBrowserRouter, Navigate } from "react-router-dom";
 // Layouts
 import RootLayout from "@/layouts/RootLayout";
 import AdminLayout from "@/layouts/AdminLayout";
+import DriverLayout from "@/layouts/DriverLayout"; // Đã chuyển về @/layouts
 import ProfileLayout from "@/pages/customer-route-pages/profile/layout";
 
 // Public Pages
@@ -31,6 +32,13 @@ import AdminReportsPage from "@/pages/admin-route-pages/reports";
 import AdminRegionsPage from "@/pages/admin-route-pages/regions";
 import AdminCategoriesPage from "@/pages/admin-route-pages/categories";
 import AdminBrandsPage from "@/pages/admin-route-pages/brands";
+
+// Driver Pages (Import theo kiểu folder con / index.tsx)
+import DriverDashboard from "@/pages/driver-route-pages/dashboard";
+import DriverOrders from "@/pages/driver-route-pages/orders";
+import DriverOrderDetail from "@/pages/driver-route-pages/order-details";
+// import DriverOrders from "@/pages/driver-route-pages/orders";
+// import DriverOrderDetail from "@/pages/driver-route-pages/order-details";
 
 // --- 1. NHÓM ROUTE CÔNG KHAI (PUBLIC) ---
 const publicRoutes = [
@@ -73,6 +81,14 @@ const adminRoutes = [
   { path: "reports", element: <AdminReportsPage /> },
 ];
 
+// --- 4. NHÓM ROUTE TÀI XẾ (DRIVER) ---
+const driverRoutes = [
+  { index: true, element: <Navigate to="dashboard" replace /> },
+  { path: "dashboard", element: <DriverDashboard /> },
+  { path: "orders", element: <DriverOrders /> },
+  { path: "orders/:id", element: <DriverOrderDetail /> },
+];
+
 // --- CẤU TRÌNH ROUTER CHÍNH ---
 export const router = createBrowserRouter([
   {
@@ -84,5 +100,10 @@ export const router = createBrowserRouter([
     path: "/admin",
     element: <AdminLayout />,
     children: adminRoutes,
+  },
+  {
+    path: "/driver",
+    element: <DriverLayout />,
+    children: driverRoutes,
   },
 ]);
