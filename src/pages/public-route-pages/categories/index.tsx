@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Leaf, Coffee, Flower2, Sprout, ArrowRight } from "lucide-react";
-import { categories } from "../shop/constants";
+import { categories } from "@/pages/public-route-pages/shop/constants";
 
 const iconMap = {
   Leaf: Leaf,

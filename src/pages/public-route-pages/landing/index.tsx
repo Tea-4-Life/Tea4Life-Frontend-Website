@@ -41,7 +41,7 @@ const banners = [
       "Thu hoạch từ những cây trà hàng trăm năm tuổi, phủ trắng lớp lông tuyết mịn màng.",
     image:
       "https://images.unsplash.com/photo-1594631252845-29fc4cc8cde9?q=80&w=1200&auto=format&fit=crop",
-    bgColor: "bg-[#0c4a6e]", // Blue 900 (Vibe núi cao, sương mù)
+    bgColor: "bg-[#0c4a6e]",
   },
   {
     title: "TRÀ SEN TÂY HỒ",
@@ -50,7 +50,7 @@ const banners = [
       "Sự kết hợp hoàn hảo giữa trà xanh Tân Cương thượng hạng và hương sen bách diệp hồ Tây.",
     image:
       "https://images.unsplash.com/photo-1576092768241-dec231879fc3?q=80&w=1200&auto=format&fit=crop",
-    bgColor: "bg-[#831843]", // Pink 900 (Hợp màu hoa sen)
+    bgColor: "bg-[#831843]",
   },
 ];
 
