@@ -1,7 +1,3 @@
-"use client";
-
-import { useState } from "react";
-import { Button } from "@/components/ui/button.tsx";
 import {
   Card,
   CardContent,
@@ -9,346 +5,83 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card.tsx";
-import { Input } from "@/components/ui/input.tsx";
-import { Label } from "@/components/ui/label.tsx";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs.tsx";
-import { Leaf, Mail, Lock, User, Eye, EyeOff } from "lucide-react";
+import { Button } from "@/components/ui/button.tsx";
+import { Leaf, LogIn, UserPlus } from "lucide-react";
 import { Link } from "react-router-dom";
+import keycloak from "@/lib/keycloak"; // Import file cấu hình của bạn
 
 export default function AuthPage() {
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  // Hàm xử lý điều hướng sang Keycloak Login
+  const handleLogin = () => {
+    keycloak.login();
+  };
+
+  // Hàm xử lý điều hướng sang Keycloak Register
+  const handleRegister = () => {
+    keycloak.register();
+  };
 
   return (
     <div className="flex min-h-[calc(100vh-160px)] items-center justify-center bg-gradient-to-br from-emerald-50 via-white to-green-50 px-4 py-12">
+      {/* Background Decor */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -left-40 -top-40 h-96 w-96 rounded-full bg-emerald-200/50 blur-3xl" />
         <div className="absolute -bottom-40 -right-40 h-96 w-96 rounded-full bg-green-200/50 blur-3xl" />
       </div>
 
       <Card className="relative w-full max-w-md border-emerald-100 shadow-xl">
-        <CardHeader className="text-center pb-2">
+        <CardHeader className="text-center pb-6">
           <Link to="/" className="mx-auto mb-4 flex items-center gap-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-green-500">
-              <Leaf className="h-5 w-5 text-white" />
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-green-500 shadow-lg">
+              <Leaf className="h-6 w-6 text-white" />
             </div>
-            <span className="text-xl font-bold text-emerald-800">Tea4Life</span>
+            <span className="text-2xl font-bold text-emerald-800">
+              Tea4Life
+            </span>
           </Link>
           <CardTitle className="text-2xl font-bold text-emerald-900">
-            Chào mừng bạn
+            Hệ thống xác thực
           </CardTitle>
           <CardDescription className="text-emerald-600">
-            Đăng nhập hoặc tạo tài khoản mới để tiếp tục
+            Vui lòng chọn phương thức để tiếp tục trải nghiệm
           </CardDescription>
         </CardHeader>
 
-        <CardContent>
-          <Tabs defaultValue="login" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 bg-emerald-100">
-              <TabsTrigger
-                value="login"
-                className="data-[state=active]:bg-white data-[state=active]:text-emerald-700"
-              >
-                Đăng nhập
-              </TabsTrigger>
-              <TabsTrigger
-                value="register"
-                className="data-[state=active]:bg-white data-[state=active]:text-emerald-700"
-              >
-                Đăng ký
-              </TabsTrigger>
-            </TabsList>
+        <CardContent className="space-y-4">
+          {/* Nút Đăng nhập - Gọi Keycloak Login */}
+          <Button
+            onClick={handleLogin}
+            className="w-full h-12 text-lg bg-gradient-to-r from-emerald-500 to-green-500 text-white hover:from-emerald-600 hover:to-green-600 shadow-md transition-all"
+          >
+            <LogIn className="mr-2 h-5 w-5" />
+            Đăng nhập ngay
+          </Button>
 
-            {/* Login Tab */}
-            <TabsContent value="login" className="mt-6">
-              <form className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="login-email" className="text-emerald-800">
-                    Email
-                  </Label>
-                  <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-emerald-500" />
-                    <Input
-                      id="login-email"
-                      type="email"
-                      placeholder="your@email.com"
-                      className="border-emerald-200 pl-10 focus-visible:ring-emerald-500"
-                    />
-                  </div>
-                </div>
+          {/* Nút Đăng ký - Gọi Keycloak Register */}
+          <Button
+            onClick={handleRegister}
+            variant="outline"
+            className="w-full h-12 text-lg border-emerald-200 text-emerald-700 hover:bg-emerald-50 transition-all"
+          >
+            <UserPlus className="mr-2 h-5 w-5" />
+            Tạo tài khoản mới
+          </Button>
 
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <Label
-                      htmlFor="login-password"
-                      className="text-emerald-800"
-                    >
-                      Mật khẩu
-                    </Label>
-                    <button
-                      type="button"
-                      className="text-sm text-emerald-600 hover:text-emerald-700 hover:underline"
-                    >
-                      Quên mật khẩu?
-                    </button>
-                  </div>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-emerald-500" />
-                    <Input
-                      id="login-password"
-                      type={showPassword ? "text" : "password"}
-                      placeholder="Nhập mật khẩu"
-                      className="border-emerald-200 pl-10 pr-10 focus-visible:ring-emerald-500"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-emerald-500 hover:text-emerald-700"
-                    >
-                      {showPassword ? (
-                        <EyeOff className="h-4 w-4" />
-                      ) : (
-                        <Eye className="h-4 w-4" />
-                      )}
-                    </button>
-                  </div>
-                </div>
+          <div className="relative my-8">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-emerald-100" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-white px-2 text-emerald-400">
+                Securely managed by Keycloak
+              </span>
+            </div>
+          </div>
 
-                <Button
-                  type="submit"
-                  className="w-full bg-gradient-to-r from-emerald-500 to-green-500 text-white hover:from-emerald-600 hover:to-green-600"
-                >
-                  Đăng nhập
-                </Button>
-
-                <div className="relative my-6">
-                  <div className="absolute inset-0 flex items-center">
-                    <div className="w-full border-t border-emerald-200" />
-                  </div>
-                  <div className="relative flex justify-center text-sm">
-                    <span className="bg-white px-2 text-emerald-500">
-                      Hoặc tiếp tục với
-                    </span>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    className="border-emerald-200 text-emerald-700 hover:bg-emerald-50 bg-transparent"
-                  >
-                    <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
-                      <path
-                        fill="currentColor"
-                        d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-                      />
-                      <path
-                        fill="currentColor"
-                        d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                      />
-                      <path
-                        fill="currentColor"
-                        d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
-                      />
-                      <path
-                        fill="currentColor"
-                        d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-                      />
-                    </svg>
-                    Google
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    className="border-emerald-200 text-emerald-700 hover:bg-emerald-50 bg-transparent"
-                  >
-                    <svg
-                      className="mr-2 h-4 w-4"
-                      fill="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-                    </svg>
-                    Facebook
-                  </Button>
-                </div>
-              </form>
-            </TabsContent>
-
-            {/* Register Tab */}
-            <TabsContent value="register" className="mt-6">
-              <form className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="register-name" className="text-emerald-800">
-                    Họ và tên
-                  </Label>
-                  <div className="relative">
-                    <User className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-emerald-500" />
-                    <Input
-                      id="register-name"
-                      type="text"
-                      placeholder="Nguyễn Văn A"
-                      className="border-emerald-200 pl-10 focus-visible:ring-emerald-500"
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="register-email" className="text-emerald-800">
-                    Email
-                  </Label>
-                  <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-emerald-500" />
-                    <Input
-                      id="register-email"
-                      type="email"
-                      placeholder="your@email.com"
-                      className="border-emerald-200 pl-10 focus-visible:ring-emerald-500"
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label
-                    htmlFor="register-password"
-                    className="text-emerald-800"
-                  >
-                    Mật khẩu
-                  </Label>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-emerald-500" />
-                    <Input
-                      id="register-password"
-                      type={showPassword ? "text" : "password"}
-                      placeholder="Tạo mật khẩu"
-                      className="border-emerald-200 pl-10 pr-10 focus-visible:ring-emerald-500"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-emerald-500 hover:text-emerald-700"
-                    >
-                      {showPassword ? (
-                        <EyeOff className="h-4 w-4" />
-                      ) : (
-                        <Eye className="h-4 w-4" />
-                      )}
-                    </button>
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label
-                    htmlFor="register-confirm"
-                    className="text-emerald-800"
-                  >
-                    Xác nhận mật khẩu
-                  </Label>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-emerald-500" />
-                    <Input
-                      id="register-confirm"
-                      type={showConfirmPassword ? "text" : "password"}
-                      placeholder="Nhập lại mật khẩu"
-                      className="border-emerald-200 pl-10 pr-10 focus-visible:ring-emerald-500"
-                    />
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setShowConfirmPassword(!showConfirmPassword)
-                      }
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-emerald-500 hover:text-emerald-700"
-                    >
-                      {showConfirmPassword ? (
-                        <EyeOff className="h-4 w-4" />
-                      ) : (
-                        <Eye className="h-4 w-4" />
-                      )}
-                    </button>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-2">
-                  <input
-                    type="checkbox"
-                    id="terms"
-                    className="mt-1 h-4 w-4 rounded border-emerald-300 text-emerald-600 focus:ring-emerald-500"
-                  />
-                  <label htmlFor="terms" className="text-sm text-emerald-700">
-                    Tôi đồng ý với{" "}
-                    <a href="#" className="text-emerald-600 hover:underline">
-                      Điều khoản dịch vụ
-                    </a>{" "}
-                    và{" "}
-                    <a href="#" className="text-emerald-600 hover:underline">
-                      Chính sách bảo mật
-                    </a>
-                  </label>
-                </div>
-
-                <Button
-                  type="submit"
-                  className="w-full bg-gradient-to-r from-emerald-500 to-green-500 text-white hover:from-emerald-600 hover:to-green-600"
-                >
-                  Tạo tài khoản
-                </Button>
-
-                <div className="relative my-6">
-                  <div className="absolute inset-0 flex items-center">
-                    <div className="w-full border-t border-emerald-200" />
-                  </div>
-                  <div className="relative flex justify-center text-sm">
-                    <span className="bg-white px-2 text-emerald-500">
-                      Hoặc đăng ký với
-                    </span>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    className="border-emerald-200 text-emerald-700 hover:bg-emerald-50 bg-transparent"
-                  >
-                    <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
-                      <path
-                        fill="currentColor"
-                        d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-                      />
-                      <path
-                        fill="currentColor"
-                        d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                      />
-                      <path
-                        fill="currentColor"
-                        d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
-                      />
-                      <path
-                        fill="currentColor"
-                        d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-                      />
-                    </svg>
-                    Google
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    className="border-emerald-200 text-emerald-700 hover:bg-emerald-50 bg-transparent"
-                  >
-                    <svg
-                      className="mr-2 h-4 w-4"
-                      fill="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-                    </svg>
-                    Facebook
-                  </Button>
-                </div>
-              </form>
-            </TabsContent>
-          </Tabs>
+          <p className="text-center text-xs text-emerald-500 px-4">
+            Bằng cách tiếp tục, bạn đồng ý với Điều khoản và Chính sách bảo mật
+            của Tea4Life.
+          </p>
         </CardContent>
       </Card>
     </div>
