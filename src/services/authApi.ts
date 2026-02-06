@@ -8,7 +8,6 @@ export const waitForUserSync = async (email: string): Promise<boolean> => {
   const MAX_RETRIES = 10;
   for (let i = 0; i < MAX_RETRIES; i++) {
     try {
-      // Lưu ý: Đảm bảo path /api/v1/... khớp với Controller bạn đã viết
       const response = await axios.get<ApiResponse<UserStatusResponse>>(
         `${USER_SERVICE_URL}/api/v1/users/exists/${email}`,
       );
@@ -16,9 +15,9 @@ export const waitForUserSync = async (email: string): Promise<boolean> => {
       const { userStatus } = response.data.data;
       if (userStatus === "SUCCESS") return true;
 
-      console.log(`>>>> [SYNC] ${userStatus}... lần ${i + 1}`);
+      console.log(`[Tea4Life] Đồng bộ ${userStatus}... lần ${i + 1}`);
     } catch (err) {
-      console.error(">>>> [SYNC] Kết nối thất bại...", err);
+      console.error("[Tea4Life] Đồng bộ thất bại", err);
     }
     await new Promise((resolve) => setTimeout(resolve, 1500));
   }

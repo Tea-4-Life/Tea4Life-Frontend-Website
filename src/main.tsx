@@ -23,20 +23,20 @@ const bootstrap = async () => {
       const email = keycloak.tokenParsed?.email || "";
 
       const isReady = await waitForUserSync(email);
-      if (!isReady) console.error(">>>> [SYNC] Timeout!");
+      if (!isReady) console.error("[Tea4Life] Hết thời gian đồng bộ");
 
       store.dispatch(setAuthSuccess({ email, roles: "" }));
 
       keycloak.onTokenExpired = () => {
         keycloak.updateToken(70).then((refreshed) => {
-          if (refreshed) console.log("Token refreshed");
+          if (refreshed) console.log("[Tea4Life] Làm mới token thành công");
         });
       };
     } else {
       store.dispatch(clearAuth());
     }
   } catch (err) {
-    console.error("Auth Initialization Failed:", err);
+    console.error("[Tea4Life] Khởi tạo tính năng Auth thất bại:", err);
     store.dispatch(setAuthFailure());
   } finally {
     root.render(
