@@ -1,5 +1,3 @@
-"use client";
-
 import { useNavigate } from "react-router-dom";
 import {
   DropdownMenu,
@@ -11,6 +9,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { User, LogOut, PackageSearch, UserCircle } from "lucide-react";
+import keycloak from "@/lib/keycloak";
 
 interface UserMenuProps {
   user: {
@@ -24,8 +23,7 @@ export function UserMenu({ user }: UserMenuProps) {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    // Xử lý logic xóa token/session ở đây nếu có
-    navigate("/auth");
+    keycloak.logout({ redirectUri: window.location.origin });
   };
 
   return (
@@ -47,7 +45,7 @@ export function UserMenu({ user }: UserMenuProps) {
             )}
           </div>
           <span className="text-sm font-medium text-emerald-800 hidden lg:block">
-            {user.name}
+            {user.name || user.email}
           </span>
         </Button>
       </DropdownMenuTrigger>
@@ -55,7 +53,7 @@ export function UserMenu({ user }: UserMenuProps) {
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
             <p className="text-sm font-medium leading-none text-emerald-900">
-              {user.name}
+              {user.name || "Người dùng"}
             </p>
             <p className="text-xs leading-none text-emerald-500">
               {user.email}
@@ -65,14 +63,14 @@ export function UserMenu({ user }: UserMenuProps) {
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={() => navigate("/profile")}
-          className="cursor-pointer focus:bg-emerald-50 focus:text-emerald-900"
+          className="cursor-pointer focus:bg-emerald-50"
         >
           <UserCircle className="mr-2 h-4 w-4 text-emerald-600" />
           <span>Thông tin cá nhân</span>
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => navigate("/order")}
-          className="cursor-pointer focus:bg-emerald-50 focus:text-emerald-900"
+          className="cursor-pointer focus:bg-emerald-50"
         >
           <PackageSearch className="mr-2 h-4 w-4 text-emerald-600" />
           <span>Đơn hàng của tôi</span>
@@ -80,7 +78,7 @@ export function UserMenu({ user }: UserMenuProps) {
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={handleLogout}
-          className="cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50"
+          className="cursor-pointer text-red-600 focus:bg-red-50"
         >
           <LogOut className="mr-2 h-4 w-4" />
           <span>Đăng xuất</span>
