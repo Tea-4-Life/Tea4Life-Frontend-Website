@@ -8,7 +8,6 @@ import ProfileLayout from "@/pages/customer-route-pages/profile/layout";
 
 // Public Pages
 import LandingPage from "@/pages/public-route-pages/landing";
-import AuthPage from "@/pages/public-route-pages/auth";
 import ShopPage from "@/pages/public-route-pages/shop";
 import ProductDetail from "@/pages/public-route-pages/product-details/index.tsx";
 import CartPage from "@/pages/public-route-pages/cart";
@@ -43,7 +42,6 @@ import DriverOrderDetail from "@/pages/driver-route-pages/order-details";
 // --- 1. NHÓM ROUTE CÔNG KHAI (PUBLIC) ---
 const publicRoutes = [
   { index: true, element: <LandingPage /> },
-  { path: "auth", element: <AuthPage /> },
   { path: "shop", element: <ShopPage /> },
   { path: "shop/products/:id", element: <ProductDetail /> },
   { path: "cart", element: <CartPage /> },
