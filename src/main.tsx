@@ -22,7 +22,7 @@ const bootstrap = async () => {
     if (keycloak.authenticated) {
       const email = keycloak.tokenParsed?.email || "";
 
-      const isReady = await waitForUserSync(email);
+      const isReady = await waitForUserSync();
       if (!isReady) console.error("[Tea4Life] Hết thời gian đồng bộ");
 
       store.dispatch(setAuthSuccess({ email, roles: "" }));

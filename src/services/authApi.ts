@@ -1,15 +1,21 @@
 import axios from "axios";
 import type ApiResponse from "@/types/base/ApiResponse";
 import type UserStatusResponse from "@/types/user/UserStatusResponse";
+import keycloak from "@/lib/keycloak";
 
-const USER_SERVICE_URL = import.meta.env.VITE_USER_SERVICE_BACKEND_BASE_URL;
+const GATEWAY_BASE_URL = import.meta.env.VITE_GATEWAY_BASE_URL;
 
-export const waitForUserSync = async (email: string): Promise<boolean> => {
+export const waitForUserSync = async (): Promise<boolean> => {
   const MAX_RETRIES = 10;
   for (let i = 0; i < MAX_RETRIES; i++) {
     try {
       const response = await axios.get<ApiResponse<UserStatusResponse>>(
-        `${USER_SERVICE_URL}/api/v1/users/exists/${email}`,
+        `${GATEWAY_BASE_URL}/user-service/users/exists`,
+        {
+          headers: {
+            Authorization: `Bearer ${keycloak.token}`,
+          },
+        },
       );
 
       const { userStatus } = response.data.data;
