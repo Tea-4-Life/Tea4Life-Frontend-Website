@@ -128,7 +128,7 @@ export default function LandingPage() {
               {banners.map((banner, index) => (
                 <CarouselItem key={index}>
                   <div
-                    className={`relative h-[350px] md:h-[450px] w-full ${banner.bgColor}`}
+                    className={`relative h-87.5 md:h-112.5 w-full ${banner.bgColor}`}
                   >
                     <div className="absolute inset-0 flex items-center px-10 md:px-20 text-white z-10">
                       <div className="max-w-xl space-y-4">
@@ -151,10 +151,10 @@ export default function LandingPage() {
                     </div>
                     {/* Background Image Layer */}
                     <div className="absolute right-0 top-0 h-full w-full md:w-3/5 select-none overflow-hidden">
-                      <div className="absolute inset-0 bg-gradient-to-r from-inherit via-transparent to-transparent z-[1]" />
+                      <div className="absolute inset-0 bg-linear-to-r from-inherit via-transparent to-transparent z-1" />
                       <img
                         src={banner.image}
-                        className="h-full w-full object-cover opacity-60 md:opacity-80 transition-transform duration-[5000ms] hover:scale-110"
+                        className="h-full w-full object-cover opacity-60 md:opacity-80 transition-transform duration-5000 hover:scale-110"
                         alt={banner.title}
                       />
                     </div>
@@ -187,7 +187,7 @@ export default function LandingPage() {
             {categories.map((cat) => (
               <div
                 key={cat.name}
-                className="flex flex-col items-center gap-4 min-w-[110px] cursor-pointer group"
+                className="flex flex-col items-center gap-4 min-w-27.5 cursor-pointer group"
               >
                 <div
                   className={`h-24 w-24 ${cat.color} rounded-full flex items-center justify-center text-4xl shadow-sm transition-all duration-300 group-hover:-translate-y-2 group-hover:shadow-xl border-4 border-white`}
