@@ -12,18 +12,44 @@ import {
 import { initKeycloakSession } from "@/lib/auth-init";
 import "./index.css";
 import { waitForUserSync } from "./services/authApi.ts";
+import LoadingScreen from "./components/custom/LoadingScreen.tsx";
 
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 const root = createRoot(document.getElementById("root")!);
 
 const bootstrap = async () => {
+  root.render(
+    <LoadingScreen
+      title="Tea4Life"
+      subtitle="Đang khởi tạo kết nối bảo mật..."
+    />,
+  );
+
   try {
     await initKeycloakSession();
 
     if (keycloak.authenticated) {
       const email = keycloak.tokenParsed?.email || "";
 
+      root.render(
+        <LoadingScreen
+          title="Tea4Life"
+          subtitle="Đang chuẩn bị không gian trà cho bạn..."
+        />,
+      );
+      await delay(3000);
+
+      root.render(
+        <LoadingScreen
+          title="Tea4Life"
+          subtitle="Đang đồng bộ dữ liệu tài khoản từ hệ thống..."
+        />,
+      );
       const isReady = await waitForUserSync();
-      if (!isReady) console.error("[Tea4Life] Hết thời gian đồng bộ");
+
+      if (!isReady) {
+        console.error("[Tea4Life] Hết thời gian đồng bộ");
+      }
 
       store.dispatch(setAuthSuccess({ email, roles: "" }));
 
