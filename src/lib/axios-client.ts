@@ -5,6 +5,7 @@ import axios, {
   type AxiosError,
 } from "axios";
 import keycloak from "@/lib/keycloak";
+import { store, clearAuth } from "@/features/store";
 
 /*
 ===========================================================
@@ -116,6 +117,7 @@ axiosClient.interceptors.response.use(
           })
           .catch((err: unknown) => {
             processQueue(err, null);
+            store.dispatch(clearAuth());
             keycloak.logout();
             reject(err);
           })

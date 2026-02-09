@@ -4,12 +4,7 @@ import {
   useDispatch,
   useSelector,
 } from "react-redux";
-import authReducer, {
-  setAuthSuccess,
-  setAuthFailure,
-  clearAuth,
-  setLoadingRole,
-} from "./auth/authSlice";
+import authReducer, { setAuthFailure, clearAuth } from "./auth/authSlice";
 
 export const store = configureStore({
   reducer: {
@@ -21,7 +16,7 @@ export const store = configureStore({
     }),
 });
 
-export { setAuthSuccess, setAuthFailure, clearAuth, setLoadingRole };
+export { setAuthFailure, clearAuth };
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
