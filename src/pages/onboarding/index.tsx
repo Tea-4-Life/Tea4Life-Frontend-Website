@@ -25,6 +25,7 @@ import keycloak from "@/lib/keycloak";
 import type { OnboardingRequest } from "@/types/user/OnboardingRequest";
 import { executeOnboarding } from "@/features/auth/authThunk";
 import { useAuth } from "@/features/auth/useAuth";
+import ImageCropperComponent from "@/components/custom/ImageCropperComponent";
 
 export default function OnboardingPage() {
   const dispatch = useAppDispatch();
@@ -42,7 +43,13 @@ export default function OnboardingPage() {
   const [isUploading, setIsUploading] = useState(false); // Vẫn dùng cho bước upload S3
   const [errors, setErrors] = useState<Record<string, string>>({});
 
+  // --- State cho Image Cropper ---
+  const [cropperOpen, setCropperOpen] = useState(false);
+  const [cropperSrc, setCropperSrc] = useState<string | null>(null);
+
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const AVATAR_MAX_SIZE = 150;
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -60,13 +67,41 @@ export default function OnboardingPage() {
       return;
     }
 
-    setAvatarFile(file);
-    setAvatarPreview(URL.createObjectURL(file));
     setErrors((prev) => {
       const next = { ...prev };
       delete next.avatar;
       return next;
     });
+
+    // Kiểm tra kích thước ảnh để quyết định có cần crop không
+    const img = new Image();
+    const objectUrl = URL.createObjectURL(file);
+    img.onload = () => {
+      if (
+        img.width > AVATAR_MAX_SIZE ||
+        img.height > AVATAR_MAX_SIZE ||
+        img.width !== img.height
+      ) {
+        // Ảnh to hoặc không vuông → mở cropper
+        setCropperSrc(objectUrl);
+        setCropperOpen(true);
+      } else {
+        // Ảnh nhỏ và vuông → dùng trực tiếp
+        setAvatarFile(file);
+        setAvatarPreview(objectUrl);
+      }
+    };
+    img.src = objectUrl;
+
+    // Reset input để có thể chọn lại cùng 1 file
+    e.target.value = "";
+  };
+
+  const handleCropComplete = (croppedFile: File) => {
+    setAvatarFile(croppedFile);
+    setAvatarPreview(URL.createObjectURL(croppedFile));
+    setCropperOpen(false);
+    setCropperSrc(null);
   };
 
   const validate = (): boolean => {
@@ -210,7 +245,7 @@ export default function OnboardingPage() {
                   htmlFor="fullName"
                   className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1"
                 >
-                  Họ và tên
+                  Họ và tên <span className="text-red-500">*</span>
                 </Label>
                 <div className="relative">
                   <User className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
@@ -234,7 +269,7 @@ export default function OnboardingPage() {
                   htmlFor="phone"
                   className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1"
                 >
-                  Số điện thoại
+                  Số điện thoại <span className="text-red-500">*</span>
                 </Label>
                 <div className="relative">
                   <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
@@ -259,11 +294,12 @@ export default function OnboardingPage() {
                     htmlFor="dob"
                     className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1"
                   >
-                    Ngày sinh
+                    Ngày sinh <span className="text-red-500">*</span>
                   </Label>
                   <Input
                     id="dob"
                     type="date"
+                    max="2010-12-31"
                     value={dob}
                     onChange={(e) => setDob(e.target.value)}
                     className="h-12 rounded-2xl bg-white border-slate-200 focus:ring-emerald-500"
@@ -277,7 +313,7 @@ export default function OnboardingPage() {
 
                 <div className="space-y-2">
                   <Label className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1">
-                    Giới tính
+                    Giới tính <span className="text-red-500">*</span>
                   </Label>
                   <Select
                     value={gender}
@@ -311,21 +347,21 @@ export default function OnboardingPage() {
             )}
 
             {/* Actions */}
-            <div className="pt-4 space-y-4">
+            <div className="pt-4 space-y-3">
               <Button
                 type="submit"
                 disabled={isLoading || isUploading}
-                className="w-full h-14 bg-emerald-700 hover:bg-emerald-800 text-white rounded-2xl font-bold shadow-lg shadow-emerald-200 transition-all flex items-center justify-center gap-2 group active:scale-[0.98]"
+                className="w-full h-11 bg-emerald-700 hover:bg-emerald-800 text-white rounded-2xl text-sm font-semibold shadow-md shadow-emerald-200/50 transition-all flex items-center justify-center gap-2 group active:scale-[0.98]"
               >
                 {isLoading || isUploading ? (
                   <>
-                    <Loader2 className="h-5 w-5 animate-spin" />
+                    <Loader2 className="h-4 w-4 animate-spin" />
                     {isUploading ? "Đang tải ảnh..." : "Đang xử lý hồ sơ..."}
                   </>
                 ) : (
                   <>
-                    Hoàn tất và tham gia ngay
-                    <ChevronRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                    Hoàn tất
+                    <ChevronRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
                   </>
                 )}
               </Button>
@@ -342,6 +378,20 @@ export default function OnboardingPage() {
           </form>
         </div>
       </div>
+
+      {/* Image Cropper Modal */}
+      {cropperSrc && (
+        <ImageCropperComponent
+          imageSrc={cropperSrc}
+          open={cropperOpen}
+          onClose={() => {
+            setCropperOpen(false);
+            setCropperSrc(null);
+          }}
+          onCropComplete={handleCropComplete}
+          outputSize={AVATAR_MAX_SIZE}
+        />
+      )}
     </div>
   );
 }

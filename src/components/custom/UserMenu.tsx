@@ -8,7 +8,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { User, LogOut, PackageSearch, UserCircle } from "lucide-react";
+import { LogOut, PackageSearch, UserCircle } from "lucide-react";
+import { getNameInitials } from "@/lib/utils";
 import keycloak from "@/lib/keycloak";
 
 interface UserMenuProps {
@@ -21,7 +22,6 @@ interface UserMenuProps {
 
 export function UserMenu({ user }: UserMenuProps) {
   const navigate = useNavigate();
-
   const handleLogout = () => {
     keycloak.logout({ redirectUri: window.location.origin });
   };
@@ -41,7 +41,9 @@ export function UserMenu({ user }: UserMenuProps) {
                 className="h-full w-full object-cover"
               />
             ) : (
-              <User className="h-5 w-5 text-emerald-600" />
+              <span className="text-xs font-bold text-emerald-600">
+                {getNameInitials(user.name)}
+              </span>
             )}
           </div>
           <span className="text-sm font-medium text-emerald-800 hidden lg:block">
@@ -55,9 +57,11 @@ export function UserMenu({ user }: UserMenuProps) {
             <p className="text-sm font-medium leading-none text-emerald-900">
               {user.name || "Người dùng"}
             </p>
-            <p className="text-xs leading-none text-emerald-500">
-              {user.email}
-            </p>
+            {user.email && (
+              <p className="text-xs leading-none text-emerald-500">
+                {user.email}
+              </p>
+            )}
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />

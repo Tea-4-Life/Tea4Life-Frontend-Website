@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { UserMenu } from "@/components/custom/UserMenu";
 import { useAuth } from "@/features/auth/useAuth";
+import { getMediaUrl } from "@/lib/utils";
 import keycloak from "@/lib/keycloak";
 import {
   Menu,
@@ -22,7 +23,7 @@ const navLinks = [
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { isAuthenticated, email, initialized } = useAuth();
+  const { isAuthenticated, fullName, email, avatarUrl, initialized } = useAuth();
   const cartCount = 0;
 
   const handleLogin = () => keycloak.login();
@@ -77,7 +78,7 @@ export default function Header() {
               {!initialized ? (
                 <div className="h-8 w-8 animate-pulse rounded-full bg-emerald-100" />
               ) : isAuthenticated ? (
-                <UserMenu user={{ name: "", email: email || "" }} />
+                <UserMenu user={{ name: fullName || "", email: email || "", avatar: getMediaUrl(avatarUrl) }} />
               ) : (
                 <Button
                   onClick={handleLogin}
