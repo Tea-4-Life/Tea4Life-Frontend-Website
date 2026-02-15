@@ -21,6 +21,7 @@ import { Save, Calendar as CalendarIcon, Loader2 } from "lucide-react";
 import type { UserProfileResponse } from "@/types/user/UserProfileResponse";
 import { useAppDispatch } from "@/features/store";
 import { executeUpdateProfile } from "@/features/auth/authThunk";
+import { toast } from "sonner";
 
 interface ProfileContext {
   profile: UserProfileResponse | null;
@@ -33,7 +34,6 @@ export default function GeneralPage() {
   const dispatch = useAppDispatch();
 
   const [saving, setSaving] = useState(false);
-  const [saveMessage, setSaveMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
   const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
@@ -153,35 +153,22 @@ export default function GeneralPage() {
           </div>
         )}
 
-        {saveMessage && (
-          <div
-            className={`p-3 rounded-lg text-sm font-medium ${
-              saveMessage.type === "success"
-                ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
-                : "bg-red-50 text-red-700 border border-red-200"
-            }`}
-          >
-            {saveMessage.text}
-          </div>
-        )}
-
         <Button
           disabled={saving}
           onClick={async () => {
             if (!fullName.trim() || !phone.trim() || !dob || !gender) {
-              setSaveMessage({ type: "error", text: "Vui lòng điền đầy đủ thông tin bắt buộc." });
+              toast.error("Vui lòng điền đầy đủ thông tin bắt buộc.");
               return;
             }
             setSaving(true);
-            setSaveMessage(null);
             try {
               await dispatch(
                 executeUpdateProfile({ fullName: fullName.trim(), phone: phone.trim(), dob, gender: gender as "MALE" | "FEMALE" | "OTHER" })
               ).unwrap();
               await refetchProfile();
-              setSaveMessage({ type: "success", text: "Cập nhật hồ sơ thành công!" });
+              toast.success("Cập nhật hồ sơ thành công!");
             } catch {
-              setSaveMessage({ type: "error", text: "Cập nhật thất bại. Vui lòng thử lại." });
+              toast.error("Cập nhật thất bại. Vui lòng thử lại.");
             } finally {
               setSaving(false);
             }

@@ -2,6 +2,7 @@ import axiosClient from "@/lib/axios-client";
 import type ApiResponse from "@/types/base/ApiResponse";
 import type { OnboardingRequest } from "@/types/user/OnboardingRequest";
 import type { UpdateAvatarRequest } from "@/types/user/UpdateAvatarRequest";
+import type { UpdatePasswordRequest } from "@/types/user/UpdatePasswordRequest";
 import type { UpdateProfileRequest } from "@/types/user/UpdateProfileRequest";
 import type { UserProfileResponse } from "@/types/user/UserProfileResponse";
 import type UserStatusResponse from "@/types/user/UserStatusResponse";
@@ -50,6 +51,13 @@ export const updateUserProfileApi = async (data: UpdateProfileRequest) => {
 export const updateUserAvatarApi = async (data: UpdateAvatarRequest) => {
   return await axiosClient.post<ApiResponse<void>>(
     `/user-service/users/me/avatar`,
+    data
+  );
+};
+
+export const updateUserPasswordApi = async (data: UpdatePasswordRequest) => {
+  return await axiosClient.post<ApiResponse<void>>(
+    `/user-service/users/me/password`,
     data
   );
 };
