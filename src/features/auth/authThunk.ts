@@ -1,5 +1,10 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { checkUserStatusApi, processOnboardingApi, updateUserProfileApi, updateUserAvatarApi } from "@/services/userApi";
+import {
+  checkUserStatusApi,
+  processOnboardingApi,
+  updateUserProfileApi,
+  updateUserAvatarApi,
+} from "@/services/userApi";
 import { handleUpload } from "@/services/storageApi";
 import type { OnboardingRequest } from "@/types/user/OnboardingRequest";
 import type { UpdateProfileRequest } from "@/types/user/UpdateProfileRequest";

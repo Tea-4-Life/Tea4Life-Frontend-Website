@@ -1,5 +1,5 @@
 export interface UpsertPermissionRequest {
   name: string;
-  group: string;
+  permissionGroup: string;
   description: string;
 }

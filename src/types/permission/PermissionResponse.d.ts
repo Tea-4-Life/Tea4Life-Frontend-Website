@@ -1,6 +1,6 @@
 export interface PermissionResponse {
   id: string;
   name: string;
-  group: string;
+  permissionGroup: string;
   description: string;
 }
