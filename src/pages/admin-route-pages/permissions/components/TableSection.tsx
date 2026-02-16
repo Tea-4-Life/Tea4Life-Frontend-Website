@@ -1,5 +1,5 @@
 import React from "react";
-import { Plus, Edit2, Trash2, MoreVertical } from "lucide-react";
+import { Plus, Edit2, Trash2 } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -8,22 +8,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
 import EmptyState from "@/components/custom/EmptyState";
 import type { PermissionResponse } from "@/types/permission/PermissionResponse";
 
 interface TableSectionProps {
   loading: boolean;
   data: PermissionResponse[];
-  totalElements: number;
   onCreateOpen: () => void;
   onEdit: (permission: PermissionResponse) => void;
   onDelete: (id: string) => void;
@@ -32,154 +23,142 @@ interface TableSectionProps {
 const TableSection: React.FC<TableSectionProps> = ({
   loading,
   data,
-  totalElements,
   onCreateOpen,
   onEdit,
   onDelete,
 }) => {
   return (
-    <Card className="border-none shadow-sm rounded-3xl overflow-hidden bg-white">
-      <div className="p-6 border-b border-emerald-50 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="flex items-center gap-2">
-          <Badge
-            variant="secondary"
-            className="bg-emerald-50 text-emerald-700 border-emerald-100 px-3 py-1 rounded-lg"
-          >
-            Tổng số: {totalElements}
-          </Badge>
+    <div className="space-y-6">
+      {/* Table Header Controls - Balanced Layout */}
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 px-4">
+        <div className="flex flex-col">
+          <h2 className="text-2xl font-black text-slate-800 tracking-tight">
+            Danh sách quyền hạn
+          </h2>
+          <p className="text-sm text-slate-500 font-medium">
+            Quản lý và thiết lập các cấp độ truy cập trong hệ thống
+          </p>
         </div>
 
         <Button
           onClick={onCreateOpen}
-          className="bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl shadow-lg shadow-emerald-100 gap-2 px-6"
+          className="bg-emerald-500 hover:bg-emerald-600 text-white rounded-2xl shadow-lg shadow-emerald-200/50 gap-2 px-8 h-12 font-bold transition-all active:scale-95 whitespace-nowrap"
         >
-          <Plus className="h-4 w-4" />
-          Tạo quyền mới
+          <Plus className="h-5 w-5" />
+          Tạo quyền hạn mới
         </Button>
       </div>
 
-      <CardContent className="p-0">
+      {/* Main Table Container with Min-Height */}
+      <div className="overflow-hidden border border-emerald-200 rounded-[2rem] bg-white shadow-sm min-h-[500px] flex flex-col">
         {loading ? (
-          <div className="py-20 flex flex-col items-center justify-center">
-            <div className="h-10 w-10 animate-spin rounded-full border-4 border-emerald-500 border-t-transparent" />
-            <p className="text-slate-500 mt-4 font-medium italic">
-              Đang tải dữ liệu...
+          <div className="flex-1 flex flex-col items-center justify-center bg-white">
+            <div className="h-12 w-12 animate-spin rounded-full border-4 border-emerald-500 border-t-transparent" />
+            <p className="text-slate-500 mt-4 font-bold italic tracking-wide">
+              Đang chuẩn bị dữ liệu...
             </p>
           </div>
         ) : (
-          <Table className="border border-emerald-50">
-            <TableHeader className="bg-slate-50/50">
-              <TableRow className="hover:bg-transparent border-emerald-50">
-                <TableHead className="w-[120px] font-bold text-slate-700 pl-6 border-r border-emerald-50">
-                  ID
-                </TableHead>
-                <TableHead className="font-bold text-slate-700 border-r border-emerald-50">
-                  Tên quyền
-                </TableHead>
-                <TableHead className="font-bold text-slate-700 border-r border-emerald-50">
-                  Nhóm quyền
-                </TableHead>
-                <TableHead className="font-bold text-slate-700 border-r border-emerald-50">
-                  Mô tả
-                </TableHead>
-                <TableHead className="text-right pr-6 font-bold text-slate-700">
-                  Thao tác
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {data.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={5} className="h-auto p-0">
-                    <div className="p-8">
-                      <EmptyState
-                        title="Chưa có quyền hạn nào"
-                        description="Hệ thống chưa tìm thấy dữ liệu quyền hạn nào phù hợp."
-                        actionLabel="Tạo quyền đầu tiên"
-                        onAction={onCreateOpen}
-                        className="border-none shadow-none bg-transparent"
-                      />
-                    </div>
-                  </TableCell>
+          <div className="flex-1">
+            <Table>
+              <TableHeader className="bg-emerald-50/50 transition-colors">
+                <TableRow className="hover:bg-transparent border-emerald-200">
+                  <TableHead className="w-[120px] font-black text-slate-700 pl-8 border-r border-emerald-200 uppercase text-[11px] tracking-wider text-left">
+                    Mã ID
+                  </TableHead>
+                  <TableHead className="font-black text-slate-700 border-r border-emerald-200 uppercase text-[11px] tracking-wider text-left pl-6">
+                    Tên quyền hạn
+                  </TableHead>
+                  <TableHead className="font-black text-slate-700 border-r border-emerald-200 uppercase text-[11px] tracking-wider text-left pl-6">
+                    Nhóm phân loại
+                  </TableHead>
+                  <TableHead className="font-black text-slate-700 border-r border-emerald-200 uppercase text-[11px] tracking-wider text-left pl-6">
+                    Chi tiết mô tả
+                  </TableHead>
+                  <TableHead className="pr-8 font-black text-slate-700 uppercase text-[11px] tracking-wider text-center">
+                    Thao tác
+                  </TableHead>
                 </TableRow>
-              ) : (
-                data.map((item) => (
-                  <TableRow
-                    key={item.id}
-                    className="group hover:bg-emerald-50/30 border-emerald-50 transition-colors"
-                  >
-                    <TableCell className="font-mono text-xs text-slate-500 pl-6 border-r border-emerald-50">
-                      #{item.id}
+              </TableHeader>
+              <TableBody>
+                {data.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={5} className="h-[400px] p-0">
+                      <EmptyState
+                        title="Chưa có dữ liệu"
+                        description="Hiện tại chưa có quyền hạn nào được định nghĩa trong hệ thống."
+                        actionLabel="Bắt đầu tạo mới"
+                        onAction={onCreateOpen}
+                        className="border-none shadow-none bg-white"
+                      />
                     </TableCell>
-                    <TableCell className="font-semibold text-slate-700 border-r border-emerald-50">
-                      {item.name}
-                    </TableCell>
-                    <TableCell className="border-r border-emerald-50">
-                      <Badge className="bg-emerald-50 text-emerald-600 border-none px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider">
-                        {item.permissionGroup}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-slate-500 max-w-[300px] truncate border-r border-emerald-50">
-                      {item.description || "Không có mô tả"}
-                    </TableCell>
-                    <TableCell className="text-right pr-6">
-                      <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8 rounded-lg text-emerald-600 hover:bg-emerald-100"
-                          onClick={() => onEdit(item)}
-                        >
-                          <Edit2 className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8 rounded-lg text-red-500 hover:bg-red-50"
-                          onClick={() => onDelete(item.id)}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
-                      <div className="group-hover:hidden">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
+                  </TableRow>
+                ) : (
+                  <>
+                    {data.map((item) => (
+                      <TableRow
+                        key={item.id}
+                        className="group hover:bg-emerald-50/40 border-emerald-200 transition-colors h-20"
+                      >
+                        <TableCell className="font-mono text-[14px] font-medium text-slate-500 pl-8 border-r border-emerald-100/50 text-left">
+                          #{item.id}
+                        </TableCell>
+                        <TableCell className="text-[14px] font-medium text-slate-600 border-r border-emerald-100/50 text-left pl-6">
+                          {item.name}
+                        </TableCell>
+                        <TableCell className="text-[14px] font-medium text-slate-600 border-r border-emerald-100/50 text-left pl-6">
+                          {item.permissionGroup}
+                        </TableCell>
+                        <TableCell className="text-[14px] font-medium text-slate-500 border-r border-emerald-100/50 text-left pl-6 max-w-[400px] truncate">
+                          {item.description || "—"}
+                        </TableCell>
+                        <TableCell className="pr-8 text-center bg-slate-50/30">
+                          <div className="flex items-center justify-center gap-2">
                             <Button
                               variant="ghost"
                               size="icon"
-                              className="h-8 w-8 text-slate-400"
-                            >
-                              <MoreVertical className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent
-                            align="end"
-                            className="rounded-xl border-emerald-50 shadow-lg shadow-emerald-100/20"
-                          >
-                            <DropdownMenuItem
-                              className="gap-2 text-emerald-600 focus:text-emerald-700 focus:bg-emerald-50 cursor-pointer"
+                              className="h-10 w-10 rounded-2xl text-emerald-600 hover:bg-emerald-100 hover:text-emerald-700 transition-all active:scale-95 group"
                               onClick={() => onEdit(item)}
+                              title="Chỉnh sửa"
                             >
-                              <Edit2 className="h-4 w-4" /> Sửa
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              className="gap-2 text-red-600 focus:text-red-700 focus:bg-red-50 cursor-pointer"
+                              <Edit2 className="h-4.5 w-4.5 group-hover:rotate-12 transition-transform" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-10 w-10 rounded-2xl text-red-500 hover:bg-red-50 hover:text-red-600 transition-all active:scale-95 group"
                               onClick={() => onDelete(item.id)}
+                              title="Xóa"
                             >
-                              <Trash2 className="h-4 w-4" /> Xóa
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
+                              <Trash2 className="h-4.5 w-4.5 group-hover:scale-110 transition-transform" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                    {/* Empty Spacer Rows */}
+                    {Array.from({ length: Math.max(0, 5 - data.length) }).map(
+                      (_, index) => (
+                        <TableRow
+                          key={`empty-${index}`}
+                          className="h-20 border-emerald-100/30 hover:bg-transparent"
+                        >
+                          <TableCell className="border-r border-emerald-100/20" />
+                          <TableCell className="border-r border-emerald-100/20" />
+                          <TableCell className="border-r border-emerald-100/20" />
+                          <TableCell className="border-r border-emerald-100/20" />
+                          <TableCell className="bg-slate-50/10" />
+                        </TableRow>
+                      ),
+                    )}
+                  </>
+                )}
+              </TableBody>
+            </Table>
+          </div>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 };
 
