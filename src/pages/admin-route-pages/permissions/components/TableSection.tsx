@@ -15,14 +15,16 @@ import type { PermissionResponse } from "@/types/permission/PermissionResponse";
 interface TableSectionProps {
   loading: boolean;
   data: PermissionResponse[];
+  totalElements: number;
   onCreateOpen: () => void;
   onEdit: (permission: PermissionResponse) => void;
-  onDelete: (id: string) => void;
+  onDelete: (id: string) => void | Promise<void>;
 }
 
 const TableSection: React.FC<TableSectionProps> = ({
   loading,
   data,
+  totalElements,
   onCreateOpen,
   onEdit,
   onDelete,
@@ -33,7 +35,7 @@ const TableSection: React.FC<TableSectionProps> = ({
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4 px-4">
         <div className="flex flex-col">
           <h2 className="text-2xl font-black text-slate-800 tracking-tight">
-            Danh sách quyền hạn
+            Danh sách quyền hạn {totalElements > 0 && `(${totalElements})`}
           </h2>
           <p className="text-sm text-slate-500 font-medium">
             Quản lý và thiết lập các cấp độ truy cập trong hệ thống
