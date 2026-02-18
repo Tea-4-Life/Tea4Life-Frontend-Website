@@ -34,3 +34,9 @@ export const deleteRoleApi = async (id: string) => {
     `/user-service/roles/${id}`,
   );
 };
+
+export const findRoleById = async (id: string) => {
+  return await axiosClient.get<ApiResponse<RoleResponse>>(
+    `/user-service/roles/${id}`,
+  );
+};

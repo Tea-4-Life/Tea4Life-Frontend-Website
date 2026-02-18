@@ -16,7 +16,7 @@ import { findAllPermissionsList } from "@/services/permissionApi";
 import type { PermissionResponse } from "@/types/permission/PermissionResponse";
 import { handleError } from "@/lib/utils";
 import { toast } from "sonner";
-import { createRoleApi, updateRoleApi } from "@/services/roleApi";
+import { createRoleApi, updateRoleApi, findRoleById } from "@/services/roleApi";
 
 // Switch component inline styling since ui/switch is missing
 const Switch = ({
@@ -72,10 +72,23 @@ export default function RoleFormPage() {
         const res = await findAllPermissionsList();
         setPermissions(res.data.data);
 
-        // Mock fetch if edit - in real app would fetch role by ID here
-        if (isEdit) {
-          // Dummy data for visual confirmation if needed, or just leave empty for now as requested
-          console.log("Edit mode for ID:", id);
+        if (isEdit && id) {
+          try {
+            const roleRes = await findRoleById(id);
+            const actualRole = roleRes.data.data;
+
+            setName(actualRole.name);
+            setDescription(actualRole.description || "");
+
+            // Map permissions to ID set
+            if (actualRole.permissions) {
+              const permIds = new Set(actualRole.permissions.map((p) => p.id));
+              setSelectedPermissionIds(permIds);
+            }
+          } catch (error) {
+            handleError(error, "Không thể tải thông tin chức vụ");
+            navigate("/admin/roles");
+          }
         }
       } catch (error) {
         handleError(error, "Lỗi tải danh sách quyền hạn");
@@ -84,7 +97,7 @@ export default function RoleFormPage() {
       }
     };
     init();
-  }, [isEdit, id]);
+  }, [isEdit, id, navigate]);
 
   const handleTogglePermission = (permissionId: string, checked: boolean) => {
     const newSet = new Set(selectedPermissionIds);
