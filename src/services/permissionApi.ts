@@ -25,6 +25,12 @@ export const findAllPermissions = async (
   );
 };
 
+export const findAllPermissionsList = async () => {
+  return await axiosClient.get<ApiResponse<PermissionResponse[]>>(
+    "/user-service/permissions/all",
+  );
+};
+
 export const updatePermissionApi = async (
   id: string,
   data: UpsertPermissionRequest,

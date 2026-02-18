@@ -32,6 +32,8 @@ import AdminRegionsPage from "@/pages/admin-route-pages/regions";
 import AdminCategoriesPage from "@/pages/admin-route-pages/categories";
 import AdminBrandsPage from "@/pages/admin-route-pages/brands";
 import AdminPermissionsPage from "@/pages/admin-route-pages/permissions";
+import AdminRolesPage from "@/pages/admin-route-pages/roles";
+import AdminRoleCreatePage from "@/pages/admin-route-pages/roles/create";
 
 // Driver Pages (Import theo kiểu folder con / index.tsx)
 import DriverDashboard from "@/pages/driver-route-pages/dashboard";
@@ -79,6 +81,9 @@ const adminRoutes = [
   { path: "users", element: <AdminUsersPage /> },
   { path: "reports", element: <AdminReportsPage /> },
   { path: "permissions", element: <AdminPermissionsPage /> },
+  { path: "roles", element: <AdminRolesPage /> },
+  { path: "roles/create", element: <AdminRoleCreatePage /> },
+  { path: "roles/edit/:id", element: <AdminRoleCreatePage /> },
 ];
 
 // --- 4. NHÓM ROUTE TÀI XẾ (DRIVER) ---
