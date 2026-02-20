@@ -60,6 +60,16 @@ const TableSection: React.FC<TableSectionProps> = ({
               Đang chuẩn bị dữ liệu...
             </p>
           </div>
+        ) : data.length === 0 ? (
+          <div className="flex-1 flex items-center justify-center">
+            <EmptyState
+              title="Chưa có dữ liệu"
+              description="Hiện tại chưa có quyền hạn nào được định nghĩa trong hệ thống."
+              actionLabel="Bắt đầu tạo mới"
+              onAction={onCreateOpen}
+              className="border-none shadow-none bg-white"
+            />
+          </div>
         ) : (
           <div className="flex-1">
             <Table>
@@ -83,77 +93,61 @@ const TableSection: React.FC<TableSectionProps> = ({
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {data.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={5} className="h-[400px] p-0">
-                      <EmptyState
-                        title="Chưa có dữ liệu"
-                        description="Hiện tại chưa có quyền hạn nào được định nghĩa trong hệ thống."
-                        actionLabel="Bắt đầu tạo mới"
-                        onAction={onCreateOpen}
-                        className="border-none shadow-none bg-white"
-                      />
+                {data.map((item) => (
+                  <TableRow
+                    key={item.id}
+                    className="group hover:bg-emerald-50/40 border-emerald-200 transition-colors h-20"
+                  >
+                    <TableCell className="font-mono text-[14px] font-medium text-slate-500 pl-8 border-r border-emerald-100/50 text-left">
+                      #{item.id}
+                    </TableCell>
+                    <TableCell className="text-[14px] font-medium text-slate-600 border-r border-emerald-100/50 text-left pl-6">
+                      {item.name}
+                    </TableCell>
+                    <TableCell className="text-[14px] font-medium text-slate-600 border-r border-emerald-100/50 text-left pl-6">
+                      {item.permissionGroup}
+                    </TableCell>
+                    <TableCell className="text-[14px] font-medium text-slate-500 border-r border-emerald-100/50 text-left pl-6 max-w-[400px] truncate">
+                      {item.description || "—"}
+                    </TableCell>
+                    <TableCell className="pr-8 text-center bg-slate-50/30">
+                      <div className="flex items-center justify-center gap-2">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-10 w-10 rounded-2xl text-emerald-600 hover:bg-emerald-100 hover:text-emerald-700 transition-all active:scale-95 group"
+                          onClick={() => onEdit(item)}
+                          title="Chỉnh sửa"
+                        >
+                          <Edit2 className="h-4.5 w-4.5 group-hover:rotate-12 transition-transform" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-10 w-10 rounded-2xl text-red-500 hover:bg-red-50 hover:text-red-600 transition-all active:scale-95 group"
+                          onClick={() => onDelete(item.id)}
+                          title="Xóa"
+                        >
+                          <Trash2 className="h-4.5 w-4.5 group-hover:scale-110 transition-transform" />
+                        </Button>
+                      </div>
                     </TableCell>
                   </TableRow>
-                ) : (
-                  <>
-                    {data.map((item) => (
-                      <TableRow
-                        key={item.id}
-                        className="group hover:bg-emerald-50/40 border-emerald-200 transition-colors h-20"
-                      >
-                        <TableCell className="font-mono text-[14px] font-medium text-slate-500 pl-8 border-r border-emerald-100/50 text-left">
-                          #{item.id}
-                        </TableCell>
-                        <TableCell className="text-[14px] font-medium text-slate-600 border-r border-emerald-100/50 text-left pl-6">
-                          {item.name}
-                        </TableCell>
-                        <TableCell className="text-[14px] font-medium text-slate-600 border-r border-emerald-100/50 text-left pl-6">
-                          {item.permissionGroup}
-                        </TableCell>
-                        <TableCell className="text-[14px] font-medium text-slate-500 border-r border-emerald-100/50 text-left pl-6 max-w-[400px] truncate">
-                          {item.description || "—"}
-                        </TableCell>
-                        <TableCell className="pr-8 text-center bg-slate-50/30">
-                          <div className="flex items-center justify-center gap-2">
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="h-10 w-10 rounded-2xl text-emerald-600 hover:bg-emerald-100 hover:text-emerald-700 transition-all active:scale-95 group"
-                              onClick={() => onEdit(item)}
-                              title="Chỉnh sửa"
-                            >
-                              <Edit2 className="h-4.5 w-4.5 group-hover:rotate-12 transition-transform" />
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="h-10 w-10 rounded-2xl text-red-500 hover:bg-red-50 hover:text-red-600 transition-all active:scale-95 group"
-                              onClick={() => onDelete(item.id)}
-                              title="Xóa"
-                            >
-                              <Trash2 className="h-4.5 w-4.5 group-hover:scale-110 transition-transform" />
-                            </Button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                    {/* Empty Spacer Rows */}
-                    {Array.from({ length: Math.max(0, 5 - data.length) }).map(
-                      (_, index) => (
-                        <TableRow
-                          key={`empty-${index}`}
-                          className="h-20 border-emerald-100/30 hover:bg-transparent"
-                        >
-                          <TableCell className="border-r border-emerald-100/20" />
-                          <TableCell className="border-r border-emerald-100/20" />
-                          <TableCell className="border-r border-emerald-100/20" />
-                          <TableCell className="border-r border-emerald-100/20" />
-                          <TableCell className="bg-slate-50/10" />
-                        </TableRow>
-                      ),
-                    )}
-                  </>
+                ))}
+                {/* Empty Spacer Rows */}
+                {Array.from({ length: Math.max(0, 5 - data.length) }).map(
+                  (_, index) => (
+                    <TableRow
+                      key={`empty-${index}`}
+                      className="h-20 border-emerald-100/30 hover:bg-transparent"
+                    >
+                      <TableCell className="border-r border-emerald-100/20" />
+                      <TableCell className="border-r border-emerald-100/20" />
+                      <TableCell className="border-r border-emerald-100/20" />
+                      <TableCell className="border-r border-emerald-100/20" />
+                      <TableCell className="bg-slate-50/10" />
+                    </TableRow>
+                  ),
                 )}
               </TableBody>
             </Table>
