@@ -1,4 +1,4 @@
 export interface UserRoleAssign {
-  roleId: number;
+  roleId: string;
   keycloakId: string;
 }

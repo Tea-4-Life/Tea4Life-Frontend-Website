@@ -7,7 +7,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { X, Mail, Phone, Calendar, User, Shield } from "lucide-react";
+import { X, Mail, Phone, Calendar, User, Shield, KeyRound } from "lucide-react";
 import type { UserResponse } from "@/types/user/UserResponse";
 
 interface UserDetailModalProps {
@@ -38,8 +38,8 @@ const UserDetailModal: React.FC<UserDetailModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[520px] rounded-[2.5rem] border-emerald-50 shadow-2xl p-0 overflow-hidden">
-        <DialogHeader className="p-8 bg-emerald-50/50 border-b border-emerald-100">
+      <DialogContent className="sm:max-w-[720px] rounded-[2.5rem] border-emerald-50 shadow-2xl p-0 overflow-hidden">
+        <DialogHeader className="px-8 py-6 bg-emerald-50/50 border-b border-emerald-100">
           <div>
             <DialogTitle className="text-2xl font-bold text-slate-800">
               Chi tiết người dùng
@@ -50,17 +50,17 @@ const UserDetailModal: React.FC<UserDetailModalProps> = ({
           </div>
         </DialogHeader>
 
-        <div className="p-8">
+        <div className="px-8 py-6">
           {loading ? (
             <div className="flex flex-col items-center justify-center py-12">
               <div className="h-10 w-10 animate-spin rounded-full border-4 border-emerald-500 border-t-transparent" />
               <p className="text-slate-400 mt-4 text-sm">Đang tải...</p>
             </div>
           ) : user ? (
-            <div className="space-y-5">
+            <div className="space-y-4">
               {/* Avatar & Name */}
-              <div className="flex items-center gap-4 pb-5 border-b border-emerald-100/50">
-                <div className="h-16 w-16 rounded-2xl bg-emerald-100 overflow-hidden flex items-center justify-center shrink-0">
+              <div className="flex items-center gap-4 pb-4 border-b border-emerald-100/50">
+                <div className="h-14 w-14 rounded-2xl bg-emerald-100 overflow-hidden flex items-center justify-center shrink-0">
                   {user.avatarUrl ? (
                     <img
                       src={user.avatarUrl}
@@ -68,7 +68,7 @@ const UserDetailModal: React.FC<UserDetailModalProps> = ({
                       className="h-full w-full object-cover"
                     />
                   ) : (
-                    <span className="text-emerald-600 font-bold text-xl">
+                    <span className="text-emerald-600 font-bold text-lg">
                       {user.fullName
                         ?.split(" ")
                         .map((n) => n[0])
@@ -86,8 +86,13 @@ const UserDetailModal: React.FC<UserDetailModalProps> = ({
                 </div>
               </div>
 
-              {/* Info Grid */}
-              <div className="grid grid-cols-1 gap-4">
+              {/* Info Grid - 2 columns */}
+              <div className="grid grid-cols-2 gap-3">
+                <InfoRow
+                  icon={<KeyRound className="h-4 w-4" />}
+                  label="Keycloak ID"
+                  value={user.keycloakId || "—"}
+                />
                 <InfoRow
                   icon={<Mail className="h-4 w-4" />}
                   label="Email"
@@ -121,7 +126,7 @@ const UserDetailModal: React.FC<UserDetailModalProps> = ({
             </p>
           )}
 
-          <div className="pt-6">
+          <div className="pt-5">
             <Button
               type="button"
               variant="outline"

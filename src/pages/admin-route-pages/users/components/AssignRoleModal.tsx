@@ -23,7 +23,7 @@ import type { UserSummaryResponse } from "@/types/user/UserSummaryResponse";
 interface AssignRoleModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (roleId: number, keycloakId: string) => void;
+  onSubmit: (roleId: string, keycloakId: string) => void;
   user: UserSummaryResponse | null;
   roles: RoleResponse[];
   loading?: boolean;
@@ -44,7 +44,7 @@ const AssignRoleModal: React.FC<AssignRoleModalProps> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedRoleId || !user) return;
-    onSubmit(Number(selectedRoleId), user.keycloakId);
+    onSubmit(selectedRoleId, user.keycloakId);
   };
 
   return (

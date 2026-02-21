@@ -101,7 +101,7 @@ export default function AdminUsersPage() {
     }
   };
 
-  const handleAssignRoleSubmit = async (roleId: number, keycloakId: string) => {
+  const handleAssignRoleSubmit = async (roleId: string, keycloakId: string) => {
     setAssignRoleLoading(true);
     try {
       await assignRoleApi({ roleId, keycloakId });
