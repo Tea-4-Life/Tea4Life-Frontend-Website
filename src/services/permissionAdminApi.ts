@@ -7,7 +7,7 @@ import type { UpsertPermissionRequest } from "@/types/permission/UpsertPermissio
 
 export const createPermissionApi = async (data: UpsertPermissionRequest) => {
   return await axiosClient.post<ApiResponse<void>>(
-    "/user-service/permissions",
+    "/user-service/admin/permissions",
     data,
   );
 };
@@ -16,7 +16,7 @@ export const findAllPermissions = async (
   params: PaginationParams = { page: 1, size: 10 },
 ) => {
   return await axiosClient.get<ApiResponse<PageResponse<PermissionResponse>>>(
-    "/user-service/permissions",
+    "/user-service/admin/permissions",
     {
       params: {
         ...params,
@@ -27,7 +27,7 @@ export const findAllPermissions = async (
 
 export const findAllPermissionsList = async () => {
   return await axiosClient.get<ApiResponse<PermissionResponse[]>>(
-    "/user-service/permissions/all",
+    "/user-service/admin/permissions/all",
   );
 };
 
@@ -36,13 +36,13 @@ export const updatePermissionApi = async (
   data: UpsertPermissionRequest,
 ) => {
   return await axiosClient.post<ApiResponse<void>>(
-    `/user-service/permissions/${id}`,
+    `/user-service/admin/permissions/${id}`,
     data,
   );
 };
 
 export const deletePermissionApi = async (id: string) => {
   return await axiosClient.delete<ApiResponse<void>>(
-    `/user-service/permissions/${id}`,
+    `/user-service/admin/permissions/${id}`,
   );
 };
