@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { usePaginationState } from "@/hooks/use-pagination-state";
-import { findAllRoles, deleteRoleApi } from "@/services/roleAdminApi";
+import { findAllRoles, deleteRoleApi } from "@/services/admin/roleAdminApi";
 import type { RoleResponse } from "@/types/role/RoleResponse";
 import { handleError } from "@/lib/utils";
 import { toast } from "sonner";

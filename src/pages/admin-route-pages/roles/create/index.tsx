@@ -12,7 +12,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { findAllPermissionList } from "@/services/permissionAdminApi";
+import { findAllPermissionList } from "@/services/admin/permissionAdminApi";
 import type { PermissionResponse } from "@/types/permission/PermissionResponse";
 import { handleError } from "@/lib/utils";
 import { toast } from "sonner";
@@ -20,7 +20,7 @@ import {
   createRoleApi,
   updateRoleApi,
   findRoleById,
-} from "@/services/roleAdminApi";
+} from "@/services/admin/roleAdminApi";
 
 // Switch component inline styling since ui/switch is missing
 const Switch = ({

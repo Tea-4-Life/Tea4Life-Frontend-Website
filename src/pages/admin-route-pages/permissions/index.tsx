@@ -5,7 +5,7 @@ import {
   createPermissionApi,
   updatePermissionApi,
   deletePermissionApi,
-} from "@/services/permissionAdminApi";
+} from "@/services/admin/permissionAdminApi";
 import type { PermissionResponse } from "@/types/permission/PermissionResponse";
 import type { UpsertPermissionRequest } from "@/types/permission/UpsertPermissionRequest";
 import { handleError } from "@/lib/utils";

@@ -1,124 +1,177 @@
-"use client";
-
+import { useState, useEffect, useCallback } from "react";
+import { usePaginationState } from "@/hooks/use-pagination-state";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Search, Mail, ShieldAlert, Ban, CheckCircle2 } from "lucide-react";
+  findAllUsers,
+  findUserByKeycloakId,
+  assignRoleApi,
+} from "@/services/admin/userAdminApi";
+import { findAllRoleList } from "@/services/admin/roleAdminApi";
+import type { UserSummaryResponse } from "@/types/user/UserSummaryResponse";
+import type { UserResponse } from "@/types/user/UserResponse";
+import type { RoleResponse } from "@/types/role/RoleResponse";
+import { handleError } from "@/lib/utils";
+import { toast } from "sonner";
 
-const mockUsers = [
-  {
-    id: 1,
-    name: "Nguyễn Văn A",
-    email: "vanna@gmail.com",
-    role: "Customer",
-    status: "Active",
-    joined: "15/01/2026",
-  },
-  {
-    id: 2,
-    name: "Trần Thị B",
-    email: "thib@gmail.com",
-    role: "Customer",
-    status: "Active",
-    joined: "20/01/2026",
-  },
-  {
-    id: 3,
-    name: "Lê Văn C",
-    email: "vanc@gmail.com",
-    role: "Editor",
-    status: "Banned",
-    joined: "01/01/2026",
-  },
-];
+// Sub-components
+import HeaderSection from "./components/HeaderSection";
+import SearchSection from "./components/SearchSection";
+import TableSection from "./components/TableSection";
+import PaginationSection from "./components/PaginationSection";
+import UserDetailModal from "./components/UserDetailModal";
+import AssignRoleModal from "./components/AssignRoleModal";
 
 export default function AdminUsersPage() {
+  const { pagination, onPageChange, onSizeChange } = usePaginationState();
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState<UserSummaryResponse[]>([]);
+  const [totalElements, setTotalElements] = useState(0);
+
+  // Search local state
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // Detail modal state
+  const [isDetailOpen, setIsDetailOpen] = useState(false);
+  const [detailLoading, setDetailLoading] = useState(false);
+  const [detailUser, setDetailUser] = useState<UserResponse | null>(null);
+
+  // Assign role modal state
+  const [isAssignRoleOpen, setIsAssignRoleOpen] = useState(false);
+  const [assignRoleLoading, setAssignRoleLoading] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<UserSummaryResponse | null>(
+    null,
+  );
+  const [roles, setRoles] = useState<RoleResponse[]>([]);
+  const [rolesLoading, setRolesLoading] = useState(false);
+
+  const fetchUsers = useCallback(async () => {
+    setLoading(true);
+    try {
+      const response = await findAllUsers({
+        ...pagination,
+      });
+      const pageData = response.data.data;
+      setData(pageData.content);
+      setTotalElements(pageData.totalElements);
+    } catch (error) {
+      handleError(error, "Không thể tải danh sách người dùng.");
+    } finally {
+      setTimeout(() => setLoading(false), 500);
+    }
+  }, [pagination]);
+
+  useEffect(() => {
+    fetchUsers();
+  }, [fetchUsers]);
+
+  // Detail
+  const handleDetail = async (user: UserSummaryResponse) => {
+    setIsDetailOpen(true);
+    setDetailLoading(true);
+    setDetailUser(null);
+    try {
+      const res = await findUserByKeycloakId(user.keycloakId);
+      setDetailUser(res.data.data);
+    } catch (error) {
+      handleError(error, "Không thể tải thông tin người dùng.");
+      setIsDetailOpen(false);
+    } finally {
+      setDetailLoading(false);
+    }
+  };
+
+  // Ban
+  const handleBan = (user: UserSummaryResponse) => {
+    toast.info(
+      `Chức năng cấm người dùng "${user.fullName || user.email}" đang được phát triển.`,
+    );
+  };
+
+  // Assign Role
+  const handleAssignRoleOpen = async (user: UserSummaryResponse) => {
+    setSelectedUser(user);
+    setIsAssignRoleOpen(true);
+    setRolesLoading(true);
+    try {
+      const res = await findAllRoleList();
+      setRoles(res.data.data);
+    } catch (error) {
+      handleError(error, "Không thể tải danh sách chức vụ.");
+    } finally {
+      setRolesLoading(false);
+    }
+  };
+
+  const handleAssignRoleSubmit = async (roleId: number, keycloakId: string) => {
+    setAssignRoleLoading(true);
+    try {
+      await assignRoleApi({ roleId, keycloakId });
+      toast.success("Gán chức vụ thành công!");
+      setIsAssignRoleOpen(false);
+      fetchUsers();
+    } catch (error) {
+      handleError(error, "Gán chức vụ thất bại.");
+    } finally {
+      setAssignRoleLoading(false);
+    }
+  };
+
+  // Reset Password
+  const handleResetPassword = (user: UserSummaryResponse) => {
+    toast.info(
+      `Chức năng đặt lại mật khẩu cho "${user.fullName || user.email}" đang được phát triển.`,
+    );
+  };
+
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-slate-900">
-          Quản lý Khách hàng
-        </h1>
-      </div>
+    <div className="space-y-6 animate-in fade-in duration-500">
+      {/* 1. Header Section */}
+      <HeaderSection />
 
-      <div className="bg-white rounded-xl shadow-sm border p-4">
-        <div className="relative max-w-sm mb-6">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-          <Input placeholder="Tìm theo tên hoặc email..." className="pl-10" />
-        </div>
+      {/* 2. Search Section */}
+      <SearchSection
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+      />
 
-        <Table>
-          <TableHeader>
-            <TableRow className="bg-slate-50/50">
-              <TableHead>Khách hàng</TableHead>
-              <TableHead>Vai trò</TableHead>
-              <TableHead>Ngày tham gia</TableHead>
-              <TableHead>Trạng thái</TableHead>
-              <TableHead className="text-right">Hành động</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {mockUsers.map((user) => (
-              <TableRow key={user.id}>
-                <TableCell>
-                  <div className="flex flex-col">
-                    <span className="font-semibold text-slate-900">
-                      {user.name}
-                    </span>
-                    <span className="text-xs text-slate-500">{user.email}</span>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <Badge variant="outline" className="font-medium">
-                    {user.role}
-                  </Badge>
-                </TableCell>
-                <TableCell className="text-slate-600 text-sm">
-                  {user.joined}
-                </TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-1.5">
-                    {user.status === "Active" ? (
-                      <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                    ) : (
-                      <ShieldAlert className="h-4 w-4 text-red-500" />
-                    )}
-                    <span
-                      className={
-                        user.status === "Active"
-                          ? "text-emerald-700"
-                          : "text-red-700"
-                      }
-                    >
-                      {user.status}
-                    </span>
-                  </div>
-                </TableCell>
-                <TableCell className="text-right space-x-1">
-                  <Button variant="ghost" size="icon" title="Gửi mail">
-                    <Mail className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="text-red-500 hover:text-red-600 hover:bg-red-50"
-                  >
-                    <Ban className="h-4 w-4" />
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
+      {/* 3. Table Section */}
+      <TableSection
+        loading={loading}
+        data={data}
+        totalElements={totalElements}
+        onDetail={handleDetail}
+        onBan={handleBan}
+        onAssignRole={handleAssignRoleOpen}
+        onResetPassword={handleResetPassword}
+      />
+
+      {/* 4. Pagination Section */}
+      <PaginationSection
+        page={pagination.page}
+        size={pagination.size}
+        totalElements={totalElements}
+        onPageChange={onPageChange}
+        onSizeChange={onSizeChange}
+      />
+
+      {/* User Detail Modal */}
+      <UserDetailModal
+        isOpen={isDetailOpen}
+        onClose={() => setIsDetailOpen(false)}
+        user={detailUser}
+        loading={detailLoading}
+      />
+
+      {/* Assign Role Modal */}
+      <AssignRoleModal
+        key={isAssignRoleOpen ? selectedUser?.keycloakId || "assign" : "closed"}
+        isOpen={isAssignRoleOpen}
+        onClose={() => setIsAssignRoleOpen(false)}
+        onSubmit={handleAssignRoleSubmit}
+        user={selectedUser}
+        roles={roles}
+        loading={assignRoleLoading}
+        rolesLoading={rolesLoading}
+      />
     </div>
   );
 }
