@@ -12,7 +12,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { findAllPermissionsList } from "@/services/permissionAdminApi";
+import { findAllPermissionList } from "@/services/permissionAdminApi";
 import type { PermissionResponse } from "@/types/permission/PermissionResponse";
 import { handleError } from "@/lib/utils";
 import { toast } from "sonner";
@@ -73,7 +73,7 @@ export default function RoleFormPage() {
     const init = async () => {
       setLoading(true);
       try {
-        const res = await findAllPermissionsList();
+        const res = await findAllPermissionList();
         setPermissions(res.data.data);
 
         if (isEdit && id) {

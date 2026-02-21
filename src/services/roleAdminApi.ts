@@ -38,6 +38,12 @@ export const deleteRoleApi = async (id: string) => {
   );
 };
 
+export const findAllRoleList = async () => {
+  return await axiosClient.get<ApiResponse<RoleResponse[]>>(
+    "/user-service/admin/roles/all",
+  );
+};
+
 export const findRoleById = async (id: string) => {
   return await axiosClient.get<ApiResponse<RoleResponse>>(
     `/user-service/admin/roles/${id}`,
