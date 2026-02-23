@@ -97,7 +97,7 @@ export default function ProfileLayout() {
 
   return (
     <div className="min-h-screen bg-linear-to-b from-emerald-50/50 to-white py-12">
-      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         {/* Profile Header */}
         <div className="flex flex-col md:flex-row items-start md:items-center gap-6 mb-8">
           <div className="relative group">
@@ -175,7 +175,9 @@ export default function ProfileLayout() {
 
         {/* Page Content — truyền profile data qua Outlet context */}
         <div className="mt-4">
-          <Outlet context={{ profile, loading, refetchProfile: fetchProfile }} />
+          <Outlet
+            context={{ profile, loading, refetchProfile: fetchProfile }}
+          />
         </div>
       </div>
 

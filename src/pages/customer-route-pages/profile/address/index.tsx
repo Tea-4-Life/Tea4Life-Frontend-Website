@@ -10,7 +10,6 @@ import {
   CardTitle,
 } from "@/components/ui/card.tsx";
 import { Input } from "@/components/ui/input.tsx";
-import { Label } from "@/components/ui/label.tsx";
 import { Plus, MapPin, Search, MoreVertical, Phone, User } from "lucide-react";
 import {
   DropdownMenu,
@@ -18,15 +17,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu.tsx";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog.tsx";
+import { useNavigate } from "react-router-dom";
 
 // Cập nhật Mock data có số điện thoại
 const initialAddresses = [
@@ -53,7 +44,7 @@ const initialAddresses = [
 export default function AddressPage() {
   const [addresses] = useState(initialAddresses);
   const [searchQuery, setSearchQuery] = useState("");
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const navigate = useNavigate();
 
   const filteredAddresses = addresses.filter(
     (addr) =>
@@ -79,80 +70,13 @@ export default function AddressPage() {
               </CardDescription>
             </div>
 
-            {/* Dialog Thêm địa chỉ mới */}
-            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-              <DialogTrigger asChild>
-                <Button
-                  disabled={!canAddMore}
-                  className="bg-emerald-600 hover:bg-emerald-700 text-white shrink-0"
-                >
-                  <Plus className="h-4 w-4 mr-2" /> Thêm địa chỉ mới
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[500px] border-emerald-100">
-                <DialogHeader>
-                  <DialogTitle className="text-emerald-900">
-                    Thêm địa chỉ mới
-                  </DialogTitle>
-                  <DialogDescription>
-                    Nhập thông tin người nhận và địa chỉ giao hàng chi tiết.
-                  </DialogDescription>
-                </DialogHeader>
-                <div className="grid gap-4 py-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label>Tên gợi nhớ (Vd: Nhà riêng)</Label>
-                      <Input
-                        placeholder="Nhà riêng, Công ty..."
-                        className="border-emerald-100"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label>Tên người nhận</Label>
-                      <Input
-                        placeholder="Tên khách hàng"
-                        className="border-emerald-100"
-                      />
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Số điện thoại nhận hàng</Label>
-                    <div className="relative">
-                      <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-emerald-500" />
-                      <Input
-                        placeholder="09xx xxx xxx"
-                        className="pl-10 border-emerald-100"
-                      />
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Địa chỉ chi tiết</Label>
-                    <Input
-                      placeholder="Số nhà, tên đường..."
-                      className="border-emerald-100"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Thành phố / Tỉnh</Label>
-                    <Input
-                      placeholder="Hồ Chí Minh"
-                      className="border-emerald-100"
-                    />
-                  </div>
-                </div>
-                <DialogFooter>
-                  <Button
-                    variant="outline"
-                    onClick={() => setIsDialogOpen(false)}
-                  >
-                    Hủy
-                  </Button>
-                  <Button className="bg-emerald-600 hover:bg-emerald-700">
-                    Lưu địa chỉ
-                  </Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
+            <Button
+              disabled={!canAddMore}
+              onClick={() => navigate("/profile/address/create")}
+              className="bg-emerald-600 hover:bg-emerald-700 text-white shrink-0"
+            >
+              <Plus className="h-4 w-4 mr-2" /> Thêm địa chỉ mới
+            </Button>
           </div>
         </CardHeader>
 

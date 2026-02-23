@@ -20,6 +20,7 @@ import OrderDetailPage from "@/pages/customer-route-pages/order-details";
 import CheckoutPage from "@/pages/customer-route-pages/checkout";
 import GeneralPage from "@/pages/customer-route-pages/profile/general";
 import AddressPage from "@/pages/customer-route-pages/profile/address";
+import CreateAddressPage from "@/pages/customer-route-pages/profile/address/create.tsx";
 import SecurityPage from "@/pages/customer-route-pages/profile/security";
 
 // Admin Pages
@@ -64,6 +65,7 @@ const customerRoutes = [
       { index: true, element: <Navigate to="general" replace /> },
       { path: "general", element: <GeneralPage /> },
       { path: "address", element: <AddressPage /> },
+      { path: "address/create", element: <CreateAddressPage /> },
       { path: "security", element: <SecurityPage /> },
     ],
   },
