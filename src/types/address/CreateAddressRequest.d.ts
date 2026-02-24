@@ -4,7 +4,6 @@ export interface CreateAddressRequest {
   receiverName: string;
   phone: string;
   province: string;
-  district: string;
   ward: string;
   detail: string;
   latitude: number;

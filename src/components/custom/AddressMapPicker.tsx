@@ -4,14 +4,13 @@ import goongjs from "@goongmaps/goong-js";
 import "@goongmaps/goong-js/dist/goong-js.css";
 import { goongApiV2 } from "@/lib/goong";
 import type { GoongAutocompletePrediction } from "@/lib/goong";
-import { debounce } from "lodash";
+import debounce from "lodash/debounce";
 import { Search, MapPin as MapPinIcon, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input.tsx";
 
 interface AddressMapPickerProps {
   onLocationSelect: (data: {
     province: string;
-    district: string;
     ward: string;
     detail: string;
     latitude: number;
@@ -64,7 +63,6 @@ export const AddressMapPicker: React.FC<AddressMapPickerProps> = ({
             const place = results[0]; // Kết quả chính xác nhất thường ở mảng đầu tiên
             onLocationSelectRef.current({
               province: place.compound?.province || "",
-              district: place.compound?.district || "",
               ward: place.compound?.commune || "",
               detail: place.formatted_address || "",
               latitude: lat,
@@ -253,6 +251,14 @@ export const AddressMapPicker: React.FC<AddressMapPickerProps> = ({
                 onClick={() =>
                   handleSelectPrediction(p.place_id, p.description)
                 }
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    handleSelectPrediction(p.place_id, p.description);
+                  }
+                }}
+                role="button"
+                tabIndex={0}
                 className="flex items-start gap-3 p-3.5 hover:bg-emerald-50 cursor-pointer transition-colors border-b last:border-0 border-gray-100 mx-2 mt-1 rounded-xl"
               >
                 <div className="mt-0.5 text-emerald-600 bg-emerald-100/50 p-2 rounded-full shrink-0">

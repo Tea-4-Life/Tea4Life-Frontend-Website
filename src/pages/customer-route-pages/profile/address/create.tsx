@@ -19,7 +19,6 @@ export default function CreateAddressPage() {
     receiverName: "",
     phone: "",
     province: "",
-    district: "",
     ward: "",
     detail: "",
     latitude: 0,
@@ -67,7 +66,6 @@ export default function CreateAddressPage() {
                     setAddressForm((prev) => ({
                       ...prev,
                       province: data.province,
-                      district: data.district,
                       ward: data.ward,
                       detail: data.addressText,
                       latitude: data.latitude,
@@ -178,27 +176,15 @@ export default function CreateAddressPage() {
                   </div>
                   <div className="space-y-1">
                     <Label className="text-xs text-muted-foreground">
-                      Quận/Huyện
+                      Phường/Xã
                     </Label>
                     <Input
                       readOnly
-                      placeholder="Quận/Huyện"
+                      placeholder="Phường/Xã"
                       className="border-none bg-emerald-50 text-emerald-800 focus-visible:ring-0 cursor-default"
-                      value={addressForm.district}
+                      value={addressForm.ward}
                     />
                   </div>
-                </div>
-
-                <div className="space-y-1">
-                  <Label className="text-xs text-muted-foreground">
-                    Phường/Xã
-                  </Label>
-                  <Input
-                    readOnly
-                    placeholder="Phường/Xã"
-                    className="border-none bg-emerald-50 text-emerald-800 focus-visible:ring-0 cursor-default"
-                    value={addressForm.ward}
-                  />
                 </div>
 
                 <div className="space-y-2">
