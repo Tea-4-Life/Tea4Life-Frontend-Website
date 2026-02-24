@@ -5,20 +5,20 @@ import type { AddressResponse } from "@/types/address/AddressResponse";
 
 export const createAddressApi = async (data: CreateAddressRequest) => {
   return await axiosClient.post<ApiResponse<AddressResponse>>(
-    "/user-service/addresses",
+    "/user-service/users/me/addresses",
     data,
   );
 };
 
 export const findMyAddressesApi = async () => {
   return await axiosClient.get<ApiResponse<AddressResponse[]>>(
-    "/user-service/addresses",
+    "/user-service/users/me/addresses",
   );
 };
 
 export const findMyAddressByIdApi = async (id: string | number) => {
   return await axiosClient.get<ApiResponse<AddressResponse>>(
-    `/user-service/addresses/${id}`,
+    `/user-service/users/me/addresses/${id}`,
   );
 };
 
@@ -27,13 +27,13 @@ export const updateMyAddressApi = async (
   data: CreateAddressRequest,
 ) => {
   return await axiosClient.post<ApiResponse<AddressResponse>>(
-    `/user-service/addresses/${id}`,
+    `/user-service/users/me/addresses/${id}`,
     data,
   );
 };
 
 export const deleteMyAddressApi = async (id: string | number) => {
   return await axiosClient.delete<ApiResponse<void>>(
-    `/user-service/addresses/${id}`,
+    `/user-service/users/me/addresses/${id}`,
   );
 };

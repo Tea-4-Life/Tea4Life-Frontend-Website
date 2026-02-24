@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button.tsx";
 import {
   Card,
@@ -18,40 +18,54 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu.tsx";
 import { useNavigate } from "react-router-dom";
+import { findMyAddressesApi } from "@/services/addressApi";
+import type { AddressResponse } from "@/types/address/AddressResponse";
 
-// Cập nhật Mock data có số điện thoại
-const initialAddresses = [
-  {
-    id: 1,
-    name: "Nhà riêng",
-    receiver: "Nguyễn Văn A",
-    phone: "0901 234 567",
-    detail: "123 Đường Lê Lợi, Quận 1",
-    city: "TP. Hồ Chí Minh",
-    isDefault: true,
-  },
-  {
-    id: 2,
-    name: "Công ty",
-    receiver: "Nguyễn Văn A",
-    phone: "0988 777 666",
-    detail: "Tòa nhà Bitexco, Hải Triều",
-    city: "TP. Hồ Chí Minh",
-    isDefault: false,
-  },
-];
+const addressTypeLabels: Record<string, string> = {
+  HOME: "Nhà riêng",
+  OFFICE: "Công ty",
+  OTHER: "Khác",
+};
 
 export default function AddressPage() {
-  const [addresses] = useState(initialAddresses);
+  const [addresses, setAddresses] = useState<AddressResponse[]>([]);
+  const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const fetchAddresses = async () => {
+      try {
+        const res = await findMyAddressesApi();
+        if (res.data.errorCode === null) {
+          setAddresses(res.data.data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch addresses:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchAddresses();
+  }, []);
+
   const filteredAddresses = addresses.filter(
     (addr) =>
-      addr.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (addressTypeLabels[addr.addressType] || addr.addressType)
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase()) ||
       addr.detail.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      addr.receiverName.toLowerCase().includes(searchQuery.toLowerCase()) ||
       addr.phone.includes(searchQuery),
   );
+
+  if (loading) {
+    return (
+      <div className="p-8 text-center text-emerald-600">
+        Đang tải địa chỉ...
+      </div>
+    );
+  }
 
   const canAddMore = addresses.length < 5;
 
@@ -103,7 +117,10 @@ export default function AddressPage() {
                   </div>
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
-                      <p className="font-bold text-emerald-900">{addr.name}</p>
+                      <p className="font-bold text-emerald-900">
+                        {addressTypeLabels[addr.addressType] ||
+                          addr.addressType}
+                      </p>
                       {addr.isDefault && (
                         <span className="text-[10px] font-bold uppercase px-2 py-0.5 bg-emerald-500 text-white rounded-full">
                           Mặc định
@@ -113,7 +130,7 @@ export default function AddressPage() {
 
                     <div className="flex items-center gap-4 text-sm text-emerald-700">
                       <span className="flex items-center gap-1 font-medium">
-                        <User className="h-3 w-3" /> {addr.receiver}
+                        <User className="h-3 w-3" /> {addr.receiverName}
                       </span>
                       <span className="flex items-center gap-1 text-emerald-600">
                         <Phone className="h-3 w-3" /> {addr.phone}
@@ -121,7 +138,7 @@ export default function AddressPage() {
                     </div>
 
                     <p className="text-sm text-emerald-600 leading-snug">
-                      {addr.detail}, {addr.city}
+                      {addr.detail}, {addr.ward}, {addr.province}
                     </p>
                   </div>
                 </div>
