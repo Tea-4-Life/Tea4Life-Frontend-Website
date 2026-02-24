@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button.tsx";
 import {
   Card,
@@ -12,12 +12,16 @@ import { Input } from "@/components/ui/input.tsx";
 import { Label } from "@/components/ui/label.tsx";
 import { Phone, ArrowLeft, MapPin, Loader2 } from "lucide-react";
 import { AddressMapPicker } from "@/components/custom/AddressMapPicker";
-import { createAddressApi } from "@/services/addressApi";
+import {
+  updateMyAddressApi,
+  findMyAddressByIdApi,
+} from "@/services/addressApi";
 import { toast } from "sonner";
 import type { AddressType } from "@/types/address/CreateAddressRequest";
 
-export default function CreateAddressPage() {
+export default function EditAddressPage() {
   const navigate = useNavigate();
+  const { id } = useParams<{ id: string }>();
   const [addressForm, setAddressForm] = useState({
     receiverName: "",
     phone: "",
@@ -31,6 +35,36 @@ export default function CreateAddressPage() {
   });
 
   const [isLoading, setIsLoading] = useState(false);
+  const [isFetching, setIsFetching] = useState(true);
+
+  useEffect(() => {
+    const fetchAddressDetails = async () => {
+      if (!id) return;
+      try {
+        const res = await findMyAddressByIdApi(id);
+        if (res.data && res.data.data) {
+          const addr = res.data.data;
+          setAddressForm({
+            receiverName: addr.receiverName,
+            phone: addr.phone,
+            province: addr.province,
+            ward: addr.ward,
+            detail: addr.detail,
+            latitude: addr.latitude || 0,
+            longitude: addr.longitude || 0,
+            addressType: addr.addressType as AddressType,
+            isDefault: addr.isDefault,
+          });
+        }
+      } catch (error) {
+        console.error("Lỗi khi tải thông tin địa chỉ:", error);
+        toast.error("Không thể tải thông tin địa chỉ.");
+      } finally {
+        setIsFetching(false);
+      }
+    };
+    fetchAddressDetails();
+  }, [id]);
 
   const handleSave = async () => {
     // Basic validation
@@ -43,22 +77,32 @@ export default function CreateAddressPage() {
       return;
     }
 
+    if (!id) return;
+
     setIsLoading(true);
     try {
-      const response = await createAddressApi(addressForm);
+      const response = await updateMyAddressApi(id, addressForm);
       if (response.data && !response.data.errorCode) {
-        toast.success("Tạo địa chỉ thành công!");
+        toast.success("Cập nhật địa chỉ thành công!");
         navigate("/profile/address");
       } else {
         toast.error(response.data.errorMessage || "Có lỗi xảy ra");
       }
     } catch (error) {
-      console.error("Lỗi khi tạo địa chỉ", error);
-      toast.error("Lỗi khi tạo địa chỉ. Vui lòng thử lại sau.");
+      console.error("Lỗi khi cập nhật địa chỉ", error);
+      toast.error("Lỗi khi cập nhật địa chỉ. Vui lòng thử lại sau.");
     } finally {
       setIsLoading(false);
     }
   };
+
+  if (isFetching) {
+    return (
+      <div className="flex justify-center items-center h-48">
+        <Loader2 className="h-8 w-8 animate-spin text-emerald-600" />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -75,10 +119,10 @@ export default function CreateAddressPage() {
             </Button>
             <div>
               <CardTitle className="text-emerald-800 text-xl flex items-center gap-2">
-                Thêm địa chỉ giao hàng
+                Chỉnh sửa địa chỉ
               </CardTitle>
               <CardDescription>
-                Nhập thông tin người nhận và gắn ghim bản đồ để lấy vị trí
+                Cập nhật thông tin nhận hàng và vị trí định vị
               </CardDescription>
             </div>
           </div>
@@ -90,6 +134,8 @@ export default function CreateAddressPage() {
             <div className="space-y-3">
               <div className="h-[450px]">
                 <AddressMapPicker
+                  initialLatitude={addressForm.latitude || undefined}
+                  initialLongitude={addressForm.longitude || undefined}
                   onLocationSelect={(data) => {
                     setAddressForm((prev) => ({
                       ...prev,

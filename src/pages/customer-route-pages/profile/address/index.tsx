@@ -18,7 +18,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu.tsx";
 import { useNavigate } from "react-router-dom";
-import { findMyAddressesApi } from "@/services/addressApi";
+import {
+  findMyAddressesApi,
+  deleteMyAddressApi,
+  setDefaultMyAddressApi,
+} from "@/services/addressApi";
+import { toast } from "sonner";
+import { ConfirmationDialog } from "@/components/custom/ConfirmationDialog";
 import type { AddressResponse } from "@/types/address/AddressResponse";
 
 const addressTypeLabels: Record<string, string> = {
@@ -31,23 +37,72 @@ export default function AddressPage() {
   const [addresses, setAddresses] = useState<AddressResponse[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [addressToDelete, setAddressToDelete] = useState<
+    string | number | null
+  >(null);
+  const [isDeleting, setIsDeleting] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchAddresses = async () => {
-      try {
-        const res = await findMyAddressesApi();
-        if (res.data.errorCode === null) {
-          setAddresses(res.data.data);
-        }
-      } catch (error) {
-        console.error("Failed to fetch addresses:", error);
-      } finally {
-        setLoading(false);
+  const fetchAddresses = async () => {
+    try {
+      const res = await findMyAddressesApi();
+      if (res.data && Array.isArray(res.data.data)) {
+        setAddresses(res.data.data);
+      } else if (Array.isArray(res.data)) {
+        setAddresses(res.data as unknown as AddressResponse[]);
       }
-    };
+    } catch (error) {
+      console.error("Failed to fetch addresses:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchAddresses();
   }, []);
+
+  const handleDeleteClick = (id: string | number) => {
+    setAddressToDelete(id);
+    setDeleteDialogOpen(true);
+  };
+
+  const confirmDeleteAddress = async () => {
+    if (!addressToDelete) return;
+    setIsDeleting(true);
+    try {
+      const response = await deleteMyAddressApi(addressToDelete);
+      if (response.data && !response.data.errorCode) {
+        toast.success("Xóa địa chỉ thành công!");
+        fetchAddresses();
+      } else {
+        toast.error(response.data.errorMessage || "Không thể xóa địa chỉ");
+      }
+    } catch (error) {
+      console.error("Lỗi khi xóa địa chỉ:", error);
+      toast.error("Đã xảy ra lỗi khi xóa địa chỉ");
+    } finally {
+      setIsDeleting(false);
+      setDeleteDialogOpen(false);
+      setAddressToDelete(null);
+    }
+  };
+
+  const handleSetDefaultAddress = async (id: string | number) => {
+    try {
+      const response = await setDefaultMyAddressApi(id);
+      if (response.data && !response.data.errorCode) {
+        toast.success("Thay đổi địa chỉ mặc định thành công!");
+        fetchAddresses();
+      } else {
+        toast.error(response.data.errorMessage || "Không thể đặt làm mặc định");
+      }
+    } catch (error) {
+      console.error("Lỗi khi đặt làm mặc định:", error);
+      toast.error("Đã xảy ra lỗi hệ thống khi đặt địa chỉ mặc định");
+    }
+  };
 
   const filteredAddresses = addresses.filter(
     (addr) =>
@@ -155,10 +210,23 @@ export default function AddressPage() {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
                     {!addr.isDefault && (
-                      <DropdownMenuItem>Đặt làm mặc định</DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => handleSetDefaultAddress(addr.id)}
+                      >
+                        Đặt làm mặc định
+                      </DropdownMenuItem>
                     )}
-                    <DropdownMenuItem>Chỉnh sửa</DropdownMenuItem>
-                    <DropdownMenuItem className="text-red-600 focus:bg-red-50 focus:text-red-600">
+                    <DropdownMenuItem
+                      onClick={() =>
+                        navigate(`/profile/address/edit/${addr.id}`)
+                      }
+                    >
+                      Chỉnh sửa
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      className="text-red-600 focus:bg-red-50 focus:text-red-600"
+                      onClick={() => handleDeleteClick(addr.id)}
+                    >
                       Xóa
                     </DropdownMenuItem>
                   </DropdownMenuContent>
@@ -168,6 +236,19 @@ export default function AddressPage() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Cửa sổ xác nhận xóa Địa Chỉ */}
+      <ConfirmationDialog
+        isOpen={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        title="Xác nhận xóa địa chỉ"
+        description="Bạn có chắc chắn muốn xóa địa chỉ này không? Hành động này không thể hoàn tác."
+        confirmLabel="Xóa địa chỉ"
+        cancelLabel="Hủy"
+        onConfirm={confirmDeleteAddress}
+        variant="destructive"
+        isLoading={isDeleting}
+      />
     </div>
   );
 }

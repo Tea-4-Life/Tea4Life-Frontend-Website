@@ -37,3 +37,9 @@ export const deleteMyAddressApi = async (id: string | number) => {
     `/user-service/users/me/addresses/${id}`,
   );
 };
+
+export const setDefaultMyAddressApi = async (id: string | number) => {
+  return await axiosClient.post<ApiResponse<AddressResponse>>(
+    `/user-service/users/me/addresses/${id}/default`,
+  );
+};
