@@ -19,6 +19,7 @@ import TableSection from "./components/TableSection";
 import PaginationSection from "./components/PaginationSection";
 import UserDetailModal from "./components/UserDetailModal";
 import AssignRoleModal from "./components/AssignRoleModal";
+import UserAddressModal from "./components/UserAddressModal";
 
 export default function AdminUsersPage() {
   const { pagination, onPageChange, onSizeChange } = usePaginationState();
@@ -42,6 +43,12 @@ export default function AdminUsersPage() {
   );
   const [roles, setRoles] = useState<RoleResponse[]>([]);
   const [rolesLoading, setRolesLoading] = useState(false);
+
+  // Address modal state
+  const [isAddressOpen, setIsAddressOpen] = useState(false);
+  const [addressUser, setAddressUser] = useState<UserSummaryResponse | null>(
+    null,
+  );
 
   const fetchUsers = useCallback(async () => {
     setLoading(true);
@@ -115,6 +122,12 @@ export default function AdminUsersPage() {
     }
   };
 
+  // Addresses
+  const handleAddressOpen = (user: UserSummaryResponse) => {
+    setAddressUser(user);
+    setIsAddressOpen(true);
+  };
+
   // Reset Password
   const handleResetPassword = (user: UserSummaryResponse) => {
     toast.info(
@@ -142,6 +155,7 @@ export default function AdminUsersPage() {
         onBan={handleBan}
         onAssignRole={handleAssignRoleOpen}
         onResetPassword={handleResetPassword}
+        onAddressMenu={handleAddressOpen}
       />
 
       {/* 4. Pagination Section */}
@@ -171,6 +185,13 @@ export default function AdminUsersPage() {
         roles={roles}
         loading={assignRoleLoading}
         rolesLoading={rolesLoading}
+      />
+
+      {/* User Address Modal */}
+      <UserAddressModal
+        isOpen={isAddressOpen}
+        onClose={() => setIsAddressOpen(false)}
+        user={addressUser}
       />
     </div>
   );

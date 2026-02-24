@@ -1,5 +1,5 @@
 import React from "react";
-import { Eye, Ban, ShieldCheck, KeyRound } from "lucide-react";
+import { Eye, Ban, ShieldCheck, KeyRound, MapPin } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -20,6 +20,7 @@ interface TableSectionProps {
   onBan: (user: UserSummaryResponse) => void;
   onAssignRole: (user: UserSummaryResponse) => void;
   onResetPassword: (user: UserSummaryResponse) => void;
+  onAddressMenu: (user: UserSummaryResponse) => void;
 }
 
 const TableSection: React.FC<TableSectionProps> = ({
@@ -30,6 +31,7 @@ const TableSection: React.FC<TableSectionProps> = ({
   onBan,
   onAssignRole,
   onResetPassword,
+  onAddressMenu,
 }) => {
   return (
     <div className="space-y-6">
@@ -132,6 +134,15 @@ const TableSection: React.FC<TableSectionProps> = ({
                           title="Gán quyền"
                         >
                           <ShieldCheck className="h-4 w-4 group-hover/btn:scale-110 transition-transform" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-9 w-9 rounded-2xl text-emerald-600 hover:bg-emerald-100 hover:text-emerald-700 transition-all active:scale-95 group/btn"
+                          onClick={() => onAddressMenu(user)}
+                          title="Quản lý địa chỉ"
+                        >
+                          <MapPin className="h-4 w-4 group-hover/btn:scale-110 transition-transform" />
                         </Button>
                         <Button
                           variant="ghost"

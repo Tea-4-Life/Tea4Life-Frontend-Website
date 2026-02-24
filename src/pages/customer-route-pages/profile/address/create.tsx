@@ -10,8 +10,11 @@ import {
 } from "@/components/ui/card.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { Label } from "@/components/ui/label.tsx";
-import { Phone, ArrowLeft, MapPin } from "lucide-react";
+import { Phone, ArrowLeft, MapPin, Loader2 } from "lucide-react";
 import { AddressMapPicker } from "@/components/custom/AddressMapPicker";
+import { createAddressApi } from "@/services/addressApi";
+import { toast } from "sonner";
+import type { AddressType } from "@/types/address/CreateAddressRequest";
 
 export default function CreateAddressPage() {
   const navigate = useNavigate();
@@ -23,14 +26,38 @@ export default function CreateAddressPage() {
     detail: "",
     latitude: 0,
     longitude: 0,
-    addressType: "HOME",
+    addressType: "HOME" as AddressType,
     isDefault: false,
   });
 
-  const handleSave = () => {
-    console.log("Saving address:", addressForm);
-    // TODO: Connect to API
-    navigate("/profile/address");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSave = async () => {
+    // Basic validation
+    if (
+      !addressForm.receiverName ||
+      !addressForm.phone ||
+      !addressForm.detail
+    ) {
+      toast.error("Vui lòng điền đầy đủ thông tin bắt buộc!");
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const response = await createAddressApi(addressForm);
+      if (response.data.errorCode === null) {
+        toast.success("Tạo địa chỉ thành công!");
+        navigate("/profile/address");
+      } else {
+        toast.error(response.data.errorMessage || "Có lỗi xảy ra");
+      }
+    } catch (error) {
+      console.error("Lỗi khi tạo địa chỉ", error);
+      toast.error("Lỗi khi tạo địa chỉ. Vui lòng thử lại sau.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -144,7 +171,7 @@ export default function CreateAddressPage() {
                     onChange={(e) =>
                       setAddressForm({
                         ...addressForm,
-                        addressType: e.target.value,
+                        addressType: e.target.value as AddressType,
                       })
                     }
                   >
@@ -233,8 +260,12 @@ export default function CreateAddressPage() {
                 <Button
                   className="flex-1 bg-emerald-600 hover:bg-emerald-700"
                   onClick={handleSave}
+                  disabled={isLoading}
                 >
-                  Hoàn tất lưu
+                  {isLoading && (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  )}
+                  {isLoading ? "Đang lưu..." : "Hoàn tất lưu"}
                 </Button>
               </div>
             </div>
