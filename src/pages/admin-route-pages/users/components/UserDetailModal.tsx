@@ -9,6 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { X, Mail, Phone, Calendar, User, Shield, KeyRound } from "lucide-react";
 import type { UserResponse } from "@/types/user/UserResponse";
+import { getMediaUrl } from "@/lib/utils";
 
 interface UserDetailModalProps {
   isOpen: boolean;
@@ -63,7 +64,7 @@ const UserDetailModal: React.FC<UserDetailModalProps> = ({
                 <div className="h-14 w-14 rounded-2xl bg-emerald-100 overflow-hidden flex items-center justify-center shrink-0">
                   {user.avatarUrl ? (
                     <img
-                      src={user.avatarUrl}
+                      src={getMediaUrl(user.avatarUrl)}
                       alt={user.fullName}
                       className="h-full w-full object-cover"
                     />

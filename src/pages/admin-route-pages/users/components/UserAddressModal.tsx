@@ -8,6 +8,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { AddressMapPicker } from "@/components/custom/AddressMapPicker";
 import {
   MapPin,
   Phone,
@@ -144,7 +145,7 @@ const UserAddressModal: React.FC<UserAddressModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="max-w-2xl bg-white border-emerald-100/50 shadow-2xl p-0 overflow-hidden">
+      <DialogContent className="max-w-5xl sm:max-w-5xl w-[90vw] bg-white border-emerald-100/50 shadow-2xl p-0 overflow-hidden max-h-[90vh] flex flex-col">
         <DialogHeader className="p-6 pb-4 border-b border-emerald-50 bg-emerald-50/10">
           <DialogTitle className="text-xl font-bold flex items-center gap-2 text-emerald-900">
             {view === "edit" ? (
@@ -168,7 +169,7 @@ const UserAddressModal: React.FC<UserAddressModalProps> = ({
           </DialogTitle>
         </DialogHeader>
 
-        <div className="p-6 min-h-[400px]">
+        <div className="p-6 min-h-[400px] flex-1 overflow-y-auto">
           {loading ? (
             <div className="flex flex-col items-center justify-center h-[300px]">
               <Loader2 className="h-8 w-8 animate-spin text-emerald-500" />
@@ -246,7 +247,40 @@ const UserAddressModal: React.FC<UserAddressModalProps> = ({
             </div>
           ) : (
             // Edit Form View
-            <div className="space-y-5 animate-in slide-in-from-right-2 duration-300">
+            <div className="space-y-6 animate-in slide-in-from-right-2 duration-300">
+              <div className="space-y-3">
+                <div className="h-[450px]">
+                  <AddressMapPicker
+                    initialLatitude={editForm.latitude || undefined}
+                    initialLongitude={editForm.longitude || undefined}
+                    onLocationSelect={(data) => {
+                      setEditForm((prev) => ({
+                        ...prev,
+                        province: data.province,
+                        ward: data.ward,
+                        detail: data.addressText,
+                        latitude: data.latitude,
+                        longitude: data.longitude,
+                      }));
+                    }}
+                  />
+                </div>
+                <div className="bg-emerald-50/50 px-4 py-2.5 rounded-xl border border-emerald-100 text-sm flex items-center gap-3">
+                  <div className="relative flex h-3 w-3 shrink-0">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                  </div>
+                  <div>
+                    <p className="font-bold text-emerald-950 text-[13px] uppercase tracking-wider">
+                      Ghim vị trí của người dùng
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-0.5 font-medium">
+                      Kéo thả ghim hoặc tìm kiếm để tự động điền địa chỉ.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label className="text-emerald-900 font-semibold">
@@ -280,11 +314,9 @@ const UserAddressModal: React.FC<UserAddressModalProps> = ({
                     Tỉnh/TP
                   </Label>
                   <Input
+                    readOnly
                     value={editForm.province}
-                    onChange={(e) =>
-                      setEditForm({ ...editForm, province: e.target.value })
-                    }
-                    className="border-emerald-100 focus-visible:ring-emerald-500"
+                    className="border-none bg-emerald-50 text-emerald-800 focus-visible:ring-0 cursor-default"
                   />
                 </div>
                 <div className="space-y-2">
@@ -292,11 +324,9 @@ const UserAddressModal: React.FC<UserAddressModalProps> = ({
                     Phường/Xã
                   </Label>
                   <Input
+                    readOnly
                     value={editForm.ward}
-                    onChange={(e) =>
-                      setEditForm({ ...editForm, ward: e.target.value })
-                    }
-                    className="border-emerald-100 focus-visible:ring-emerald-500"
+                    className="border-none bg-emerald-50 text-emerald-800 focus-visible:ring-0 cursor-default"
                   />
                 </div>
                 <div className="space-y-2">
@@ -323,11 +353,9 @@ const UserAddressModal: React.FC<UserAddressModalProps> = ({
                   Địa chỉ chi tiết (Sổ nhà, tên đường)
                 </Label>
                 <Input
+                  readOnly
                   value={editForm.detail}
-                  onChange={(e) =>
-                    setEditForm({ ...editForm, detail: e.target.value })
-                  }
-                  className="border-emerald-100 focus-visible:ring-emerald-500"
+                  className="border-none bg-emerald-50 text-emerald-800 focus-visible:ring-0 cursor-default"
                 />
               </div>
 

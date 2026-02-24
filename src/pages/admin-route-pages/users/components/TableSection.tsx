@@ -11,6 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import EmptyState from "@/components/custom/EmptyState";
 import type { UserSummaryResponse } from "@/types/user/UserSummaryResponse";
+import { getMediaUrl } from "@/lib/utils";
 
 interface TableSectionProps {
   loading: boolean;
@@ -93,7 +94,7 @@ const TableSection: React.FC<TableSectionProps> = ({
                       <div className="h-10 w-10 rounded-full bg-emerald-100 overflow-hidden flex items-center justify-center">
                         {user.avatarUrl ? (
                           <img
-                            src={user.avatarUrl}
+                            src={getMediaUrl(user.avatarUrl)}
                             alt={user.fullName}
                             className="h-full w-full object-cover"
                           />
