@@ -24,6 +24,7 @@ export default function CreateAddressPage() {
     latitude: 0,
     longitude: 0,
     addressType: "HOME",
+    isDefault: false,
   });
 
   const handleSave = () => {
@@ -198,6 +199,27 @@ export default function CreateAddressPage() {
                     value={addressForm.detail}
                   />
                 </div>
+              </div>
+
+              <div className="flex items-center space-x-2 pt-2">
+                <input
+                  type="checkbox"
+                  id="isDefault"
+                  className="h-4 w-4 rounded border-emerald-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer accent-emerald-600"
+                  checked={addressForm.isDefault}
+                  onChange={(e) =>
+                    setAddressForm({
+                      ...addressForm,
+                      isDefault: e.target.checked,
+                    })
+                  }
+                />
+                <Label
+                  htmlFor="isDefault"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer text-emerald-900"
+                >
+                  Đặt làm địa chỉ mặc định
+                </Label>
               </div>
 
               <div className="pt-4 flex gap-3">
