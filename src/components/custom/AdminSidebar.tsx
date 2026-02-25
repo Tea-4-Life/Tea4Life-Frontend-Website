@@ -50,8 +50,8 @@ const adminGroups: SidebarGroup[] = [
   {
     label: "Quản lý sản phẩm",
     links: [
-      { name: "Sản phẩm", href: "/admin/products", icon: Package },
       { name: "Danh mục", href: "/admin/categories", icon: LayoutGrid },
+      { name: "Sản phẩm", href: "/admin/products", icon: Package },
       { name: "Thương hiệu", href: "/admin/brands", icon: Award },
       { name: "Vùng miền", href: "/admin/regions", icon: Map },
     ],

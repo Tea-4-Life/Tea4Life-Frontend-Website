@@ -1,105 +1,166 @@
-"use client";
-
+import { useState, useCallback, useEffect } from "react";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+  getProductCategoriesApi,
+  createProductCategoryApi,
+  updateProductCategoryApi,
+  deleteProductCategoryApi,
+} from "@/services/admin/productCategoryAdminApi";
+import type { ProductCategoryResponse } from "@/types/product-category/ProductCategoryResponse";
+import type { CreateProductCategoryRequest } from "@/types/product-category/CreateProductCategoryRequest";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Plus, Search, Edit, Trash2, LayoutGrid } from "lucide-react";
+import { Plus, LayoutGrid } from "lucide-react";
+import { toast } from "sonner";
+import { handleError } from "@/lib/utils";
 
-const categories = [
-  {
-    id: 1,
-    name: "Trà Xanh",
-    slug: "tra-xanh",
-    productCount: 15,
-    status: "Active",
-  },
-  {
-    id: 2,
-    name: "Trà Ô Long",
-    slug: "tra-o-long",
-    productCount: 12,
-    status: "Active",
-  },
-  {
-    id: 3,
-    name: "Trà Thảo Mộc",
-    slug: "tra-thao-moc",
-    productCount: 8,
-    status: "Active",
-  },
-];
+// Sub-components
+import TableSection from "./components/TableSection";
+import CategoryFormModal from "./components/CategoryFormModal";
+import { ConfirmationDialog } from "@/components/custom/ConfirmationDialog";
 
 export default function AdminCategoriesPage() {
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState<ProductCategoryResponse[]>([]);
+
+  // Form Modal state
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [formLoading, setFormLoading] = useState(false);
+  const [currentCategory, setCurrentCategory] =
+    useState<ProductCategoryResponse | null>(null);
+
+  // Delete Dialog state
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [deleteName, setDeleteName] = useState("");
+
+  const fetchCategories = useCallback(async () => {
+    setLoading(true);
+    try {
+      // Product categoryService response: { code, message, data: { content: [] } } or { code, message, data: [] }
+      // The user mentioned it returns { data: [...] }, not PageResponse so we need to dynamically adapt.
+      const response = await getProductCategoriesApi({ page: 1, size: 1000 });
+      const responseData = response.data.data;
+      if (Array.isArray(responseData)) {
+        setData(responseData);
+      } else {
+        setData([]); // Fallback
+      }
+    } catch (error) {
+      handleError(error, "Không thể tải danh sách danh mục.");
+    } finally {
+      setTimeout(() => setLoading(false), 500);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchCategories();
+  }, [fetchCategories]);
+
+  const handleOpenCreateForm = () => {
+    setCurrentCategory(null);
+    setIsFormOpen(true);
+  };
+
+  const handleOpenEditForm = (category: ProductCategoryResponse) => {
+    setCurrentCategory(category);
+    setIsFormOpen(true);
+  };
+
+  const handleFormSubmit = async (
+    formData: CreateProductCategoryRequest,
+    id?: string,
+  ) => {
+    setFormLoading(true);
+    try {
+      if (id) {
+        await updateProductCategoryApi(id, formData);
+        toast.success("Cập nhật danh mục thành công!");
+      } else {
+        await createProductCategoryApi(formData);
+        toast.success("Thêm danh mục thành công!");
+      }
+      setIsFormOpen(false);
+      fetchCategories();
+    } catch (error) {
+      handleError(error, "Lưu danh mục thất bại.");
+    } finally {
+      setFormLoading(false);
+    }
+  };
+
+  const handleOpenDeleteDialog = (id: string, name: string) => {
+    setDeleteId(id);
+    setDeleteName(name);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!deleteId) return;
+    setDeleteLoading(true);
+    try {
+      await deleteProductCategoryApi(deleteId);
+      toast.success(`Đã xóa danh mục "${deleteName}"`);
+      setIsDeleteDialogOpen(false);
+      fetchCategories();
+    } catch (error) {
+      handleError(error, "Xóa danh mục thất bại.");
+    } finally {
+      setDeleteLoading(false);
+    }
+  };
+
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
-          <LayoutGrid className="h-6 w-6 text-emerald-600" /> Quản lý Danh mục
-        </h1>
-        <Button className="bg-emerald-600 hover:bg-emerald-700 font-medium">
-          <Plus className="h-4 w-4 mr-2" /> Thêm danh mục
+    <div className="space-y-6 animate-in fade-in duration-500">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
+            <LayoutGrid className="h-6 w-6 text-emerald-600" /> Quản lý Danh mục
+          </h1>
+          <p className="mt-1 text-sm text-slate-500">
+            Tổng cộng:{" "}
+            <span className="font-semibold text-emerald-700">
+              {data?.length || 0}
+            </span>{" "}
+            danh mục
+          </p>
+        </div>
+        <Button
+          onClick={handleOpenCreateForm}
+          className="bg-emerald-600 hover:bg-emerald-700 text-white font-medium shadow-sm transition-all shadow-emerald-200"
+        >
+          <Plus className="h-4 w-4 mr-2" /> Thêm Danh Mục Mới
         </Button>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border p-4">
-        <div className="relative max-w-sm mb-6">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-          <Input
-            placeholder="Tìm kiếm danh mục..."
-            className="pl-10 border-slate-200"
-          />
-        </div>
+      {/* Table Content */}
+      <TableSection
+        loading={loading}
+        data={data}
+        onEdit={handleOpenEditForm}
+        onDelete={handleOpenDeleteDialog}
+      />
 
-        <Table>
-          <TableHeader className="bg-slate-50/50">
-            <TableRow>
-              <TableHead className="font-bold">Tên danh mục</TableHead>
-              <TableHead className="font-bold">Slug (URL)</TableHead>
-              <TableHead className="font-bold">Số sản phẩm</TableHead>
-              <TableHead className="font-bold text-right">Hành động</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {categories.map((cat) => (
-              <TableRow
-                key={cat.id}
-                className="hover:bg-slate-50/50 transition-colors"
-              >
-                <TableCell className="font-semibold text-emerald-900">
-                  {cat.name}
-                </TableCell>
-                <TableCell className="text-slate-500 font-mono text-xs">
-                  {cat.slug}
-                </TableCell>
-                <TableCell>{cat.productCount} sản phẩm</TableCell>
-                <TableCell className="text-right space-x-1">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="text-blue-600 hover:bg-blue-50"
-                  >
-                    <Edit className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="text-red-600 hover:bg-red-50"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
+      {/* Form Modal (Create/Update) */}
+      <CategoryFormModal
+        isOpen={isFormOpen}
+        onClose={() => setIsFormOpen(false)}
+        onSubmit={handleFormSubmit}
+        loading={formLoading}
+        initialData={currentCategory}
+      />
+
+      {/* Delete Confirmation */}
+      <ConfirmationDialog
+        isOpen={isDeleteDialogOpen}
+        onOpenChange={setIsDeleteDialogOpen}
+        title="Xác nhận xóa danh mục"
+        description={`Bạn có chắc chắn muốn xóa danh mục "${deleteName}"? Hành động này không thể hoàn tác và có thể ảnh hưởng đến các sản phẩm thuộc danh mục này.`}
+        onConfirm={handleDeleteConfirm}
+        isLoading={deleteLoading}
+        confirmLabel="Xóa vĩnh viễn"
+        cancelLabel="Hủy bỏ"
+      />
     </div>
   );
 }
