@@ -26,11 +26,11 @@ export default function BrandsListPage() {
         {/* Header Section */}
         <div className="text-center mb-16">
           <h1 className="text-4xl font-extrabold text-emerald-900 sm:text-5xl">
-            Thương hiệu Trà Đồng hành
+            Thương hiệu Đồng hành
           </h1>
           <p className="mt-4 text-xl text-emerald-700 max-w-2xl mx-auto">
             Tea4Life tự hào là đối tác phân phối chính thức của những thương
-            hiệu trà danh tiếng nhất Việt Nam.
+            hiệu đồ uống danh tiếng nhất Việt Nam.
           </p>
         </div>
 

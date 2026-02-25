@@ -18,93 +18,94 @@ import { Star, ShoppingCart, ArrowRight } from "lucide-react";
 // --- Dữ liệu Banner ---
 const banners = [
   {
-    title: "TRÀ XANH THÁI NGUYÊN",
-    subtitle: "Đệ nhất danh trà Việt",
-    description: "Hương thơm cốm non, vị chát dịu ngọt hậu đặc trưng.",
+    title: "TRÀ SỮA TRÂN CHÂU",
+    subtitle: "Vị ngon khó cưỡng",
+    description:
+      "Hương vị trà sữa truyền thống kết hợp trân châu dai giòn sần sật.",
     image:
-      "https://images.unsplash.com/photo-1597318181409-cf64d0b5d8a2?q=80&w=1200&auto=format&fit=crop",
-    bgColor: "bg-[#14532d]", // Green 900
+      "https://images.unsplash.com/photo-1558852063-8a39e8027a05?q=80&w=1200&auto=format&fit=crop",
+    bgColor: "bg-[#d97706]", // amber-600
   },
   {
-    title: "TRÀ THẢO MỘC",
-    subtitle: "An nhiên trong từng nhịp thở",
+    title: "HỒNG TRÀ MACCHIATO",
+    subtitle: "Lớp kem sánh mịn",
     description:
-      "Sự hòa quyện của hoa cúc, kỷ tử và táo đỏ, giúp thanh lọc cơ thể và thư giãn tâm trí.",
+      "Hồng trà đậm vị quyện cùng lớp kem macchiato mặn ngọt béo ngậy.",
     image:
-      "https://images.unsplash.com/photo-1563911892437-1feda0179e1b?q=80&w=1200&auto=format&fit=crop",
-    bgColor: "bg-[#78350f]", // Amber 900 (Màu ấm của thảo mộc)
+      "https://images.unsplash.com/photo-1623868612984-633dfbaf0fbb?q=80&w=1200&auto=format&fit=crop",
+    bgColor: "bg-[#b91c1c]", // red-700
   },
   {
-    title: "TRÀ TUYẾT CỔ THỤ",
-    subtitle: "Báu vật từ đỉnh Tây Côn Lĩnh",
+    title: "TRÀ TRÁI CÂY NHIỆT ĐỚI",
+    subtitle: "Thanh mát ngày hè",
     description:
-      "Thu hoạch từ những cây trà hàng trăm năm tuổi, phủ trắng lớp lông tuyết mịn màng.",
+      "Trà tươi thanh mát kết hợp cùng trái cây nhiệt đới mọng nước.",
     image:
-      "https://images.unsplash.com/photo-1594631252845-29fc4cc8cde9?q=80&w=1200&auto=format&fit=crop",
-    bgColor: "bg-[#0c4a6e]",
+      "https://images.unsplash.com/photo-1524156868115-e696b44983db?q=80&w=1200&auto=format&fit=crop",
+    bgColor: "bg-[#047857]", // emerald-700
   },
   {
-    title: "TRÀ SEN TÂY HỒ",
-    subtitle: "Quốc ẩm trong từng chén trà",
+    title: "SỮA TƯƠI TRÂN CHÂU",
+    subtitle: "Ngọt ngào hương vị đường đen",
     description:
-      "Sự kết hợp hoàn hảo giữa trà xanh Tân Cương thượng hạng và hương sen bách diệp hồ Tây.",
+      "Sữa tươi thanh trùng thanh mát hòa quyện cùng trân châu đường đen đậm vị.",
     image:
-      "https://images.unsplash.com/photo-1576092768241-dec231879fc3?q=80&w=1200&auto=format&fit=crop",
-    bgColor: "bg-[#831843]",
+      "https://images.unsplash.com/photo-1596803244618-8dbee441d70b?q=80&w=1200&auto=format&fit=crop",
+    bgColor: "bg-[#1e1b4b]", // indigo-950
   },
 ];
 
 // --- Dữ liệu Danh mục (Circle Style) ---
 const categories = [
-  { name: "Trà Xanh", icon: "🍃", color: "bg-emerald-100" },
-  { name: "Trà Ô Long", icon: "🍵", color: "bg-green-100" },
-  { name: "Trà Sen", icon: "🪷", color: "bg-rose-100" },
-  { name: "Trà Thảo Mộc", icon: "🌸", color: "bg-amber-100" },
-  { name: "Phụ Kiện", icon: "🏺", color: "bg-slate-100" },
-  { name: "Quà Tặng", icon: "🎁", color: "bg-red-100" },
+  { name: "Trà Sữa", icon: "🧋", color: "bg-orange-100" },
+  { name: "Trà Trái Cây", icon: "🍹", color: "bg-yellow-100" },
+  { name: "Hồng Trà", icon: "☕", color: "bg-red-100" },
+  { name: "Macchiato", icon: "☁️", color: "bg-slate-100" },
+  { name: "Sữa Tươi", icon: "🥛", color: "bg-blue-100" },
+  { name: "Topping", icon: "🍮", color: "bg-amber-100" },
 ];
 
 // --- Dữ liệu Sản phẩm Ưu đãi (Best Deals) ---
 const bestDeals = [
   {
-    name: "Trà Ô Long Mộc Châu",
-    price: "350.000đ",
-    oldPrice: "580.000đ",
-    discount: "40%",
-    image:
-      "https://images.unsplash.com/photo-1564890369478-c89ca6d9cde9?q=80&w=400&auto=format&fit=crop",
-  },
-  {
-    name: "Trà Xanh Thái Nguyên",
-    price: "220.000đ",
-    oldPrice: "280.000đ",
-    discount: "21%",
-    image:
-      "https://images.unsplash.com/photo-1556679343-c7306c1976bc?q=80&w=400&auto=format&fit=crop",
-  },
-  {
-    name: "Trà Sen Tây Hồ",
-    price: "450.000đ",
-    oldPrice: "550.000đ",
+    name: "Trà Sữa Trân Châu Đường Đen",
+    price: "45.000đ",
+    oldPrice: "55.000đ",
     discount: "18%",
     image:
-      "https://images.unsplash.com/photo-1594631252845-29fc4cc8cde9?q=80&w=400&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1596803244618-8dbee441d70b?q=80&w=400&auto=format&fit=crop",
   },
   {
-    name: "Trà Tuyết Cổ Thụ",
-    price: "890.000đ",
-    oldPrice: "1.100.000đ",
+    name: "Hồng Trà Macchiato",
+    price: "39.000đ",
+    oldPrice: "50.000đ",
+    discount: "22%",
+    image:
+      "https://images.unsplash.com/photo-1623868612984-633dfbaf0fbb?q=80&w=400&auto=format&fit=crop",
+  },
+  {
+    name: "Trà Đào Cam Sả",
+    price: "42.000đ",
+    oldPrice: "52.000đ",
     discount: "19%",
     image:
-      "https://images.unsplash.com/photo-1576092768241-dec231879fc3?q=80&w=400&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1498644349942-5b966cf1375d?q=80&w=400&auto=format&fit=crop",
   },
   {
-    name: "Trà Hoa Cúc Vàng",
-    price: "185.000đ",
-    oldPrice: "230.000đ",
+    name: "Sữa Tươi Trân Châu",
+    price: "35.000đ",
+    oldPrice: "45.000đ",
+    discount: "22%",
+    image:
+      "https://images.unsplash.com/photo-1558852063-8a39e8027a05?q=80&w=400&auto=format&fit=crop",
+  },
+  {
+    name: "Trà Xanh Kem Phô Mai",
+    price: "40.000đ",
+    oldPrice: "50.000đ",
     discount: "20%",
     image:
-      "https://images.unsplash.com/photo-1563911892437-1feda0179e1b?q=80&w=400&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1606758688404-58bc4499d30c?q=80&w=400&auto=format&fit=crop",
   },
 ];
 
@@ -173,7 +174,7 @@ export default function LandingPage() {
         <section className="space-y-6">
           <div className="flex items-center justify-between border-b border-slate-200 pb-4">
             <h3 className="text-2xl font-black text-slate-800 uppercase tracking-tight">
-              Danh Mục Trà
+              Danh Mục Đồ Uống
             </h3>
             <Link
               to="/categories"

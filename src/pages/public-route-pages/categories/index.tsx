@@ -25,10 +25,10 @@ export default function CategoriesPage() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h1 className="text-4xl font-extrabold text-emerald-900">
-            Danh mục Trà
+            Danh mục Đồ Uống
           </h1>
           <p className="mt-4 text-emerald-700">
-            Tìm kiếm loại trà phù hợp với khẩu vị của bạn
+            Tìm kiếm thức uống phù hợp với khẩu vị của bạn
           </p>
         </div>
 

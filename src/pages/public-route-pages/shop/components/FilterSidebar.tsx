@@ -81,13 +81,13 @@ export default function FilterSidebar({
 
       {/* Region */}
       <div className="space-y-2">
-        <Label className="text-emerald-900 font-medium">Vung mien</Label>
+        <Label className="text-emerald-900 font-medium">Dong san pham</Label>
         <Select
           value={region}
           onValueChange={(value) => onUpdateParams({ region: value })}
         >
           <SelectTrigger className="border-emerald-200 focus:ring-emerald-500">
-            <SelectValue placeholder="Chon vung mien" />
+            <SelectValue placeholder="Chon dong san pham" />
           </SelectTrigger>
           <SelectContent>
             {regions.map((r) => (
