@@ -1,4 +1,3 @@
-import * as React from "react";
 import { Leaf } from "lucide-react";
 import { Button } from "@/components/ui/button.tsx";
 

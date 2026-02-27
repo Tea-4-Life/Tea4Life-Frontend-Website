@@ -1,4 +1,3 @@
-import * as React from "react";
 import { MessageSquare, Star } from "lucide-react";
 
 export function TestimonialsSection() {

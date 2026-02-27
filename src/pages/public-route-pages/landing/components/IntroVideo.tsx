@@ -1,5 +1,3 @@
-import * as React from "react";
-
 export function IntroVideo() {
   return (
     <section className="relative w-full h-[60vh] md:h-[80vh] border-b-8 border-[#1A4331] overflow-hidden z-10">

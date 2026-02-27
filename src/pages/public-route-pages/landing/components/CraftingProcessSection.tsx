@@ -1,4 +1,3 @@
-import * as React from "react";
 import { Sprout, Droplets, Sun } from "lucide-react";
 
 export function CraftingProcessSection() {
