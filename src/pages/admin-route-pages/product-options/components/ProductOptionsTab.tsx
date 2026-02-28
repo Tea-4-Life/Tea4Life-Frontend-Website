@@ -1,49 +1,108 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Plus, Settings2, Pencil, Trash2 } from "lucide-react";
-import type { ProductOptionResponse } from "@/types/product-option/ProductOptionResponse";
+import { toast } from "sonner";
+import { handleError } from "@/lib/utils";
 
-// Mock data tạm
-const mockOptions: ProductOptionResponse[] = [
-  {
-    id: "1",
-    name: "Kích cỡ",
-    isRequired: true,
-    isMultiSelect: false,
-    sortOrder: 1,
-    productIds: ["p1", "p2", "p3"],
-  },
-  {
-    id: "2",
-    name: "Mức đường",
-    isRequired: true,
-    isMultiSelect: false,
-    sortOrder: 2,
-    productIds: ["p1", "p2"],
-  },
-  {
-    id: "3",
-    name: "Mức đá",
-    isRequired: true,
-    isMultiSelect: false,
-    sortOrder: 3,
-    productIds: ["p1", "p2", "p3"],
-  },
-  {
-    id: "4",
-    name: "Topping",
-    isRequired: false,
-    isMultiSelect: true,
-    sortOrder: 4,
-    productIds: ["p1"],
-  },
-];
+import {
+  getAllProductOptionsApi,
+  createProductOptionApi,
+  updateProductOptionApi,
+  deleteProductOptionApi,
+} from "@/services/admin/productOptionAdminApi";
+
+import type { ProductOptionResponse } from "@/types/product-option/ProductOptionResponse";
+import type { CreateProductOptionRequest } from "@/types/product-option/CreateProductOptionRequest";
+
+import { ConfirmationDialog } from "@/components/custom/ConfirmationDialog";
+import ProductOptionFormModal from "./ProductOptionFormModal";
 
 export default function ProductOptionsTab() {
-  const [data] = useState<ProductOptionResponse[]>(mockOptions);
-  const [loading] = useState(false);
+  const [data, setData] = useState<ProductOptionResponse[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Form Modal state
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [formLoading, setFormLoading] = useState(false);
+  const [currentOption, setCurrentOption] =
+    useState<ProductOptionResponse | null>(null);
+
+  // Delete Dialog state
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [deleteName, setDeleteName] = useState("");
+
+  const fetchOptions = useCallback(async () => {
+    setLoading(true);
+    try {
+      const response = await getAllProductOptionsApi();
+      setData(response.data.data || []);
+    } catch (error) {
+      handleError(error, "Không thể tải danh sách tùy chọn.");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchOptions();
+  }, [fetchOptions]);
+
+  const handleOpenCreateForm = () => {
+    setCurrentOption(null);
+    setIsFormOpen(true);
+  };
+
+  const handleOpenEditForm = (option: ProductOptionResponse) => {
+    setCurrentOption(option);
+    setIsFormOpen(true);
+  };
+
+  const handleFormSubmit = async (
+    formData: CreateProductOptionRequest,
+    id?: string,
+  ) => {
+    setFormLoading(true);
+    try {
+      if (id) {
+        await updateProductOptionApi(id, formData);
+        toast.success("Cập nhật tùy chọn thành công!");
+      } else {
+        await createProductOptionApi(formData);
+        toast.success("Thêm tùy chọn mới thành công!");
+      }
+      setIsFormOpen(false);
+      fetchOptions();
+    } catch (error) {
+      handleError(error, "Lưu tùy chọn thất bại.");
+    } finally {
+      setFormLoading(false);
+    }
+  };
+
+  const handleOpenDeleteDialog = (id: string, name: string) => {
+    setDeleteId(id);
+    setDeleteName(name);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!deleteId) return;
+    setDeleteLoading(true);
+    try {
+      await deleteProductOptionApi(deleteId);
+      toast.success(`Đã xóa tùy chọn "${deleteName}"`);
+      setIsDeleteDialogOpen(false);
+      fetchOptions();
+    } catch (error) {
+      handleError(error, "Xóa tùy chọn thất bại.");
+    } finally {
+      setDeleteLoading(false);
+    }
+  };
 
   return (
     <div className="space-y-4">
@@ -54,7 +113,10 @@ export default function ProductOptionsTab() {
           <span className="font-semibold text-emerald-700">{data.length}</span>{" "}
           tùy chọn
         </p>
-        <Button className="bg-emerald-600 hover:bg-emerald-700 text-white font-medium shadow-sm transition-all shadow-emerald-200">
+        <Button
+          onClick={handleOpenCreateForm}
+          className="bg-emerald-600 hover:bg-emerald-700 text-white font-medium shadow-sm transition-all shadow-emerald-200"
+        >
           <Plus className="h-4 w-4 mr-2" /> Thêm Tùy Chọn
         </Button>
       </div>
@@ -147,7 +209,7 @@ export default function ProductOptionsTab() {
                   </td>
                   <td className="px-5 py-4">
                     <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200">
-                      {option.productIds.length} sản phẩm
+                      {option.productIds?.length || 0} sản phẩm
                     </span>
                   </td>
                   <td className="px-5 py-4 text-right">
@@ -155,6 +217,7 @@ export default function ProductOptionsTab() {
                       <Button
                         variant="ghost"
                         size="sm"
+                        onClick={() => handleOpenEditForm(option)}
                         className="h-8 w-8 p-0 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50"
                       >
                         <Pencil className="h-4 w-4" />
@@ -162,6 +225,9 @@ export default function ProductOptionsTab() {
                       <Button
                         variant="ghost"
                         size="sm"
+                        onClick={() =>
+                          handleOpenDeleteDialog(option.id, option.name)
+                        }
                         className="h-8 w-8 p-0 text-slate-400 hover:text-red-600 hover:bg-red-50"
                       >
                         <Trash2 className="h-4 w-4" />
@@ -174,6 +240,25 @@ export default function ProductOptionsTab() {
           </tbody>
         </table>
       </div>
+
+      <ProductOptionFormModal
+        isOpen={isFormOpen}
+        onClose={() => setIsFormOpen(false)}
+        onSubmit={handleFormSubmit}
+        loading={formLoading}
+        initialData={currentOption}
+      />
+
+      <ConfirmationDialog
+        isOpen={isDeleteDialogOpen}
+        onOpenChange={setIsDeleteDialogOpen}
+        title="Xác nhận xóa tùy chọn"
+        description={`Bạn có chắc chắn muốn xóa tùy chọn "${deleteName}"? Thao tác này có thể xóa cả các giá trị thuộc tùy chọn này (tùy thuộc vào backend).`}
+        onConfirm={handleDeleteConfirm}
+        isLoading={deleteLoading}
+        confirmLabel="Xóa vĩnh viễn"
+        cancelLabel="Hủy bỏ"
+      />
     </div>
   );
 }
