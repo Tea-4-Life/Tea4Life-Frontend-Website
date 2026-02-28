@@ -11,7 +11,6 @@ import {
   Leaf,
   Settings,
   LayoutGrid,
-  Award,
   Map,
   ShieldCheck,
   Lock,
@@ -52,7 +51,7 @@ const adminGroups: SidebarGroup[] = [
     links: [
       { name: "Danh mục", href: "/admin/categories", icon: LayoutGrid },
       { name: "Sản phẩm", href: "/admin/products", icon: Package },
-      { name: "Thương hiệu", href: "/admin/brands", icon: Award },
+      { name: "Tùy chọn SP", href: "/admin/product-options", icon: Settings },
       { name: "Vùng miền", href: "/admin/regions", icon: Map },
     ],
   },

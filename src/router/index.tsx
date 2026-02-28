@@ -33,7 +33,7 @@ import AdminUsersPage from "@/pages/admin-route-pages/users";
 import AdminReportsPage from "@/pages/admin-route-pages/reports";
 import AdminRegionsPage from "@/pages/admin-route-pages/regions";
 import AdminCategoriesPage from "@/pages/admin-route-pages/categories";
-import AdminBrandsPage from "@/pages/admin-route-pages/brands";
+import AdminProductOptionsPage from "@/pages/admin-route-pages/product-options";
 import AdminPermissionsPage from "@/pages/admin-route-pages/permissions";
 import AdminRolesPage from "@/pages/admin-route-pages/roles";
 import AdminRoleCreatePage from "@/pages/admin-route-pages/roles/create";
@@ -83,7 +83,7 @@ const adminRoutes = [
   { path: "orders", element: <AdminOrdersPage /> },
   { path: "categories", element: <AdminCategoriesPage /> },
   { path: "regions", element: <AdminRegionsPage /> },
-  { path: "brands", element: <AdminBrandsPage /> },
+  { path: "product-options", element: <AdminProductOptionsPage /> },
   { path: "users", element: <AdminUsersPage /> },
   { path: "reports", element: <AdminReportsPage /> },
   { path: "permissions", element: <AdminPermissionsPage /> },
