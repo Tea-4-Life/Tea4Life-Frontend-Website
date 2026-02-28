@@ -63,7 +63,7 @@ export function BestDealsSection() {
             className="group border-0 bg-transparent shadow-none h-full"
           >
             {/* Item Container */}
-            <div className="pixel-border bg-white p-5 h-full flex flex-col relative transition-transform duration-200 hover:-translate-y-2 hover:shadow-[8px_8px_0px_#1A4331]">
+            <div className="pixel-border bg-white p-5 h-full flex flex-col relative transition-transform duration-200 hover:-translate-y-2 hover:shadow-[4px_4px_0px_#1A4331]">
               {/* Floating Pixel Badge */}
               {item.badge && (
                 <div className="absolute -top-4 -right-4 z-20 bg-[#D2A676] text-[#1A4331] border-4 border-[#1A4331] font-black px-4 py-1 text-sm shadow-[4px_4px_0px_#1A4331] animate-bounce">

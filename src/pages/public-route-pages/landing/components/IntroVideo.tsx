@@ -20,7 +20,7 @@ export function IntroVideo() {
         <h1 className="text-6xl md:text-9xl pixel-text text-[#F8F5F0] drop-shadow-[6px_6px_0px_#1A4331] animate-[pulse_3s_ease-in-out_infinite]">
           TEA4LIFE
         </h1>
-        <p className="text-xl md:text-3xl font-bold font-sans text-[#F8F5F0] bg-[#1A4331] px-8 py-3 border-4 border-[#F8F5F0] shadow-[6px_6px_0px_#1A4331] tracking-widest backdrop-blur-sm uppercase">
+        <p className="text-xl md:text-3xl font-bold font-sans text-[#F8F5F0] bg-[#1A4331] px-8 py-3 border-4 border-[#F8F5F0] shadow-[4px_4px_0px_#1A4331] tracking-widest backdrop-blur-sm uppercase">
           Nơi Thiên Nhiên Hội Ngộ Hoài Niệm
         </p>
       </div>

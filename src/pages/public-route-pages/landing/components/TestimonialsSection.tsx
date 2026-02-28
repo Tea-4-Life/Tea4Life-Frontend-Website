@@ -16,7 +16,7 @@ export function TestimonialsSection() {
         {[1, 2, 3].map((_, i) => (
           <div
             key={i}
-            className="pixel-border bg-white p-8 relative group hover:-translate-y-2 hover:shadow-[6px_6px_0px_#1A4331] transition-transform"
+            className="pixel-border bg-white p-8 relative group hover:-translate-y-2 hover:shadow-[4px_4px_0px_#1A4331] transition-transform"
           >
             <MessageSquare className="absolute top-4 right-4 text-[#8A9A7A] opacity-20 w-12 h-12" />
             <div className="flex gap-1 text-[#D2A676] mb-4">

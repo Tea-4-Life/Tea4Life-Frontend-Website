@@ -35,7 +35,7 @@ export function CategoriesSection() {
         {categories.map((cat, i) => (
           <div
             key={i}
-            className="pixel-border bg-white flex flex-col items-center p-8 cursor-pointer group hover:-translate-y-2 hover:shadow-[8px_8px_0px_#1A4331] transition-all duration-200 relative overflow-hidden"
+            className="pixel-border bg-white flex flex-col items-center p-8 cursor-pointer group hover:-translate-y-2 hover:shadow-[4px_4px_0px_#1A4331] transition-all duration-200 relative overflow-hidden"
           >
             {/* Background sliding effect */}
             <div

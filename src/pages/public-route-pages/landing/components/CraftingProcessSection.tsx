@@ -37,7 +37,7 @@ export function CraftingProcessSection() {
             key={index}
             className="relative z-10 pixel-border bg-[#F8F5F0] p-8 text-center group hover:-translate-y-2 transition-transform duration-300"
           >
-            <div className="w-20 h-20 mx-auto bg-[#1A4331] text-[#F8F5F0] flex items-center justify-center pixel-border mb-6 group-hover:bg-[#8A9A7A] group-hover:text-[#1A4331] transition-colors shadow-[4px_4px_0px_#1A4331] rounded-full">
+            <div className="w-20 h-20 mx-auto bg-[#1A4331] text-[#F8F5F0] flex items-center justify-center pixel-border mb-6 group-hover:bg-[#8A9A7A] group-hover:text-[#1A4331] transition-colors shadow-[2px_2px_0px_#1A4331] rounded-full">
               {step.icon}
             </div>
             <h4 className="font-bold text-2xl text-[#1A4331] pixel-text mb-4">

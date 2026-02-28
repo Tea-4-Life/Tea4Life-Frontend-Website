@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button.tsx";
 
 export function OurStorySection() {
   return (
-    <section className="relative pixel-border bg-white shadow-[8px_8px_0px_#1A4331] overflow-hidden">
+    <section className="relative pixel-border bg-white shadow-[4px_4px_0px_#1A4331] overflow-hidden">
       <div className="grid grid-cols-1 md:grid-cols-2">
         <div className="p-8 md:p-16 flex flex-col justify-center space-y-6">
           <div className="inline-flex items-center gap-2 bg-[#F8F5F0] text-[#1A4331] px-4 py-1.5 border-2 border-[#1A4331] w-fit">

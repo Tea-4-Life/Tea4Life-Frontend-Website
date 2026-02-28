@@ -26,7 +26,7 @@ export function NewsletterSection() {
           </p>
         </div>
         <div className="w-full md:w-auto flex-1 max-w-md">
-          <div className="pixel-border bg-white p-6 shadow-[8px_8px_0px_#8A9A7A] transform md:rotate-2 group-hover:rotate-0 transition-transform duration-300">
+          <div className="pixel-border bg-white p-6 shadow-[4px_4px_0px_#8A9A7A] transform md:rotate-2 group-hover:rotate-0 transition-transform duration-300">
             <form className="flex flex-col gap-4">
               <div className="space-y-2">
                 <label className="font-bold text-[#1A4331] text-sm uppercase">

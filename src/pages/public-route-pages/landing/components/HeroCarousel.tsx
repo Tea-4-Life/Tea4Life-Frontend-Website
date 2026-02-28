@@ -48,7 +48,7 @@ export function HeroCarousel() {
   );
 
   return (
-    <section className="relative group pixel-border bg-[#F8F5F0] shadow-[8px_8px_0px_#1A4331] transition-transform hover:-translate-y-1 hover:-translate-x-1 lg:hover:shadow-[12px_12px_0px_#1A4331] duration-300">
+    <section className="relative group pixel-border bg-[#F8F5F0] shadow-[4px_4px_0px_#1A4331] transition-transform hover:-translate-y-1 hover:-translate-x-1 lg:hover:shadow-[6px_6px_0px_#1A4331] duration-300">
       <Carousel
         plugins={[plugin.current]}
         className="w-full"
