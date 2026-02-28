@@ -5,7 +5,7 @@ export function TestimonialsSection() {
     <section className="space-y-12">
       <div className="text-center space-y-4 border-b-8 border-[#1A4331] pb-6">
         <h3 className="text-4xl md:text-5xl pixel-text text-[#1A4331] drop-shadow-[2px_2px_0px_#8A9A7A]">
-          NHẬN_XÉT_CỦA_NGƯỜI_CHƠI
+          Nhận Xét Của Khách Hàng
         </h3>
         <p className="text-[#8A9A7A] font-bold text-lg">
           Cộng đồng nói gì về chúng tôi.
@@ -25,8 +25,8 @@ export function TestimonialsSection() {
               ))}
             </div>
             <p className="font-bold font-sans text-[#1A4331] text-lg mb-8 italic">
-              "Chân ái thực sự! Ly matcha ngon nhất mà mình từng uống. Phong
-              cách thả dáng retro khiến trải nghiệm trọn vẹn gấp 10 lần!"
+              "Chân ái thực sự! Ly matcha ngon nhất mà mình từng uống. Không
+              gian và phong cách phục vụ khiến trải nghiệm trọn vẹn gấp 10 lần!"
             </p>
             <div className="flex items-center gap-4 border-t-4 border-[#1A4331] pt-4 border-dashed">
               <div className="w-12 h-12 flex-shrink-0 bg-[#8A9A7A] pixel-border border-2 border-[#1A4331] overflow-hidden">
@@ -37,10 +37,10 @@ export function TestimonialsSection() {
               </div>
               <div>
                 <p className="font-bold text-[#1A4331] uppercase line-clamp-1">
-                  Pixel_Fan_{i}
+                  Khách Hàng {i + 1}
                 </p>
                 <p className="text-sm text-[#8A9A7A] font-bold">
-                  Người Pha Chế Cấp {10 + i}
+                  Thành Viên Tea4Life
                 </p>
               </div>
             </div>

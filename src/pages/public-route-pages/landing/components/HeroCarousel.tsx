@@ -35,7 +35,7 @@ const banners = [
     title: "LỤC TRÀ TRÁI CÂY NHIỆT ĐỚI",
     subtitle: "Sảng Khoái Tinh Thần",
     description:
-      "Lục trà ủ lạnh phủ đầy trái cây nhiệt đới tươi mát. Cú hích năng lượng 16-bit cho ngày mới!",
+      "Lục trà ủ lạnh phủ đầy trái cây nhiệt đới tươi mát. Cú hích năng lượng cho ngày mới!",
     image: "https://picsum.photos/seed/fruittea/1200/800",
     bgColor: "bg-[#1A4331]", // Forest Green
     textColor: "text-[#F8F5F0]",
@@ -69,8 +69,8 @@ export function HeroCarousel() {
                 </div>
 
                 {/* Content */}
-                <div className="absolute inset-0 flex flex-col justify-center px-8 md:px-24 z-10 w-full md:w-3/5">
-                  <div className={`space-y-8 ${banner.textColor}`}>
+                <div className="absolute inset-0 flex flex-col justify-center px-8 md:px-24 z-10 w-full md:w-3/5 pt-14 md:pt-16 pb-8">
+                  <div className={`space-y-5 ${banner.textColor}`}>
                     {/* Subtitle Badge */}
                     <div className="inline-flex items-center gap-2 bg-[#F8F5F0] text-[#1A4331] px-4 py-1.5 border-2 border-[#1A4331] shadow-[4px_4px_0px_rgba(0,0,0,0.2)] transform -rotate-1 hover:rotate-0 transition-transform">
                       <Leaf className="w-4 h-4" />
@@ -80,7 +80,7 @@ export function HeroCarousel() {
                     </div>
 
                     {/* Title */}
-                    <h2 className="text-5xl md:text-8xl pixel-text uppercase leading-[0.9] drop-shadow-[4px_4px_0px_rgba(26,67,49,0.3)] tracking-tighter">
+                    <h2 className="text-4xl md:text-6xl pixel-text uppercase leading-[1.1] drop-shadow-[4px_4px_0px_rgba(26,67,49,0.3)] tracking-tight">
                       {banner.title}
                     </h2>
 
@@ -99,7 +99,7 @@ export function HeroCarousel() {
                     >
                       <span className="relative z-10 flex items-center gap-3">
                         <Coffee className="w-6 h-6 group-hover/btn:animate-bounce" />
-                        [ ĐẶT_HÀNG_NGAY ]
+                        Đặt Hàng Ngay
                       </span>
                       <div className="absolute inset-0 bg-[#8A9A7A] w-0 group-hover/btn:w-full transition-all duration-300 ease-out z-0" />
                     </Button>

@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button.tsx";
-import { Input } from "@/components/ui/input.tsx";
 import { Label } from "@/components/ui/label.tsx";
 import {
   Select,
@@ -40,19 +39,21 @@ export default function FilterSidebar({
     <div className="space-y-6">
       {/* Name Search */}
       <div className="space-y-2">
-        <Label className="text-emerald-900 font-medium">Ten san pham</Label>
+        <Label className="text-[#1A4331] font-bold uppercase text-xs tracking-wider">
+          Tên sản phẩm
+        </Label>
         <div className="flex gap-2">
-          <Input
-            placeholder="Tim theo ten..."
+          <input
+            placeholder="Tìm theo tên..."
             value={nameInput}
             onChange={(e) => setNameInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && onSearch()}
-            className="border-emerald-200 focus-visible:ring-emerald-500"
+            className="w-full h-9 bg-[#F8F5F0] border-2 border-[#1A4331]/20 px-3 text-sm text-[#1A4331] focus:outline-none focus:border-[#1A4331] placeholder-[#8A9A7A] transition-colors"
           />
           <Button
             size="icon"
             onClick={onSearch}
-            className="bg-emerald-500 hover:bg-emerald-600 shrink-0"
+            className="bg-[#1A4331] text-[#F8F5F0] hover:bg-[#8A9A7A] rounded-none shrink-0 w-9 h-9"
           >
             <Search className="h-4 w-4" />
           </Button>
@@ -61,17 +62,23 @@ export default function FilterSidebar({
 
       {/* Brand */}
       <div className="space-y-2">
-        <Label className="text-emerald-900 font-medium">Thuong hieu</Label>
+        <Label className="text-[#1A4331] font-bold uppercase text-xs tracking-wider">
+          Thương hiệu
+        </Label>
         <Select
           value={brand}
           onValueChange={(value) => onUpdateParams({ brand: value })}
         >
-          <SelectTrigger className="border-emerald-200 focus:ring-emerald-500">
-            <SelectValue placeholder="Chon thuong hieu" />
+          <SelectTrigger className="border-2 border-[#1A4331]/20 bg-[#F8F5F0] text-[#1A4331] text-sm focus:ring-0 focus:ring-offset-0 rounded-none h-9">
+            <SelectValue placeholder="Chọn thương hiệu" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="border border-[#1A4331]/20 bg-[#F8F5F0] rounded-none shadow-lg">
             {brands.map((b) => (
-              <SelectItem key={b.value} value={b.value}>
+              <SelectItem
+                key={b.value}
+                value={b.value}
+                className="text-sm text-[#1A4331] focus:bg-[#8A9A7A] focus:text-[#F8F5F0] rounded-none cursor-pointer"
+              >
                 {b.label}
               </SelectItem>
             ))}
@@ -81,17 +88,23 @@ export default function FilterSidebar({
 
       {/* Region */}
       <div className="space-y-2">
-        <Label className="text-emerald-900 font-medium">Dong san pham</Label>
+        <Label className="text-[#1A4331] font-bold uppercase text-xs tracking-wider">
+          Dòng sản phẩm
+        </Label>
         <Select
           value={region}
           onValueChange={(value) => onUpdateParams({ region: value })}
         >
-          <SelectTrigger className="border-emerald-200 focus:ring-emerald-500">
-            <SelectValue placeholder="Chon dong san pham" />
+          <SelectTrigger className="border-2 border-[#1A4331]/20 bg-[#F8F5F0] text-[#1A4331] text-sm focus:ring-0 focus:ring-offset-0 rounded-none h-9">
+            <SelectValue placeholder="Chọn dòng sản phẩm" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="border border-[#1A4331]/20 bg-[#F8F5F0] rounded-none shadow-lg">
             {regions.map((r) => (
-              <SelectItem key={r.value} value={r.value}>
+              <SelectItem
+                key={r.value}
+                value={r.value}
+                className="text-sm text-[#1A4331] focus:bg-[#8A9A7A] focus:text-[#F8F5F0] rounded-none cursor-pointer"
+              >
                 {r.label}
               </SelectItem>
             ))}
@@ -101,17 +114,23 @@ export default function FilterSidebar({
 
       {/* Size */}
       <div className="space-y-2">
-        <Label className="text-emerald-900 font-medium">Kich co</Label>
+        <Label className="text-[#1A4331] font-bold uppercase text-xs tracking-wider">
+          Kích cỡ
+        </Label>
         <Select
           value={size}
           onValueChange={(value) => onUpdateParams({ size: value })}
         >
-          <SelectTrigger className="border-emerald-200 focus:ring-emerald-500">
-            <SelectValue placeholder="Chon kich co" />
+          <SelectTrigger className="border-2 border-[#1A4331]/20 bg-[#F8F5F0] text-[#1A4331] text-sm focus:ring-0 focus:ring-offset-0 rounded-none h-9">
+            <SelectValue placeholder="Chọn kích cỡ" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="border border-[#1A4331]/20 bg-[#F8F5F0] rounded-none shadow-lg">
             {sizes.map((s) => (
-              <SelectItem key={s.value} value={s.value}>
+              <SelectItem
+                key={s.value}
+                value={s.value}
+                className="text-sm text-[#1A4331] focus:bg-[#8A9A7A] focus:text-[#F8F5F0] rounded-none cursor-pointer"
+              >
                 {s.label}
               </SelectItem>
             ))}
@@ -123,11 +142,10 @@ export default function FilterSidebar({
       {hasActiveFilters && (
         <Button
           onClick={onClearFilters}
-          variant="outline"
-          className="w-full border-red-300 text-red-600 hover:bg-red-50 bg-transparent"
+          className="w-full bg-[#D2A676] text-[#1A4331] hover:bg-red-400 hover:text-white rounded-none h-9 font-bold text-xs"
         >
           <X className="h-4 w-4 mr-2" />
-          Xoa bo loc
+          Xóa Bộ Lọc
         </Button>
       )}
     </div>

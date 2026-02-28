@@ -18,16 +18,15 @@ export function OurStorySection() {
           </h3>
           <p className="text-lg font-bold font-sans text-[#1A4331] leading-relaxed">
             Chúng tôi hiểu rằng cuộc sống hiện đại đôi khi thật ngột ngạt. Đó là
-            lý do Tea4Life ra đời: một không gian nơi sự đơn giản, mộc mạc của
-            những khối pixel 16-bit hòa quyện hoàn hảo cùng sự thuần khiết của
-            những lá trà hữu cơ tự nhiên.
+            lý do Tea4Life ra đời: một không gian nơi sự đơn giản, mộc mạc hòa
+            quyện hoàn hảo cùng sự thuần khiết của những lá trà hữu cơ tự nhiên.
           </p>
           <p className="text-lg font-bold font-sans text-[#1A4331] leading-relaxed">
             Hãy cho bản thân giây phút nghỉ ngơi, nhâm nhi một ly trà ngon và
-            tận hưởng khoảnh khắc bình yên trong thế giới pixel của chúng tôi.
+            tận hưởng khoảnh khắc bình yên cùng Tea4Life.
           </p>
           <Button className="bg-[#1A4331] text-[#F8F5F0] hover:bg-[#8A9A7A] pixel-button w-fit text-lg font-bold px-8 mt-4 uppercase">
-            [ ĐỌC_THÊM ]
+            Đọc Thêm
           </Button>
         </div>
         <div className="relative h-[400px] md:h-auto border-t-8 md:border-t-0 md:border-l-8 border-[#1A4331]">

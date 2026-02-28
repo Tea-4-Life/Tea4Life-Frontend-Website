@@ -13,6 +13,7 @@ import ProductDetail from "@/pages/public-route-pages/product-details/index.tsx"
 import CartPage from "@/pages/public-route-pages/cart";
 import BrandsListPage from "@/pages/public-route-pages/brands";
 import CategoriesPage from "@/pages/public-route-pages/categories";
+import AboutPage from "@/pages/public-route-pages/about";
 
 // Customer Pages
 import OrderPage from "@/pages/customer-route-pages/orders";
@@ -52,6 +53,7 @@ const publicRoutes = [
   { path: "cart", element: <CartPage /> },
   { path: "brands", element: <BrandsListPage /> },
   { path: "categories", element: <CategoriesPage /> },
+  { path: "about", element: <AboutPage /> },
 ];
 
 // --- 2. NHÓM ROUTE KHÁCH HÀNG (CUSTOMER) ---

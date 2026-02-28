@@ -9,7 +9,7 @@ export function CraftingProcessSection() {
             ● QUY TRÌNH CỦA CHÚNG TÔI
           </p>
           <h3 className="text-4xl md:text-5xl pixel-text text-[#1A4331] drop-shadow-[2px_2px_0px_#8A9A7A]">
-            NGHỆ_THUẬT_PHA_CHẾ
+            Nghệ Thuật Pha Chế
           </h3>
         </div>
       </div>

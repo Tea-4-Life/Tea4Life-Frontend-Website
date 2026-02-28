@@ -15,11 +15,7 @@ import {
   LogOut,
 } from "lucide-react";
 
-const navLinks = [
-  { name: "[ TRANG CHỦ ]", href: "/" },
-  { name: "[ DANH MỤC ]", href: "/categories" },
-  { name: "[ THƯƠNG HIỆU ]", href: "/brands" },
-];
+const navLinks = [{ name: "[ TRANG CHỦ ]", href: "/" }];
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -58,8 +54,14 @@ export default function Header() {
             ))}
             <Link to="/shop">
               <Button className="bg-[#1A4331] text-white hover:bg-[#8A9A7A] hover:text-[#1A4331] pixel-button flex gap-2">
-                <Store className="h-4 w-4" /> CỬA HÀNG
+                <Store className="h-4 w-4" /> THỰC ĐƠN
               </Button>
+            </Link>
+            <Link
+              to="/about"
+              className="text-sm font-bold text-[#1A4331] hover:bg-[#1A4331] hover:text-[#F8F5F0] px-2 py-1 transition-colors"
+            >
+              [ VỀ CHÚNG TÔI ]
             </Link>
           </nav>
 

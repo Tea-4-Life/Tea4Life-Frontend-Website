@@ -3,10 +3,10 @@ import { ArrowRight, Leaf } from "lucide-react";
 
 // --- Dữ liệu Danh mục (Pixel Style) ---
 const categories = [
-  { name: "TRÀ_SỮA", icon: "🍵", class: "bg-[#8A9A7A]" },
-  { name: "TRÀ_TRÁI_CÂY", icon: "🍓", class: "bg-[#D2A676]" },
-  { name: "MATCHA", icon: "🌱", class: "bg-[#1A4331]" },
-  { name: "TOPPING", icon: "🍘", class: "bg-[#1A4331]" },
+  { name: "Trà Sữa", icon: "🍵", class: "bg-[#8A9A7A]" },
+  { name: "Trà Trái Cây", icon: "🍓", class: "bg-[#D2A676]" },
+  { name: "Matcha", icon: "🌱", class: "bg-[#1A4331]" },
+  { name: "Topping", icon: "🍘", class: "bg-[#1A4331]" },
 ];
 
 export function CategoriesSection() {
@@ -19,14 +19,14 @@ export function CategoriesSection() {
             <Leaf className="w-5 h-5" /> KHÁM PHÁ THIÊN NHIÊN
           </p>
           <h3 className="text-4xl md:text-5xl pixel-text text-[#1A4331] drop-shadow-[2px_2px_0px_#8A9A7A]">
-            THỰC_ĐƠN_CỦA_CHÚNG_TÔI
+            Thực Đơn Của Chúng Tôi
           </h3>
         </div>
         <Link
           to="/categories"
           className="text-lg font-bold bg-[#1A4331] text-[#F8F5F0] px-6 py-2 pixel-button hover:bg-[#8A9A7A] flex items-center gap-2 w-fit"
         >
-          XEM_TẤT_CẢ <ArrowRight className="h-5 w-5" />
+          Xem Tất Cả <ArrowRight className="h-5 w-5" />
         </Link>
       </div>
 
@@ -47,7 +47,7 @@ export function CategoriesSection() {
             </div>
 
             <span className="font-bold tracking-widest text-center w-full bg-[#1A4331] text-[#F8F5F0] py-2 border-2 border-transparent group-hover:bg-[#F8F5F0] group-hover:text-[#1A4331] group-hover:border-[#1A4331] text-lg z-10 transition-colors uppercase">
-              [ {cat.name} ]
+              {cat.name}
             </span>
           </div>
         ))}

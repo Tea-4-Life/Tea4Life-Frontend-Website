@@ -45,14 +45,14 @@ export function BestDealsSection() {
             <Sparkles className="w-5 h-5" /> PHA CHẾ MỚI MỖI NGÀY
           </p>
           <h3 className="text-4xl md:text-5xl pixel-text text-[#1A4331] drop-shadow-[2px_2px_0px_#8A9A7A]">
-            SẢN_PHẨM_BÁN_CHẠY
+            Sản Phẩm Bán Chạy
           </h3>
         </div>
         <Link
           to="/shop"
           className="text-lg font-bold bg-[#1A4331] text-[#F8F5F0] px-6 py-2 pixel-button hover:bg-[#8A9A7A] flex items-center gap-2 w-fit shadow-[4px_4px_0px_rgba(0,0,0,0.2)]"
         >
-          TOÀN_BỘ_THỰC_ĐƠN <ArrowRight className="h-5 w-5" />
+          Toàn Bộ Thực Đơn <ArrowRight className="h-5 w-5" />
         </Link>
       </div>
 
@@ -89,7 +89,7 @@ export function BestDealsSection() {
                 </h4>
 
                 {/* Taste Profile */}
-                <div className="space-y-2 mt-2 font-mono text-xs">
+                <div className="space-y-2 mt-2 text-xs">
                   <div className="flex items-center gap-2">
                     <span className="w-10 font-bold text-[#8A9A7A]">ĐƯỜNG</span>
                     <div className="flex-1 h-3 border-2 border-[#1A4331] bg-white">
@@ -112,7 +112,7 @@ export function BestDealsSection() {
 
                 {/* Price and Action */}
                 <div className="mt-auto pt-4 border-t-2 border-dashed border-[#1A4331]/30">
-                  <div className="font-mono text-xl md:text-2xl font-black text-[#1A4331] bg-[#F8F5F0] px-3 py-1 mb-4 border-l-4 border-[#1A4331] inline-block shadow-[2px_2px_0px_rgba(26,67,49,0.2)]">
+                  <div className="text-xl md:text-2xl font-black text-[#1A4331] bg-[#F8F5F0] px-3 py-1 mb-4 border-l-4 border-[#1A4331] inline-block shadow-[2px_2px_0px_rgba(26,67,49,0.2)]">
                     {item.price}
                   </div>
 

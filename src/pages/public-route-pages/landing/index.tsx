@@ -11,7 +11,7 @@ import { NewsletterSection } from "./components/NewsletterSection.tsx";
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-[#F8F5F0] text-[#1A4331] pb-24 font-mono overflow-hidden relative">
+    <div className="min-h-screen bg-[#F8F5F0] text-[#1A4331] pb-24 overflow-hidden relative">
       {/* Decorative Background Grid */}
       <div
         className="fixed inset-0 pointer-events-none opacity-[0.03] z-0"

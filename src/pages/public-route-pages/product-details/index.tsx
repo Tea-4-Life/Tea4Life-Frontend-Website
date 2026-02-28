@@ -3,17 +3,12 @@
 import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button.tsx";
-import { Card, CardContent } from "@/components/ui/card.tsx";
 import {
   Star,
   Minus,
   Plus,
   ShoppingCart,
   Heart,
-  Share2,
-  Truck,
-  Shield,
-  RotateCcw,
   ChevronLeft,
   Leaf,
 } from "lucide-react";
@@ -25,12 +20,6 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb.tsx";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs.tsx";
 
 import {
   allProducts,
@@ -54,22 +43,51 @@ const regions: Record<string, string> = regionList.reduce(
   {} as Record<string, string>,
 );
 
+const sugarLevels = [
+  { value: "0", label: "0%" },
+  { value: "30", label: "30%" },
+  { value: "50", label: "50%" },
+  { value: "70", label: "70%" },
+  { value: "100", label: "100%" },
+];
+
+const iceLevels = [
+  { value: "none", label: "Không đá" },
+  { value: "less", label: "Ít đá" },
+  { value: "normal", label: "Bình thường" },
+  { value: "more", label: "Nhiều đá" },
+];
+
+const toppings = [
+  { value: "tran-chau-den", label: "Trân châu đen", price: 10000 },
+  { value: "tran-chau-trang", label: "Trân châu trắng", price: 10000 },
+  { value: "thach-dua", label: "Thạch dừa", price: 8000 },
+  { value: "pudding", label: "Pudding", price: 12000 },
+  { value: "kem-cheese", label: "Kem cheese", price: 15000 },
+  { value: "shot-espresso", label: "Shot espresso", price: 12000 },
+];
+
 export default function ProductDetail() {
   const { id } = useParams<{ id: string }>();
   const [quantity, setQuantity] = useState(1);
   const [isFavorite, setIsFavorite] = useState(false);
+  const [selectedSize, setSelectedSize] = useState("M");
+  const [selectedSugar, setSelectedSugar] = useState("100");
+  const [selectedIce, setSelectedIce] = useState("normal");
+  const [selectedToppings, setSelectedToppings] = useState<string[]>([]);
+  const [note, setNote] = useState("");
 
   const product = allProducts.find((p) => p.id === Number(id));
 
   if (!product) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-emerald-50/50 to-white flex items-center justify-center">
+      <div className="min-h-screen bg-[#F8F5F0] flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-emerald-900 mb-4">
+          <h1 className="text-2xl font-bold text-[#1A4331] mb-4">
             Không tìm thấy sản phẩm
           </h1>
           <Link to="/shop">
-            <Button className="bg-emerald-500 hover:bg-emerald-600">
+            <Button className="bg-[#1A4331] text-[#F8F5F0] hover:bg-[#8A9A7A] rounded-none text-sm font-bold">
               <ChevronLeft className="h-4 w-4 mr-2" />
               Quay lại cửa hàng
             </Button>
@@ -86,6 +104,22 @@ export default function ProductDetail() {
     }).format(price);
   };
 
+  const toggleTopping = (value: string) => {
+    setSelectedToppings((prev) =>
+      prev.includes(value) ? prev.filter((t) => t !== value) : [...prev, value],
+    );
+  };
+
+  // Calculate total price
+  const sizeUpcharge =
+    selectedSize === "L" ? 10000 : selectedSize === "S" ? -5000 : 0;
+  const toppingTotal = selectedToppings.reduce((sum, t) => {
+    const topping = toppings.find((tp) => tp.value === t);
+    return sum + (topping?.price || 0);
+  }, 0);
+  const unitPrice = product.price + sizeUpcharge + toppingTotal;
+  const totalPrice = unitPrice * quantity;
+
   // Related products (same brand or region)
   const relatedProducts = allProducts
     .filter(
@@ -96,8 +130,18 @@ export default function ProductDetail() {
     .slice(0, 4);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-emerald-50/50 to-white">
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#F8F5F0] text-[#1A4331] relative">
+      {/* Background Grid */}
+      <div
+        className="fixed inset-0 pointer-events-none opacity-[0.03] z-0"
+        style={{
+          backgroundImage:
+            "linear-gradient(#1A4331 1px, transparent 1px), linear-gradient(90deg, #1A4331 1px, transparent 1px)",
+          backgroundSize: "32px 32px",
+        }}
+      ></div>
+
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 relative z-10">
         {/* Breadcrumb */}
         <Breadcrumb className="mb-8">
           <BreadcrumbList>
@@ -105,7 +149,7 @@ export default function ProductDetail() {
               <BreadcrumbLink asChild>
                 <Link
                   to="/"
-                  className="text-emerald-600 hover:text-emerald-700"
+                  className="text-[#8A9A7A] hover:text-[#1A4331] text-sm font-bold"
                 >
                   Trang chủ
                 </Link>
@@ -116,7 +160,7 @@ export default function ProductDetail() {
               <BreadcrumbLink asChild>
                 <Link
                   to="/shop"
-                  className="text-emerald-600 hover:text-emerald-700"
+                  className="text-[#8A9A7A] hover:text-[#1A4331] text-sm font-bold"
                 >
                   Cửa hàng
                 </Link>
@@ -124,7 +168,7 @@ export default function ProductDetail() {
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbPage className="text-emerald-900">
+              <BreadcrumbPage className="text-[#1A4331] text-sm font-bold">
                 {product.name}
               </BreadcrumbPage>
             </BreadcrumbItem>
@@ -135,280 +179,294 @@ export default function ProductDetail() {
         <div className="grid gap-8 lg:grid-cols-2 lg:gap-12">
           {/* Product Image */}
           <div className="relative">
-            <div className="overflow-hidden rounded-2xl bg-white shadow-lg">
+            <div className="overflow-hidden bg-white border-2 border-[#1A4331]/20">
               <img
                 src={product.image || "/placeholder.svg"}
                 alt={product.name}
                 className="h-full w-full object-cover aspect-square"
               />
             </div>
-            <span className="absolute top-4 left-4 bg-gradient-to-r from-emerald-500 to-green-500 text-white text-sm px-3 py-1 rounded-full font-medium">
-              {product.size}
+            <span className="absolute top-3 left-3 bg-[#D2A676] text-[#1A4331] text-xs px-2.5 py-1 font-bold border border-[#1A4331]/30">
+              {brands[product.brand]}
             </span>
           </div>
 
           {/* Product Info */}
           <div className="flex flex-col">
-            <div className="mb-2 flex items-center gap-2">
-              <span className="text-sm text-emerald-600 font-medium">
-                {brands[product.brand]}
-              </span>
-              <span className="text-emerald-300">|</span>
-              <span className="text-sm text-emerald-600">
+            <div className="mb-1 flex items-center gap-2">
+              <span className="text-xs text-[#8A9A7A] font-bold uppercase tracking-wider">
                 {regions[product.region]}
               </span>
             </div>
 
-            <h1 className="text-3xl font-bold text-emerald-900 sm:text-4xl">
+            <h1 className="text-3xl font-bold text-[#1A4331] sm:text-4xl pixel-text tracking-tight">
               {product.name}
             </h1>
 
-            {/* Rating */}
-            <div className="mt-4 flex items-center gap-2">
-              <div className="flex items-center gap-0.5">
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <Star
-                    key={i}
-                    className={`h-5 w-5 ${
-                      i < product.rating
-                        ? "fill-amber-400 text-amber-400"
-                        : "text-gray-300"
-                    }`}
-                  />
-                ))}
-              </div>
-              <span className="text-sm text-emerald-700">
-                ({product.rating}/5 - 128 đánh giá)
+            {/* Rating - simple display */}
+            <div className="mt-3 flex items-center gap-1">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <Star
+                  key={i}
+                  className={`h-4 w-4 ${
+                    i < product.rating
+                      ? "fill-[#D2A676] text-[#D2A676]"
+                      : "text-[#1A4331]/15"
+                  }`}
+                />
+              ))}
+              <span className="text-xs text-[#8A9A7A] ml-1">
+                {product.rating}/5
               </span>
             </div>
 
-            {/* Price */}
-            <p className="mt-6 text-4xl font-bold text-emerald-600">
-              {formatPrice(product.price)}
-            </p>
-
             {/* Description */}
-            <p className="mt-6 text-emerald-700 leading-relaxed">
-              {(product as any).description ||
-                "Thức uống tuyệt hảo mang lại những trải nghiệm khó quên cho bạn."}
+            <p className="mt-4 text-[#1A4331]/60 text-sm leading-relaxed">
+              Thức uống tuyệt hảo được pha chế từ nguyên liệu tươi ngon, chọn
+              lọc kỹ càng mỗi ngày.
             </p>
 
-            {/* Quantity */}
-            <div className="mt-8">
-              <label className="text-sm font-medium text-emerald-900">
-                Số lượng
+            {/* Size Selection */}
+            <div className="mt-6">
+              <label className="text-xs font-bold text-[#1A4331] uppercase tracking-wider block mb-2">
+                Chọn size
               </label>
-              <div className="mt-2 flex items-center gap-3">
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="border-emerald-300 text-emerald-700 bg-transparent"
-                >
-                  <Minus className="h-4 w-4" />
-                </Button>
-                <span className="w-12 text-center text-lg font-semibold text-emerald-900">
-                  {quantity}
+              <div className="flex gap-2">
+                {["S", "M", "L"].map((s) => (
+                  <button
+                    key={s}
+                    onClick={() => setSelectedSize(s)}
+                    className={`w-14 h-10 text-sm font-bold border-2 transition-colors ${
+                      selectedSize === s
+                        ? "bg-[#1A4331] text-[#F8F5F0] border-[#1A4331]"
+                        : "bg-white text-[#1A4331] border-[#1A4331]/20 hover:border-[#1A4331]"
+                    }`}
+                  >
+                    {s}
+                  </button>
+                ))}
+                <span className="flex items-center text-xs text-[#8A9A7A] ml-2">
+                  {selectedSize === "S" && "(-5.000 đ)"}
+                  {selectedSize === "M" && "(Chuẩn)"}
+                  {selectedSize === "L" && "(+10.000 đ)"}
                 </span>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={() => setQuantity(quantity + 1)}
-                  className="border-emerald-300 text-emerald-700 bg-transparent"
-                >
-                  <Plus className="h-4 w-4" />
-                </Button>
               </div>
             </div>
 
-            {/* Actions */}
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <Button
-                size="lg"
-                className="flex-1 bg-gradient-to-r from-emerald-500 to-green-500 text-white hover:from-emerald-600 hover:to-green-600"
-              >
-                <ShoppingCart className="h-5 w-5 mr-2" />
-                Thêm vào giỏ hàng
-              </Button>
-              <Button
-                variant="outline"
-                size="lg"
-                onClick={() => setIsFavorite(!isFavorite)}
-                className={`border-emerald-300 bg-transparent ${
-                  isFavorite
-                    ? "text-red-500 border-red-300"
-                    : "text-emerald-700"
-                }`}
-              >
-                <Heart
-                  className={`h-5 w-5 ${isFavorite ? "fill-red-500" : ""}`}
-                />
-              </Button>
-              <Button
-                variant="outline"
-                size="lg"
-                className="border-emerald-300 text-emerald-700 bg-transparent"
-              >
-                <Share2 className="h-5 w-5" />
-              </Button>
+            {/* Sugar Level */}
+            <div className="mt-5">
+              <label className="text-xs font-bold text-[#1A4331] uppercase tracking-wider block mb-2">
+                Mức đường
+              </label>
+              <div className="flex flex-wrap gap-2">
+                {sugarLevels.map((s) => (
+                  <button
+                    key={s.value}
+                    onClick={() => setSelectedSugar(s.value)}
+                    className={`px-3 h-9 text-xs font-bold border-2 transition-colors ${
+                      selectedSugar === s.value
+                        ? "bg-[#1A4331] text-[#F8F5F0] border-[#1A4331]"
+                        : "bg-white text-[#1A4331] border-[#1A4331]/20 hover:border-[#1A4331]"
+                    }`}
+                  >
+                    {s.label}
+                  </button>
+                ))}
+              </div>
             </div>
 
-            {/* Benefits */}
-            <div className="mt-8 grid grid-cols-3 gap-4">
-              <div className="flex flex-col items-center text-center p-3 bg-emerald-50 rounded-lg">
-                <Truck className="h-6 w-6 text-emerald-600 mb-2" />
-                <span className="text-xs text-emerald-700">
-                  Miễn phí vận chuyển
+            {/* Ice Level */}
+            <div className="mt-5">
+              <label className="text-xs font-bold text-[#1A4331] uppercase tracking-wider block mb-2">
+                Mức đá
+              </label>
+              <div className="flex flex-wrap gap-2">
+                {iceLevels.map((ice) => (
+                  <button
+                    key={ice.value}
+                    onClick={() => setSelectedIce(ice.value)}
+                    className={`px-3 h-9 text-xs font-bold border-2 transition-colors ${
+                      selectedIce === ice.value
+                        ? "bg-[#1A4331] text-[#F8F5F0] border-[#1A4331]"
+                        : "bg-white text-[#1A4331] border-[#1A4331]/20 hover:border-[#1A4331]"
+                    }`}
+                  >
+                    {ice.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Toppings */}
+            <div className="mt-5">
+              <label className="text-xs font-bold text-[#1A4331] uppercase tracking-wider block mb-2">
+                Topping thêm
+              </label>
+              <div className="grid grid-cols-2 gap-2">
+                {toppings.map((tp) => (
+                  <button
+                    key={tp.value}
+                    onClick={() => toggleTopping(tp.value)}
+                    className={`flex items-center justify-between px-3 h-10 text-xs font-bold border-2 transition-colors ${
+                      selectedToppings.includes(tp.value)
+                        ? "bg-[#1A4331] text-[#F8F5F0] border-[#1A4331]"
+                        : "bg-white text-[#1A4331] border-[#1A4331]/20 hover:border-[#1A4331]"
+                    }`}
+                  >
+                    <span>{tp.label}</span>
+                    <span
+                      className={
+                        selectedToppings.includes(tp.value)
+                          ? "text-[#D2A676]"
+                          : "text-[#8A9A7A]"
+                      }
+                    >
+                      +{formatPrice(tp.price)}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Note */}
+            <div className="mt-5">
+              <label className="text-xs font-bold text-[#1A4331] uppercase tracking-wider block mb-2">
+                Ghi chú
+              </label>
+              <textarea
+                value={note}
+                onChange={(e) => setNote(e.target.value)}
+                placeholder="Ví dụ: Ít ngọt, thêm đá..."
+                className="w-full h-16 bg-white border-2 border-[#1A4331]/20 px-3 py-2 text-sm text-[#1A4331] focus:outline-none focus:border-[#1A4331] placeholder-[#8A9A7A]/50 resize-none"
+              />
+            </div>
+
+            {/* Quantity + Price */}
+            <div className="mt-6 pt-5 border-t border-[#1A4331]/10">
+              <div className="flex items-center justify-between mb-4">
+                <label className="text-xs font-bold text-[#1A4331] uppercase tracking-wider">
+                  Số lượng
+                </label>
+                <div className="flex items-center gap-0">
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                    className="border-2 border-[#1A4331]/20 text-[#1A4331] bg-transparent rounded-none w-9 h-9 hover:bg-[#1A4331] hover:text-[#F8F5F0]"
+                  >
+                    <Minus className="h-3 w-3" />
+                  </Button>
+                  <span className="w-12 h-9 flex items-center justify-center text-sm font-bold text-[#1A4331] border-y-2 border-[#1A4331]/20 bg-white">
+                    {quantity}
+                  </span>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => setQuantity(quantity + 1)}
+                    className="border-2 border-[#1A4331]/20 text-[#1A4331] bg-transparent rounded-none w-9 h-9 hover:bg-[#1A4331] hover:text-[#F8F5F0]"
+                  >
+                    <Plus className="h-3 w-3" />
+                  </Button>
+                </div>
+              </div>
+
+              {/* Total */}
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-sm text-[#8A9A7A]">Tổng cộng</span>
+                <span className="text-2xl font-bold text-[#1A4331]">
+                  {formatPrice(totalPrice)}
                 </span>
               </div>
-              <div className="flex flex-col items-center text-center p-3 bg-emerald-50 rounded-lg">
-                <Shield className="h-6 w-6 text-emerald-600 mb-2" />
-                <span className="text-xs text-emerald-700">
-                  Bảo đảm chất lượng
-                </span>
-              </div>
-              <div className="flex flex-col items-center text-center p-3 bg-emerald-50 rounded-lg">
-                <RotateCcw className="h-6 w-6 text-emerald-600 mb-2" />
-                <span className="text-xs text-emerald-700">Đổi trả 7 ngày</span>
+
+              {/* Actions */}
+              <div className="flex gap-2">
+                <Button
+                  size="lg"
+                  className="flex-1 bg-[#1A4331] text-[#F8F5F0] hover:bg-[#8A9A7A] rounded-none h-12 font-bold text-sm"
+                >
+                  <ShoppingCart className="h-4 w-4 mr-2" />
+                  Thêm vào giỏ hàng
+                </Button>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => setIsFavorite(!isFavorite)}
+                  className={`rounded-none w-12 h-12 border-2 bg-transparent ${
+                    isFavorite
+                      ? "text-red-500 border-red-300"
+                      : "text-[#1A4331] border-[#1A4331]/20 hover:border-[#1A4331]"
+                  }`}
+                >
+                  <Heart
+                    className={`h-5 w-5 ${isFavorite ? "fill-red-500" : ""}`}
+                  />
+                </Button>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Tabs */}
-        <div className="mt-12">
-          <Tabs defaultValue="details" className="w-full">
-            <TabsList className="w-full justify-start border-b border-emerald-100 bg-transparent h-auto p-0">
-              <TabsTrigger
-                value="details"
-                className="rounded-none border-b-2 border-transparent data-[state=active]:border-emerald-500 data-[state=active]:bg-transparent data-[state=active]:text-emerald-700 px-6 py-3"
-              >
-                Chi tiết sản phẩm
-              </TabsTrigger>
-              <TabsTrigger
-                value="reviews"
-                className="rounded-none border-b-2 border-transparent data-[state=active]:border-emerald-500 data-[state=active]:bg-transparent data-[state=active]:text-emerald-700 px-6 py-3"
-              >
-                Đánh giá (128)
-              </TabsTrigger>
-              <TabsTrigger
-                value="shipping"
-                className="rounded-none border-b-2 border-transparent data-[state=active]:border-emerald-500 data-[state=active]:bg-transparent data-[state=active]:text-emerald-700 px-6 py-3"
-              >
-                Vận chuyển
-              </TabsTrigger>
-            </TabsList>
-            <TabsContent value="details" className="mt-6">
-              <Card className="border-emerald-100">
-                <CardContent className="p-6 space-y-4">
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    <div>
-                      <h4 className="font-medium text-emerald-900 flex items-center gap-2">
-                        <Leaf className="h-4 w-4 text-emerald-600" />
-                        Thành phần
-                      </h4>
-                      <p className="mt-1 text-emerald-700">
-                        {(product as any).ingredients ||
-                          "Hồng trà, sữa, trân châu"}
-                      </p>
-                    </div>
-                    <div>
-                      <h4 className="font-medium text-emerald-900">Xuất xứ</h4>
-                      <p className="mt-1 text-emerald-700">
-                        {(product as any).origin || "Việt Nam"}
-                      </p>
-                    </div>
-                    <div>
-                      <h4 className="font-medium text-emerald-900">Kích cỡ</h4>
-                      <p className="mt-1 text-emerald-700">{product.size}</p>
-                    </div>
-                    <div>
-                      <h4 className="font-medium text-emerald-900">Bảo quản</h4>
-                      <p className="mt-1 text-emerald-700">
-                        {(product as any).storage || "Bảo quản nơi mát mẻ"}
-                      </p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-            <TabsContent value="reviews" className="mt-6">
-              <Card className="border-emerald-100">
-                <CardContent className="p-6">
-                  <p className="text-emerald-700">
-                    Chức năng đánh giá đang được phát triển...
-                  </p>
-                </CardContent>
-              </Card>
-            </TabsContent>
-            <TabsContent value="shipping" className="mt-6">
-              <Card className="border-emerald-100">
-                <CardContent className="p-6 space-y-4">
-                  <div>
-                    <h4 className="font-medium text-emerald-900">
-                      Thời gian giao hàng
-                    </h4>
-                    <p className="mt-1 text-emerald-700">
-                      - Nội thành: 1-2 ngày làm việc
-                      <br />- Ngoại thành: 3-5 ngày làm việc
-                    </p>
-                  </div>
-                  <div>
-                    <h4 className="font-medium text-emerald-900">
-                      Phí vận chuyển
-                    </h4>
-                    <p className="mt-1 text-emerald-700">
-                      - Miễn phí cho đơn hàng từ 500.000đ
-                      <br />- Phí 30.000đ cho đơn hàng dưới 500.000đ
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-          </Tabs>
+        {/* Product Details - Ingredients info */}
+        <div className="mt-12 bg-white border border-[#1A4331]/10 p-6">
+          <h3 className="text-sm font-bold text-[#1A4331] uppercase tracking-wider mb-4 flex items-center gap-2">
+            <Leaf className="h-4 w-4 text-[#8A9A7A]" />
+            Thông tin sản phẩm
+          </h3>
+          <div className="grid gap-4 sm:grid-cols-3 text-sm">
+            <div>
+              <span className="text-[#8A9A7A] text-xs uppercase tracking-wider">
+                Dòng sản phẩm
+              </span>
+              <p className="mt-1 font-bold text-[#1A4331]">
+                {regions[product.region]}
+              </p>
+            </div>
+            <div>
+              <span className="text-[#8A9A7A] text-xs uppercase tracking-wider">
+                Thương hiệu
+              </span>
+              <p className="mt-1 font-bold text-[#1A4331]">
+                {brands[product.brand]}
+              </p>
+            </div>
+            <div>
+              <span className="text-[#8A9A7A] text-xs uppercase tracking-wider">
+                Giá gốc (size M)
+              </span>
+              <p className="mt-1 font-bold text-[#1A4331]">
+                {formatPrice(product.price)}
+              </p>
+            </div>
+          </div>
         </div>
 
         {/* Related Products */}
         {relatedProducts.length > 0 && (
-          <div className="mt-16">
-            <h2 className="text-2xl font-bold text-emerald-900 mb-6">
-              Sản phẩm liên quan
+          <div className="mt-12 pb-8">
+            <h2 className="text-lg font-bold text-[#1A4331] mb-5 pb-3 border-b border-[#1A4331]/10 uppercase tracking-wider">
+              Có thể bạn thích
             </h2>
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {relatedProducts.map((p) => (
                 <Link key={p.id} to={`/shop/products/${p.id}`}>
-                  <Card className="group overflow-hidden border-emerald-100 transition-all hover:-translate-y-1 hover:shadow-xl">
-                    <div className="relative aspect-square overflow-hidden">
+                  <div className="group bg-white border border-[#1A4331]/15 p-3 transition-all duration-200 hover:-translate-y-1 hover:shadow-[3px_3px_0px_rgba(26,67,49,0.08)]">
+                    <div className="relative aspect-square overflow-hidden border border-[#1A4331]/10 mb-3">
                       <img
                         src={p.image || "/placeholder.svg"}
                         alt={p.name}
                         className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                       />
-                      <span className="absolute top-2 right-2 bg-emerald-500 text-white text-xs px-2 py-1 rounded-full">
-                        {p.size}
-                      </span>
                     </div>
-                    <CardContent className="p-4">
-                      <div className="mb-2 flex items-center gap-0.5">
-                        {Array.from({ length: 5 }).map((_, i) => (
-                          <Star
-                            key={i}
-                            className={`h-4 w-4 ${
-                              i < p.rating
-                                ? "fill-amber-400 text-amber-400"
-                                : "text-gray-300"
-                            }`}
-                          />
-                        ))}
-                      </div>
-                      <h3 className="font-semibold text-emerald-900 line-clamp-2">
-                        {p.name}
-                      </h3>
-                      <p className="mt-2 text-lg font-bold text-emerald-600">
-                        {formatPrice(p.price)}
-                      </p>
-                    </CardContent>
-                  </Card>
+                    <h3 className="font-bold text-[#1A4331] text-sm line-clamp-1 mb-1">
+                      {p.name}
+                    </h3>
+                    <p className="text-xs text-[#8A9A7A] mb-1">
+                      {brands[p.brand]} • {regions[p.region]}
+                    </p>
+                    <p className="text-sm font-bold text-[#1A4331]">
+                      {formatPrice(p.price)}
+                    </p>
+                  </div>
                 </Link>
               ))}
             </div>

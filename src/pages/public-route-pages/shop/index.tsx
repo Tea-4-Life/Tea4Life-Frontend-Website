@@ -1,31 +1,27 @@
 import { useState, useMemo } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button.tsx";
-import { Card, CardContent } from "@/components/ui/card.tsx";
 import {
   Search,
   SlidersHorizontal,
   Star,
   X,
-  ChevronLeft,
-  ChevronRight,
   Filter,
+  Coffee,
+  Leaf,
 } from "lucide-react";
 import FilterSidebar from "./components/FilterSidebar.tsx";
-import { brands, regions, sizes, allProducts } from "./constants.ts";
-
-const PAGE_SIZE = 8;
+import { brands, regions, allProducts } from "./constants.ts";
 
 export default function ShopPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [showMobileFilter, setShowMobileFilter] = useState(false);
 
-  // Get filter values from URL: /shop?name=x&brand=x&region=x&size=x&page=x
+  // Get filter values from URL
   const name = searchParams.get("name") || "";
   const brand = searchParams.get("brand") || "all";
   const region = searchParams.get("region") || "all";
   const size = searchParams.get("size") || "all";
-  const page = parseInt(searchParams.get("page") || "1");
 
   // Local state for name input
   const [nameInput, setNameInput] = useState(name);
@@ -33,7 +29,6 @@ export default function ShopPage() {
   // Update URL params
   const updateParams = (updates: Record<string, string>) => {
     const newParams = new URLSearchParams(searchParams);
-
     Object.entries(updates).forEach(([key, value]) => {
       if (value && value !== "all" && value !== "") {
         newParams.set(key, value);
@@ -41,12 +36,6 @@ export default function ShopPage() {
         newParams.delete(key);
       }
     });
-
-    // Reset to page 1 when filters change (except when changing page)
-    if (!("page" in updates)) {
-      newParams.set("page", "1");
-    }
-
     setSearchParams(newParams);
   };
 
@@ -69,12 +58,17 @@ export default function ShopPage() {
     });
   }, [name, brand, region, size]);
 
-  // Pagination
-  const totalPages = Math.ceil(filteredProducts.length / PAGE_SIZE);
-  const paginatedProducts = filteredProducts.slice(
-    (page - 1) * PAGE_SIZE,
-    page * PAGE_SIZE,
-  );
+  // Group products by region (category)
+  const groupedProducts = useMemo(() => {
+    const groups: Record<string, typeof filteredProducts> = {};
+    filteredProducts.forEach((product) => {
+      if (!groups[product.region]) {
+        groups[product.region] = [];
+      }
+      groups[product.region].push(product);
+    });
+    return groups;
+  }, [filteredProducts]);
 
   // Handle name search submit
   const handleSearch = () => {
@@ -87,7 +81,6 @@ export default function ShopPage() {
     setSearchParams(new URLSearchParams());
   };
 
-  // SỬA LỖI TẠI ĐÂY: Ép kiểu về boolean bằng toán tử !!
   const hasActiveFilters = !!(
     name ||
     brand !== "all" ||
@@ -103,27 +96,46 @@ export default function ShopPage() {
     }).format(price);
   };
 
+  // Get region label
+  const getRegionLabel = (regionValue: string) => {
+    return regions.find((r) => r.value === regionValue)?.label || regionValue;
+  };
+
   return (
-    /* SỬA LỖI TẠI ĐÂY: Thay bg-gradient-to-b bằng bg-linear-to-b */
-    <div className="min-h-screen bg-linear-to-b from-emerald-50/50 to-white">
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#F8F5F0] text-[#1A4331] overflow-hidden relative">
+      {/* Background Grid */}
+      <div
+        className="fixed inset-0 pointer-events-none opacity-[0.03] z-0"
+        style={{
+          backgroundImage:
+            "linear-gradient(#1A4331 1px, transparent 1px), linear-gradient(90deg, #1A4331 1px, transparent 1px)",
+          backgroundSize: "32px 32px",
+        }}
+      ></div>
+
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 relative z-10">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-emerald-900 sm:text-4xl">
-            Cửa hàng
+        <div className="mb-10 border-b-2 border-[#1A4331]/10 pb-6">
+          <div className="flex items-center gap-2 mb-2">
+            <Leaf className="w-5 h-5 text-[#8A9A7A]" />
+            <p className="text-[#8A9A7A] font-bold text-sm uppercase tracking-wider">
+              Khám Phá Hương Vị
+            </p>
+          </div>
+          <h1 className="text-3xl md:text-4xl pixel-text text-[#1A4331]">
+            Thực Đơn
           </h1>
-          <p className="mt-2 text-emerald-700">
-            Khám phá bộ sưu tập trà đa dạng của chúng tôi
-          </p>
         </div>
 
         <div className="flex flex-col lg:flex-row gap-8">
-          {/* Desktop Sidebar */}
+          {/* Desktop Sidebar - Sticky */}
           <aside className="hidden lg:block w-64 shrink-0">
-            <div className="sticky top-24 bg-white rounded-xl border border-emerald-100 p-6 shadow-sm">
-              <div className="flex items-center gap-2 mb-6">
-                <SlidersHorizontal className="h-5 w-5 text-emerald-600" />
-                <h2 className="font-semibold text-emerald-900">Bộ lọc</h2>
+            <div className="sticky top-24 bg-white border-2 border-[#1A4331]/20 p-5">
+              <div className="flex items-center gap-2 mb-5 pb-3 border-b border-[#1A4331]/20">
+                <SlidersHorizontal className="h-4 w-4 text-[#8A9A7A]" />
+                <h2 className="font-bold text-[#1A4331] text-sm uppercase tracking-wider">
+                  Bộ Lọc
+                </h2>
               </div>
               <FilterSidebar
                 nameInput={nameInput}
@@ -143,13 +155,12 @@ export default function ShopPage() {
           <div className="lg:hidden">
             <Button
               onClick={() => setShowMobileFilter(true)}
-              variant="outline"
-              className="w-full border-emerald-300 text-emerald-700 bg-transparent"
+              className="w-full bg-[#1A4331] text-[#F8F5F0] hover:bg-[#8A9A7A] rounded-none h-10 font-bold text-sm"
             >
               <Filter className="h-4 w-4 mr-2" />
-              Bộ lọc
+              Bộ Lọc
               {hasActiveFilters && (
-                <span className="ml-2 bg-emerald-500 text-white text-xs px-2 py-0.5 rounded-full">
+                <span className="ml-2 bg-[#D2A676] text-[#1A4331] text-xs px-2 py-0.5 rounded-sm font-bold">
                   Đang lọc
                 </span>
               )}
@@ -163,16 +174,16 @@ export default function ShopPage() {
                 className="absolute inset-0 bg-black/50"
                 onClick={() => setShowMobileFilter(false)}
               />
-              <div className="absolute right-0 top-0 h-full w-80 max-w-full bg-white p-6 shadow-xl overflow-y-auto">
+              <div className="absolute right-0 top-0 h-full w-80 max-w-full bg-[#F8F5F0] p-6 shadow-xl border-l-2 border-[#1A4331]/20 overflow-y-auto">
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex items-center gap-2">
-                    <SlidersHorizontal className="h-5 w-5 text-emerald-600" />
-                    <h2 className="font-semibold text-emerald-900">Bộ lọc</h2>
+                    <SlidersHorizontal className="h-4 w-4 text-[#8A9A7A]" />
+                    <h2 className="font-bold text-[#1A4331] text-sm">Bộ Lọc</h2>
                   </div>
                   <Button
                     size="icon"
-                    variant="ghost"
                     onClick={() => setShowMobileFilter(false)}
+                    className="bg-transparent text-[#1A4331] hover:bg-[#1A4331]/10 rounded-none border border-[#1A4331]/20 w-9 h-9"
                   >
                     <X className="h-5 w-5" />
                   </Button>
@@ -195,14 +206,10 @@ export default function ShopPage() {
           {/* Products */}
           <main className="flex-1">
             {/* Results Info */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-              <p className="text-emerald-700">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 bg-white border border-[#1A4331]/15 p-4">
+              <p className="text-[#1A4331] font-bold text-sm">
                 Hiển thị{" "}
-                <span className="font-medium text-emerald-900">
-                  {paginatedProducts.length}
-                </span>{" "}
-                trong{" "}
-                <span className="font-medium text-emerald-900">
+                <span className="text-[#8A9A7A] text-base">
                   {filteredProducts.length}
                 </span>{" "}
                 sản phẩm
@@ -213,38 +220,37 @@ export default function ShopPage() {
             {hasActiveFilters && (
               <div className="flex flex-wrap gap-2 mb-6">
                 {name && (
-                  <span className="inline-flex items-center gap-1 bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-sm">
+                  <span className="inline-flex items-center gap-1 bg-[#1A4331] text-[#F8F5F0] px-3 py-1 text-xs font-bold rounded-sm">
                     Tên: {name}
                     <button
                       onClick={() => {
                         setNameInput("");
                         updateParams({ name: "" });
                       }}
+                      className="ml-1 hover:text-[#D2A676]"
                     >
                       <X className="h-3 w-3" />
                     </button>
                   </span>
                 )}
                 {brand !== "all" && (
-                  <span className="inline-flex items-center gap-1 bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-sm">
+                  <span className="inline-flex items-center gap-1 bg-[#8A9A7A] text-[#F8F5F0] px-3 py-1 text-xs font-bold rounded-sm">
                     {brands.find((b) => b.value === brand)?.label}
-                    <button onClick={() => updateParams({ brand: "all" })}>
+                    <button
+                      onClick={() => updateParams({ brand: "all" })}
+                      className="ml-1 hover:text-[#1A4331]"
+                    >
                       <X className="h-3 w-3" />
                     </button>
                   </span>
                 )}
                 {region !== "all" && (
-                  <span className="inline-flex items-center gap-1 bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-sm">
+                  <span className="inline-flex items-center gap-1 bg-[#D2A676] text-[#1A4331] px-3 py-1 text-xs font-bold rounded-sm">
                     {regions.find((r) => r.value === region)?.label}
-                    <button onClick={() => updateParams({ region: "all" })}>
-                      <X className="h-3 w-3" />
-                    </button>
-                  </span>
-                )}
-                {size !== "all" && (
-                  <span className="inline-flex items-center gap-1 bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-sm">
-                    {sizes.find((s) => s.value === size)?.label}
-                    <button onClick={() => updateParams({ size: "all" })}>
+                    <button
+                      onClick={() => updateParams({ region: "all" })}
+                      className="ml-1 hover:text-[#F8F5F0]"
+                    >
                       <X className="h-3 w-3" />
                     </button>
                   </span>
@@ -252,135 +258,110 @@ export default function ShopPage() {
               </div>
             )}
 
-            {/* Product Grid */}
-            {paginatedProducts.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {paginatedProducts.map((product) => (
-                  <Card
-                    key={product.id}
-                    className="group overflow-hidden border-emerald-100 transition-all hover:-translate-y-1 hover:shadow-xl"
-                  >
-                    <Link to={`/shop/products/${product.id}`}>
-                      <div className="relative aspect-square overflow-hidden">
-                        <img
-                          src={product.image || "/placeholder.svg"}
-                          alt={product.name}
-                          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                        />
-                        <span className="absolute top-2 right-2 bg-emerald-500 text-white text-xs px-2 py-1 rounded-full">
-                          {product.size}
+            {/* Products by Category */}
+            {filteredProducts.length > 0 ? (
+              <div className="space-y-10">
+                {Object.entries(groupedProducts).map(
+                  ([regionKey, products]) => (
+                    <section key={regionKey}>
+                      {/* Category Header */}
+                      <div className="flex items-center gap-3 mb-4 pb-2 border-b border-[#1A4331]/10">
+                        <h2 className="text-lg font-bold text-[#1A4331] uppercase tracking-wider">
+                          {getRegionLabel(regionKey)}
+                        </h2>
+                        <span className="text-xs text-[#8A9A7A] font-bold bg-[#F8F5F0] px-2 py-0.5 border border-[#1A4331]/10">
+                          {products.length} món
                         </span>
                       </div>
-                    </Link>
-                    <CardContent className="p-4">
-                      <div className="mb-2 flex items-center gap-0.5">
-                        {Array.from({ length: 5 }).map((_, i) => (
-                          <Star
-                            key={i}
-                            className={`h-4 w-4 ${
-                              i < product.rating
-                                ? "fill-amber-400 text-amber-400"
-                                : "text-gray-300"
-                            }`}
-                          />
+
+                      {/* Product Grid */}
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+                        {products.map((product) => (
+                          <div
+                            key={product.id}
+                            className="group bg-white border-2 border-[#1A4331]/15 p-3 flex flex-col relative transition-all duration-200 hover:-translate-y-1 hover:shadow-[4px_4px_0px_rgba(26,67,49,0.1)]"
+                          >
+                            {/* Size Badge */}
+                            <div className="absolute -top-2 -right-2 z-20 bg-[#D2A676] text-[#1A4331] border-2 border-[#1A4331] font-bold px-2 py-0.5 text-xs">
+                              {product.size}
+                            </div>
+
+                            {/* Image */}
+                            <Link to={`/shop/products/${product.id}`}>
+                              <div className="aspect-square bg-[#F8F5F0] border border-[#1A4331]/10 mb-3 relative overflow-hidden">
+                                <img
+                                  src={product.image || "/placeholder.svg"}
+                                  alt={product.name}
+                                  className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                />
+                              </div>
+                            </Link>
+
+                            {/* Details */}
+                            <div className="flex flex-col flex-1 space-y-2">
+                              {/* Rating */}
+                              <div className="flex items-center gap-0.5">
+                                {Array.from({ length: 5 }).map((_, i) => (
+                                  <Star
+                                    key={i}
+                                    className={`h-3.5 w-3.5 ${
+                                      i < product.rating
+                                        ? "fill-[#D2A676] text-[#D2A676]"
+                                        : "text-[#1A4331]/15"
+                                    }`}
+                                  />
+                                ))}
+                              </div>
+
+                              {/* Name */}
+                              <Link to={`/shop/products/${product.id}`}>
+                                <h3 className="font-bold text-[#1A4331] text-sm leading-tight line-clamp-2 hover:text-[#8A9A7A] transition-colors">
+                                  {product.name}
+                                </h3>
+                              </Link>
+
+                              {/* Brand */}
+                              <p className="text-xs text-[#8A9A7A]">
+                                {
+                                  brands.find((b) => b.value === product.brand)
+                                    ?.label
+                                }
+                              </p>
+
+                              {/* Price + Button */}
+                              <div className="mt-auto pt-2 border-t border-[#1A4331]/10">
+                                <div className="text-base font-bold text-[#1A4331] mb-2">
+                                  {formatPrice(product.price)}
+                                </div>
+                                <Button className="w-full bg-[#1A4331] text-[#F8F5F0] hover:bg-[#8A9A7A] rounded-none h-9 text-xs font-bold transition-colors">
+                                  <Coffee className="w-3.5 h-3.5 mr-1.5" />
+                                  Đặt Ngay
+                                </Button>
+                              </div>
+                            </div>
+                          </div>
                         ))}
                       </div>
-                      <Link to={`/shop/products/${product.id}`}>
-                        <h3 className="font-semibold text-emerald-900 line-clamp-2 hover:text-emerald-700">
-                          {product.name}
-                        </h3>
-                      </Link>
-                      <p className="mt-1 text-sm text-emerald-600">
-                        {brands.find((b) => b.value === product.brand)?.label} -{" "}
-                        {regions.find((r) => r.value === product.region)?.label}
-                      </p>
-                      <p className="mt-2 text-lg font-bold text-emerald-600">
-                        {formatPrice(product.price)}
-                      </p>
-                      {/* SỬA LỖI TẠI ĐÂY: Thay bg-gradient-to-r bằng bg-linear-to-r */}
-                      <Button className="mt-4 w-full bg-linear-to-r from-emerald-500 to-green-500 text-white hover:from-emerald-600 hover:to-green-600">
-                        Thêm vào giỏ
-                      </Button>
-                    </CardContent>
-                  </Card>
-                ))}
+                    </section>
+                  ),
+                )}
               </div>
             ) : (
-              <div className="text-center py-16">
-                <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-emerald-100">
-                  <Search className="h-10 w-10 text-emerald-400" />
+              <div className="text-center py-16 bg-white border border-[#1A4331]/15">
+                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center bg-[#F8F5F0] border border-[#1A4331]/20 rounded-full text-[#8A9A7A]">
+                  <Search className="h-8 w-8" />
                 </div>
-                <h3 className="text-lg font-semibold text-emerald-900">
-                  Không tìm thấy sản phẩm
+                <h3 className="text-xl font-bold text-[#1A4331] mb-2">
+                  Không Tìm Thấy Sản Phẩm
                 </h3>
-                <p className="mt-2 text-emerald-700">
+                <p className="text-[#8A9A7A] text-sm mb-4">
                   Hãy thử thay đổi bộ lọc để tìm sản phẩm phù hợp
                 </p>
                 <Button
                   onClick={clearFilters}
-                  className="mt-4 bg-emerald-500 hover:bg-emerald-600"
+                  className="bg-[#1A4331] text-[#F8F5F0] hover:bg-[#8A9A7A] rounded-none font-bold px-6 h-9 text-sm"
                 >
-                  Xóa bộ lọc
-                </Button>
-              </div>
-            )}
-
-            {/* Pagination */}
-            {totalPages > 1 && (
-              <div className="mt-8 flex items-center justify-center gap-2">
-                <Button
-                  variant="outline"
-                  size="icon"
-                  disabled={page <= 1}
-                  onClick={() => updateParams({ page: String(page - 1) })}
-                  className="border-emerald-200 text-emerald-700 hover:bg-emerald-50 bg-transparent disabled:opacity-50"
-                >
-                  <ChevronLeft className="h-4 w-4" />
-                </Button>
-
-                {Array.from({ length: totalPages }).map((_, i) => {
-                  const pageNum = i + 1;
-                  // Show first, last, current, and adjacent pages
-                  if (
-                    pageNum === 1 ||
-                    pageNum === totalPages ||
-                    (pageNum >= page - 1 && pageNum <= page + 1)
-                  ) {
-                    return (
-                      <Button
-                        key={pageNum}
-                        variant={page === pageNum ? "default" : "outline"}
-                        size="icon"
-                        onClick={() => updateParams({ page: String(pageNum) })}
-                        className={
-                          page === pageNum
-                            ? "bg-emerald-500 hover:bg-emerald-600"
-                            : "border-emerald-200 text-emerald-700 hover:bg-emerald-50 bg-transparent"
-                        }
-                      >
-                        {pageNum}
-                      </Button>
-                    );
-                  }
-                  // Show ellipsis
-                  if (pageNum === page - 2 || pageNum === page + 2) {
-                    return (
-                      <span key={pageNum} className="px-2 text-emerald-400">
-                        ...
-                      </span>
-                    );
-                  }
-                  return null;
-                })}
-
-                <Button
-                  variant="outline"
-                  size="icon"
-                  disabled={page >= totalPages}
-                  onClick={() => updateParams({ page: String(page + 1) })}
-                  className="border-emerald-200 text-emerald-700 hover:bg-emerald-50 bg-transparent disabled:opacity-50"
-                >
-                  <ChevronRight className="h-4 w-4" />
+                  Xóa Bộ Lọc
                 </Button>
               </div>
             )}
