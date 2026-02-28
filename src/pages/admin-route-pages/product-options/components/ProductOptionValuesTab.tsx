@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { Button } from "@/components/ui/button";
-import { Plus, ListChecks, Pencil, Trash2 } from "lucide-react";
+import { Plus, ListChecks, Pencil, Trash2, ArrowUpDown } from "lucide-react";
 import { toast } from "sonner";
 import { handleError } from "@/lib/utils";
 import {
@@ -57,13 +57,50 @@ export default function ProductOptionValuesTab() {
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [deleteName, setDeleteName] = useState("");
 
+  const [sortConfig, setSortConfig] = useState<{
+    key: string;
+    direction: "asc" | "desc";
+  } | null>(null);
+
+  const sortedData = useMemo(() => {
+    const sortableItems = [...data];
+    if (sortConfig !== null) {
+      sortableItems.sort((a, b) => {
+        const aVal =
+          a[sortConfig.key as keyof ProductOptionValueResponse] ?? "";
+        const bVal =
+          b[sortConfig.key as keyof ProductOptionValueResponse] ?? "";
+        if (aVal < bVal) {
+          return sortConfig.direction === "asc" ? -1 : 1;
+        }
+        if (aVal > bVal) {
+          return sortConfig.direction === "asc" ? 1 : -1;
+        }
+        return 0;
+      });
+    }
+    return sortableItems;
+  }, [data, sortConfig]);
+
+  const requestSort = (key: string) => {
+    let direction: "asc" | "desc" = "asc";
+    if (
+      sortConfig &&
+      sortConfig.key === key &&
+      sortConfig.direction === "asc"
+    ) {
+      direction = "desc";
+    }
+    setSortConfig({ key, direction });
+  };
+
   const fetchOptions = useCallback(async () => {
     try {
       const response = await getAllProductOptionsApi();
       const optionsData = response.data.data || [];
       setOptions(optionsData);
       if (optionsData.length > 0 && !selectedOptionId) {
-        setSelectedOptionId(optionsData[0].id);
+        setSelectedOptionId("all");
       }
     } catch (error) {
       handleError(error, "Không thể tải danh sách tùy chọn (cho bộ lọc).");
@@ -81,27 +118,39 @@ export default function ProductOptionValuesTab() {
     }
     setLoading(true);
     try {
-      const response = await getProductOptionValuesApi(selectedOptionId, {
-        page: 1,
-        size: 1000,
-      });
-      // The backend returns a PageResponse: { data: { content: [...] } }
-      setData(response.data.data.content || []);
+      if (selectedOptionId === "all") {
+        if (options.length === 0) {
+          setData([]);
+          setLoading(false);
+          return;
+        }
+        const allRes = await Promise.all(
+          options.map((opt) =>
+            getProductOptionValuesApi(opt.id, {
+              page: 1,
+              size: 1000,
+            }),
+          ),
+        );
+        const allData = allRes.flatMap((res) => res.data.data.content || []);
+        setData(allData);
+      } else {
+        const response = await getProductOptionValuesApi(selectedOptionId, {
+          page: 1,
+          size: 1000,
+        });
+        setData(response.data.data.content || []);
+      }
     } catch (error) {
       handleError(error, "Không thể tải danh sách giá trị của tùy chọn.");
     } finally {
       setLoading(false);
     }
-  }, [selectedOptionId]);
+  }, [selectedOptionId, options]);
 
   useEffect(() => {
     fetchValues();
   }, [fetchValues]);
-
-  const selectedOptionObj = useMemo(
-    () => options.find((o) => o.id === selectedOptionId) || null,
-    [options, selectedOptionId],
-  );
 
   const handleOpenCreateForm = () => {
     setCurrentValue(null);
@@ -114,21 +163,25 @@ export default function ProductOptionValuesTab() {
   };
 
   const handleFormSubmit = async (
+    optionId: string,
     formData: CreateProductOptionValueRequest,
     id?: string,
   ) => {
-    if (!selectedOptionId) return;
     setFormLoading(true);
     try {
       if (id) {
-        await updateProductOptionValueApi(selectedOptionId, id, formData);
+        await updateProductOptionValueApi(optionId, id, formData);
         toast.success("Cập nhật giá trị thành công!");
       } else {
-        await createProductOptionValueApi(selectedOptionId, formData);
+        await createProductOptionValueApi(optionId, formData);
         toast.success("Thêm giá trị mới thành công!");
       }
       setIsFormOpen(false);
-      fetchValues();
+      if (optionId !== selectedOptionId) {
+        setSelectedOptionId(optionId);
+      } else {
+        fetchValues();
+      }
     } catch (error) {
       handleError(error, "Lưu giá trị thất bại.");
     } finally {
@@ -146,7 +199,14 @@ export default function ProductOptionValuesTab() {
     if (!deleteId || !selectedOptionId) return;
     setDeleteLoading(true);
     try {
-      await deleteProductOptionValueApi(selectedOptionId, deleteId);
+      const valToDelete = data.find((d) => d.id === deleteId);
+      const parentId =
+        selectedOptionId === "all"
+          ? valToDelete?.productOptionId
+          : selectedOptionId;
+      if (!parentId) throw new Error("Không thể xác định Tùy chọn cha");
+
+      await deleteProductOptionValueApi(parentId, deleteId);
       toast.success(`Đã xóa giá trị "${deleteName}"`);
       setIsDeleteDialogOpen(false);
       fetchValues();
@@ -175,6 +235,7 @@ export default function ProductOptionValuesTab() {
                 <SelectValue placeholder="Chọn Tùy chọn" />
               </SelectTrigger>
               <SelectContent>
+                <SelectItem value="all">Tất cả tùy chọn</SelectItem>
                 {options.map((opt) => (
                   <SelectItem key={opt.id} value={opt.id}>
                     {opt.name}
@@ -209,12 +270,23 @@ export default function ProductOptionValuesTab() {
         <table className="w-full text-sm">
           <thead>
             <tr className="bg-slate-50 border-b border-slate-200">
-              <th className="text-left px-5 py-3.5 font-semibold text-slate-600 text-xs uppercase tracking-wider w-16">
-                #
+              <th
+                className="text-left px-5 py-3.5 font-semibold text-slate-600 text-xs uppercase tracking-wider cursor-pointer hover:bg-slate-100 transition-colors"
+                onClick={() => requestSort("id")}
+              >
+                <div className="flex items-center gap-1">
+                  ID
+                  <ArrowUpDown className="h-3 w-3" />
+                </div>
               </th>
               <th className="text-left px-5 py-3.5 font-semibold text-slate-600 text-xs uppercase tracking-wider">
                 Tên giá trị
               </th>
+              {selectedOptionId === "all" && (
+                <th className="text-left px-5 py-3.5 font-semibold text-slate-600 text-xs uppercase tracking-wider">
+                  Tùy chọn cha
+                </th>
+              )}
               <th className="text-left px-5 py-3.5 font-semibold text-slate-600 text-xs uppercase tracking-wider">
                 Giá thêm
               </th>
@@ -258,17 +330,25 @@ export default function ProductOptionValuesTab() {
                 </td>
               </tr>
             ) : (
-              data.map((value, idx) => (
+              sortedData.map((value) => (
                 <tr
                   key={value.id}
                   className="hover:bg-emerald-50/30 transition-colors"
                 >
                   <td className="px-5 py-4 text-slate-400 font-mono text-xs">
-                    {idx + 1}
+                    {value.id}
                   </td>
                   <td className="px-5 py-4 font-semibold text-slate-800">
                     {value.valueName}
                   </td>
+                  {selectedOptionId === "all" && (
+                    <td className="px-5 py-4">
+                      <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-600 border border-slate-200">
+                        {options.find((o) => o.id === value.productOptionId)
+                          ?.name || "Không rõ"}
+                      </span>
+                    </td>
+                  )}
                   <td className="px-5 py-4">
                     <span
                       className={`font-medium ${
@@ -320,14 +400,15 @@ export default function ProductOptionValuesTab() {
         onSubmit={handleFormSubmit}
         loading={formLoading}
         initialData={currentValue}
-        parentOption={selectedOptionObj}
+        options={options}
+        initialOptionId={selectedOptionId === "all" ? null : selectedOptionId}
       />
 
       <ConfirmationDialog
         isOpen={isDeleteDialogOpen}
         onOpenChange={setIsDeleteDialogOpen}
         title="Xác nhận xóa giá trị"
-        description={`Bạn có chắc chắn muốn xóa giá trị "${deleteName}" thuộc tùy chọn "${selectedOptionObj?.name}"? Hành động này không thể hoàn tác.`}
+        description={`Bạn có chắc chắn muốn xóa giá trị "${deleteName}"? Hành động này không thể hoàn tác.`}
         onConfirm={handleDeleteConfirm}
         isLoading={deleteLoading}
         confirmLabel="Xóa vĩnh viễn"

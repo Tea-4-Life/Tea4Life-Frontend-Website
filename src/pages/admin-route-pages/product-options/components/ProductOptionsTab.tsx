@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { Button } from "@/components/ui/button";
-import { Plus, Settings2, Pencil, Trash2 } from "lucide-react";
+import { Plus, Settings2, Pencil, Trash2, ArrowUpDown } from "lucide-react";
 import { toast } from "sonner";
 import { handleError } from "@/lib/utils";
 
@@ -34,6 +34,41 @@ export default function ProductOptionsTab() {
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [deleteName, setDeleteName] = useState("");
+
+  const [sortConfig, setSortConfig] = useState<{
+    key: string;
+    direction: "asc" | "desc";
+  } | null>(null);
+
+  const sortedData = useMemo(() => {
+    const sortableItems = [...data];
+    if (sortConfig !== null) {
+      sortableItems.sort((a, b) => {
+        const aVal = a[sortConfig.key as keyof ProductOptionResponse] ?? "";
+        const bVal = b[sortConfig.key as keyof ProductOptionResponse] ?? "";
+        if (aVal < bVal) {
+          return sortConfig.direction === "asc" ? -1 : 1;
+        }
+        if (aVal > bVal) {
+          return sortConfig.direction === "asc" ? 1 : -1;
+        }
+        return 0;
+      });
+    }
+    return sortableItems;
+  }, [data, sortConfig]);
+
+  const requestSort = (key: string) => {
+    let direction: "asc" | "desc" = "asc";
+    if (
+      sortConfig &&
+      sortConfig.key === key &&
+      sortConfig.direction === "asc"
+    ) {
+      direction = "desc";
+    }
+    setSortConfig({ key, direction });
+  };
 
   const fetchOptions = useCallback(async () => {
     setLoading(true);
@@ -126,8 +161,14 @@ export default function ProductOptionsTab() {
         <table className="w-full text-sm">
           <thead>
             <tr className="bg-slate-50 border-b border-slate-200">
-              <th className="text-left px-5 py-3.5 font-semibold text-slate-600 text-xs uppercase tracking-wider">
-                #
+              <th
+                className="text-left px-5 py-3.5 font-semibold text-slate-600 text-xs uppercase tracking-wider cursor-pointer hover:bg-slate-100 transition-colors"
+                onClick={() => requestSort("id")}
+              >
+                <div className="flex items-center gap-1">
+                  ID
+                  <ArrowUpDown className="h-3 w-3" />
+                </div>
               </th>
               <th className="text-left px-5 py-3.5 font-semibold text-slate-600 text-xs uppercase tracking-wider">
                 Tên tùy chọn
@@ -171,13 +212,13 @@ export default function ProductOptionsTab() {
                 </td>
               </tr>
             ) : (
-              data.map((option, idx) => (
+              sortedData.map((option) => (
                 <tr
                   key={option.id}
                   className="hover:bg-emerald-50/30 transition-colors"
                 >
                   <td className="px-5 py-4 text-slate-400 font-mono text-xs">
-                    {idx + 1}
+                    {option.id}
                   </td>
                   <td className="px-5 py-4 font-semibold text-slate-800">
                     {option.name}

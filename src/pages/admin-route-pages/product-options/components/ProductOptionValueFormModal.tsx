@@ -10,6 +10,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader2 } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import type { ProductOptionValueResponse } from "@/types/product-option/ProductOptionValueResponse";
 import type { CreateProductOptionValueRequest } from "@/types/product-option/CreateProductOptionValueRequest";
 import type { ProductOptionResponse } from "@/types/product-option/ProductOptionResponse";
@@ -18,12 +25,14 @@ interface ProductOptionValueFormModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (
+    optionId: string,
     data: CreateProductOptionValueRequest,
     id?: string,
   ) => Promise<void>;
   loading: boolean;
   initialData: ProductOptionValueResponse | null;
-  parentOption: ProductOptionResponse | null;
+  options: ProductOptionResponse[];
+  initialOptionId: string | null;
 }
 
 export default function ProductOptionValueFormModal({
@@ -32,8 +41,10 @@ export default function ProductOptionValueFormModal({
   onSubmit,
   loading,
   initialData,
-  parentOption,
+  options,
+  initialOptionId,
 }: ProductOptionValueFormModalProps) {
+  const [optionId, setOptionId] = useState("");
   const [valueName, setValueName] = useState("");
   const [extraPrice, setExtraPrice] = useState<number>(0);
   const [sortOrder, setSortOrder] = useState<number>(0);
@@ -41,21 +52,25 @@ export default function ProductOptionValueFormModal({
 
   useEffect(() => {
     if (isOpen) {
-      if (initialData) {
-        setValueName(initialData.valueName);
-        setExtraPrice(initialData.extraPrice);
-        setSortOrder(initialData.sortOrder);
-      } else {
-        setValueName("");
-        setExtraPrice(0);
-        setSortOrder(0);
-      }
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setValueName(initialData ? initialData.valueName : "");
+      setExtraPrice(initialData ? initialData.extraPrice : 0);
+      setSortOrder(initialData ? initialData.sortOrder : 0);
+      setOptionId(
+        initialData
+          ? initialOptionId || ""
+          : initialOptionId || (options.length > 0 ? options[0].id : ""),
+      );
       setError(null);
     }
-  }, [isOpen, initialData]);
+  }, [isOpen, initialData, initialOptionId, options]);
 
   const handleSubmitForm = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!optionId) {
+      setError("Vui lòng chọn Tùy chọn cha.");
+      return;
+    }
     if (!valueName.trim()) {
       setError("Tên giá trị không được để trống.");
       return;
@@ -67,6 +82,7 @@ export default function ProductOptionValueFormModal({
 
     try {
       await onSubmit(
+        optionId,
         {
           valueName: valueName.trim(),
           extraPrice: Number(extraPrice),
@@ -83,8 +99,6 @@ export default function ProductOptionValueFormModal({
     }
   };
 
-  if (!parentOption) return null;
-
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[450px] p-0 overflow-hidden bg-white border-none rounded-2xl shadow-2xl">
@@ -93,7 +107,7 @@ export default function ProductOptionValueFormModal({
             {initialData ? "Chỉnh Sửa Giá Trị" : "Thêm Giá Trị Mới"}
           </DialogTitle>
           <p className="text-sm text-emerald-700 mt-1">
-            Thuộc tùy chọn: <strong>{parentOption.name}</strong>
+            Điền thông tin và chọn Tùy chọn cha tương ứng
           </p>
         </DialogHeader>
 
@@ -104,6 +118,28 @@ export default function ProductOptionValueFormModal({
                 {error}
               </div>
             )}
+
+            <div className="space-y-2">
+              <Label className="text-emerald-900 font-semibold text-sm">
+                Thuộc Tùy Chọn <span className="text-red-500">*</span>
+              </Label>
+              <Select
+                value={optionId}
+                onValueChange={setOptionId}
+                disabled={loading || !!initialData}
+              >
+                <SelectTrigger className="w-full border-emerald-200 focus:ring-emerald-500 rounded-xl">
+                  <SelectValue placeholder="Chọn Tùy chọn" />
+                </SelectTrigger>
+                <SelectContent>
+                  {options.map((opt) => (
+                    <SelectItem key={opt.id} value={opt.id}>
+                      {opt.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
 
             <div className="space-y-2">
               <Label
