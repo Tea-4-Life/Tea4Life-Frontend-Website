@@ -13,7 +13,7 @@ export function CategoriesSection() {
   return (
     <section className="space-y-12">
       {/* Section Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between border-b-8 border-[#1A4331] pb-6 gap-4">
+      <div className="flex flex-col md:flex-row md:items-end justify-between border-b-4 border-[#1A4331] pb-6 gap-4">
         <div>
           <p className="text-[#8A9A7A] font-bold text-lg mb-2 flex items-center gap-2">
             <Leaf className="w-5 h-5" /> KHÁM PHÁ THIÊN NHIÊN

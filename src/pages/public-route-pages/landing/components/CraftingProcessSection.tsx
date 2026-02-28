@@ -3,7 +3,7 @@ import { Sprout, Droplets, Sun } from "lucide-react";
 export function CraftingProcessSection() {
   return (
     <section className="space-y-12 pb-8">
-      <div className="flex flex-col md:flex-row md:items-end justify-between border-b-8 border-[#1A4331] pb-6 gap-4">
+      <div className="flex flex-col md:flex-row md:items-end justify-between border-b-4 border-[#1A4331] pb-6 gap-4">
         <div>
           <p className="text-[#8A9A7A] font-bold text-lg mb-2">
             ● QUY TRÌNH CỦA CHÚNG TÔI

@@ -35,7 +35,7 @@ export function NewsletterSection() {
                 <input
                   type="email"
                   placeholder="yeuthiennhien@tea.com"
-                  className="w-full h-14 bg-[#F8F5F0] border-4 border-[#1A4331] px-4 font-bold text-[#1A4331] focus:outline-none focus:bg-white placeholder-[#8A9A7A]"
+                  className="w-full h-14 bg-[#F8F5F0] border-2 border-[#1A4331] px-4 font-bold text-[#1A4331] focus:outline-none focus:bg-white placeholder-[#8A9A7A]"
                 />
               </div>
               <Button className="w-full bg-[#1A4331] text-[#F8F5F0] hover:bg-[#8A9A7A] hover:text-[#1A4331] pixel-button h-14 text-lg font-bold">

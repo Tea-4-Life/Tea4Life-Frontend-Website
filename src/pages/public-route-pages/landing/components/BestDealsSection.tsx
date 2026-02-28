@@ -39,7 +39,7 @@ export function BestDealsSection() {
   return (
     <section className="space-y-12">
       {/* Section Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between border-b-8 border-[#1A4331] pb-6 gap-4">
+      <div className="flex flex-col md:flex-row md:items-end justify-between border-b-4 border-[#1A4331] pb-6 gap-4">
         <div>
           <p className="text-[#8A9A7A] font-bold text-lg mb-2 flex items-center gap-2">
             <Sparkles className="w-5 h-5" /> PHA CHẾ MỚI MỖI NGÀY
@@ -66,13 +66,13 @@ export function BestDealsSection() {
             <div className="pixel-border bg-white p-5 h-full flex flex-col relative transition-transform duration-200 hover:-translate-y-2 hover:shadow-[4px_4px_0px_#1A4331]">
               {/* Floating Pixel Badge */}
               {item.badge && (
-                <div className="absolute -top-4 -right-4 z-20 bg-[#D2A676] text-[#1A4331] border-4 border-[#1A4331] font-black px-4 py-1 text-sm shadow-[4px_4px_0px_#1A4331] animate-bounce">
+                <div className="absolute -top-4 -right-4 z-20 bg-[#D2A676] text-[#1A4331] border-2 border-[#1A4331] font-black px-4 py-1 text-sm shadow-[4px_4px_0px_#1A4331] animate-bounce">
                   ★ {item.badge}
                 </div>
               )}
 
               {/* Image Display */}
-              <div className="aspect-square bg-[#8A9A7A]/20 border-4 border-[#1A4331] p-2 mb-6 relative overflow-hidden">
+              <div className="aspect-square bg-[#8A9A7A]/20 border-2 border-[#1A4331] p-2 mb-6 relative overflow-hidden">
                 <div className="w-full h-full relative border-2 border-[#1A4331]">
                   <img
                     src={item.image}

@@ -3,7 +3,7 @@ import { MessageSquare, Star } from "lucide-react";
 export function TestimonialsSection() {
   return (
     <section className="space-y-12">
-      <div className="text-center space-y-4 border-b-8 border-[#1A4331] pb-6">
+      <div className="text-center space-y-4 border-b-4 border-[#1A4331] pb-6">
         <h3 className="text-4xl md:text-5xl pixel-text text-[#1A4331] drop-shadow-[2px_2px_0px_#8A9A7A]">
           Nhận Xét Của Khách Hàng
         </h3>

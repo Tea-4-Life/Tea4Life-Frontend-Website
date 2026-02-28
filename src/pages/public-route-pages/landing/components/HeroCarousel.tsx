@@ -87,7 +87,7 @@ export function HeroCarousel() {
                     {/* Description Box */}
                     <div className="relative">
                       <div className="absolute inset-0 bg-black/10 translate-x-2 translate-y-2 border-2 border-transparent" />
-                      <p className="relative text-lg md:text-xl font-bold font-sans max-w-md bg-[#F8F5F0] text-[#1A4331] p-5 md:p-6 border-4 border-[#1A4331]">
+                      <p className="relative text-lg md:text-xl font-bold font-sans max-w-md bg-[#F8F5F0] text-[#1A4331] p-5 md:p-6 border-2 border-[#1A4331]">
                         {banner.description}
                       </p>
                     </div>
@@ -114,7 +114,7 @@ export function HeroCarousel() {
                       <div className="absolute inset-0 bg-[#F8F5F0] translate-x-4 translate-y-4 pixel-border opacity-30" />
                       <img
                         src={banner.image}
-                        className="relative w-[300px] h-[300px] md:w-[450px] md:h-[450px] object-cover border-8 border-current pixel-border z-10 shadow-2xl"
+                        className="relative w-[300px] h-[300px] md:w-[450px] md:h-[450px] object-cover border-4 border-current pixel-border z-10 shadow-2xl"
                         alt={banner.title}
                       />
                     </div>
@@ -127,8 +127,8 @@ export function HeroCarousel() {
 
         {/* Carousel Controls */}
         <div className="hidden lg:block">
-          <CarouselPrevious className="left-8 w-14 h-14 pixel-button bg-[#F8F5F0] text-[#1A4331] hover:bg-[#8A9A7A] hover:text-[#F8F5F0] border-4 opacity-50 group-hover:opacity-100 transition-opacity" />
-          <CarouselNext className="right-8 w-14 h-14 pixel-button bg-[#F8F5F0] text-[#1A4331] hover:bg-[#8A9A7A] hover:text-[#F8F5F0] border-4 opacity-50 group-hover:opacity-100 transition-opacity" />
+          <CarouselPrevious className="left-8 w-14 h-14 pixel-button bg-[#F8F5F0] text-[#1A4331] hover:bg-[#8A9A7A] hover:text-[#F8F5F0] border-2 opacity-50 group-hover:opacity-100 transition-opacity" />
+          <CarouselNext className="right-8 w-14 h-14 pixel-button bg-[#F8F5F0] text-[#1A4331] hover:bg-[#8A9A7A] hover:text-[#F8F5F0] border-2 opacity-50 group-hover:opacity-100 transition-opacity" />
         </div>
       </Carousel>
     </section>

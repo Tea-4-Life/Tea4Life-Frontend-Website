@@ -29,7 +29,7 @@ export function OurStorySection() {
             Đọc Thêm
           </Button>
         </div>
-        <div className="relative h-[400px] md:h-auto border-t-8 md:border-t-0 md:border-l-8 border-[#1A4331]">
+        <div className="relative h-[400px] md:h-auto border-t-4 md:border-t-0 md:border-l-4 border-[#1A4331]">
           <div className="absolute inset-0 bg-gradient-to-t from-[#1A4331] to-transparent opacity-20 z-10" />
           <img
             src="https://picsum.photos/seed/teafarm/800/800"
