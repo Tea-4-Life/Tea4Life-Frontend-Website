@@ -1,49 +1,116 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
+import { lazy, Suspense } from "react";
+import LoadingScreen from "@/components/custom/LoadingScreen";
+
+// Helper để lazy load component kèm theo Suspense LoadingScreen
+const Loadable = (Component: any) => (props: any) => (
+  <Suspense fallback={<LoadingScreen />}>
+    <Component {...props} />
+  </Suspense>
+);
 
 // Layouts
-import RootLayout from "@/layouts/RootLayout";
-import AdminLayout from "@/layouts/AdminLayout";
-import DriverLayout from "@/layouts/DriverLayout"; // Đã chuyển về @/layouts
-import ProfileLayout from "@/pages/customer-route-pages/profile/layout";
+const RootLayout = Loadable(lazy(() => import("@/layouts/RootLayout")));
+const AdminLayout = Loadable(lazy(() => import("@/layouts/AdminLayout")));
+const DriverLayout = Loadable(lazy(() => import("@/layouts/DriverLayout")));
+const ProfileLayout = Loadable(
+  lazy(() => import("@/pages/customer-route-pages/profile/layout")),
+);
 
 // Public Pages
-import LandingPage from "@/pages/public-route-pages/landing";
-import ShopPage from "@/pages/public-route-pages/shop";
-import ProductDetail from "@/pages/public-route-pages/product-details/index.tsx";
-import CartPage from "@/pages/public-route-pages/cart";
-import BrandsListPage from "@/pages/public-route-pages/brands";
-import CategoriesPage from "@/pages/public-route-pages/categories";
-import AboutPage from "@/pages/public-route-pages/about";
+const LandingPage = Loadable(
+  lazy(() => import("@/pages/public-route-pages/landing")),
+);
+const ShopPage = Loadable(
+  lazy(() => import("@/pages/public-route-pages/shop")),
+);
+const ProductDetail = Loadable(
+  lazy(() => import("@/pages/public-route-pages/product-details/index.tsx")),
+);
+const CartPage = Loadable(
+  lazy(() => import("@/pages/public-route-pages/cart")),
+);
+const BrandsListPage = Loadable(
+  lazy(() => import("@/pages/public-route-pages/brands")),
+);
+const CategoriesPage = Loadable(
+  lazy(() => import("@/pages/public-route-pages/categories")),
+);
+const AboutPage = Loadable(
+  lazy(() => import("@/pages/public-route-pages/about")),
+);
 
 // Customer Pages
-import OrderPage from "@/pages/customer-route-pages/orders";
-import OrderDetailPage from "@/pages/customer-route-pages/order-details";
-import CheckoutPage from "@/pages/customer-route-pages/checkout";
-import GeneralPage from "@/pages/customer-route-pages/profile/general";
-import AddressPage from "@/pages/customer-route-pages/profile/address";
-import CreateAddressPage from "@/pages/customer-route-pages/profile/address/create";
-import EditAddressPage from "@/pages/customer-route-pages/profile/address/edit";
-import SecurityPage from "@/pages/customer-route-pages/profile/security";
+const OrderPage = Loadable(
+  lazy(() => import("@/pages/customer-route-pages/orders")),
+);
+const OrderDetailPage = Loadable(
+  lazy(() => import("@/pages/customer-route-pages/order-details")),
+);
+const CheckoutPage = Loadable(
+  lazy(() => import("@/pages/customer-route-pages/checkout")),
+);
+const GeneralPage = Loadable(
+  lazy(() => import("@/pages/customer-route-pages/profile/general")),
+);
+const AddressPage = Loadable(
+  lazy(() => import("@/pages/customer-route-pages/profile/address")),
+);
+const CreateAddressPage = Loadable(
+  lazy(() => import("@/pages/customer-route-pages/profile/address/create")),
+);
+const EditAddressPage = Loadable(
+  lazy(() => import("@/pages/customer-route-pages/profile/address/edit")),
+);
+const SecurityPage = Loadable(
+  lazy(() => import("@/pages/customer-route-pages/profile/security")),
+);
 
 // Admin Pages
-import AdminDashboard from "@/pages/admin-route-pages/dashboard";
-import AdminProductsPage from "@/pages/admin-route-pages/products";
-import AdminOrdersPage from "@/pages/admin-route-pages/orders";
-import AdminUsersPage from "@/pages/admin-route-pages/users";
-import AdminReportsPage from "@/pages/admin-route-pages/reports";
-import AdminRegionsPage from "@/pages/admin-route-pages/regions";
-import AdminCategoriesPage from "@/pages/admin-route-pages/categories";
-import AdminProductOptionsPage from "@/pages/admin-route-pages/product-options";
-import AdminPermissionsPage from "@/pages/admin-route-pages/permissions";
-import AdminRolesPage from "@/pages/admin-route-pages/roles";
-import AdminRoleCreatePage from "@/pages/admin-route-pages/roles/create";
+const AdminDashboard = Loadable(
+  lazy(() => import("@/pages/admin-route-pages/dashboard")),
+);
+const AdminProductsPage = Loadable(
+  lazy(() => import("@/pages/admin-route-pages/products")),
+);
+const AdminOrdersPage = Loadable(
+  lazy(() => import("@/pages/admin-route-pages/orders")),
+);
+const AdminUsersPage = Loadable(
+  lazy(() => import("@/pages/admin-route-pages/users")),
+);
+const AdminReportsPage = Loadable(
+  lazy(() => import("@/pages/admin-route-pages/reports")),
+);
+const AdminRegionsPage = Loadable(
+  lazy(() => import("@/pages/admin-route-pages/regions")),
+);
+const AdminCategoriesPage = Loadable(
+  lazy(() => import("@/pages/admin-route-pages/categories")),
+);
+const AdminProductOptionsPage = Loadable(
+  lazy(() => import("@/pages/admin-route-pages/product-options")),
+);
+const AdminPermissionsPage = Loadable(
+  lazy(() => import("@/pages/admin-route-pages/permissions")),
+);
+const AdminRolesPage = Loadable(
+  lazy(() => import("@/pages/admin-route-pages/roles")),
+);
+const AdminRoleCreatePage = Loadable(
+  lazy(() => import("@/pages/admin-route-pages/roles/create")),
+);
 
-// Driver Pages (Import theo kiểu folder con / index.tsx)
-import DriverDashboard from "@/pages/driver-route-pages/dashboard";
-import DriverOrders from "@/pages/driver-route-pages/orders";
-import DriverOrderDetail from "@/pages/driver-route-pages/order-details";
-// import DriverOrders from "@/pages/driver-route-pages/orders";
-// import DriverOrderDetail from "@/pages/driver-route-pages/order-details";
+// Driver Pages
+const DriverDashboard = Loadable(
+  lazy(() => import("@/pages/driver-route-pages/dashboard")),
+);
+const DriverOrders = Loadable(
+  lazy(() => import("@/pages/driver-route-pages/orders")),
+);
+const DriverOrderDetail = Loadable(
+  lazy(() => import("@/pages/driver-route-pages/order-details")),
+);
 
 // --- 1. NHÓM ROUTE CÔNG KHAI (PUBLIC) ---
 const publicRoutes = [
