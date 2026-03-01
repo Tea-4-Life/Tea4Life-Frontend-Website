@@ -2,6 +2,8 @@ import { createBrowserRouter, Navigate } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import LoadingScreen from "@/components/custom/LoadingScreen";
 
+/* eslint-disable react-refresh/only-export-components */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // Helper để lazy load component kèm theo Suspense LoadingScreen
 const Loadable = (Component: any) => (props: any) => (
   <Suspense fallback={<LoadingScreen />}>
