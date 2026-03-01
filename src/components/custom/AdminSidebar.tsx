@@ -8,7 +8,6 @@ import {
   ShoppingCart,
   BarChart3,
   ChevronRight,
-  Leaf,
   Settings,
   LayoutGrid,
   ShieldCheck,
@@ -66,9 +65,11 @@ export default function AdminSidebar() {
     <aside className="hidden md:flex w-64 flex-col border-r bg-white sticky top-0 h-screen shadow-sm">
       {/* Brand Header */}
       <div className="p-6 border-b flex items-center gap-3 bg-emerald-900">
-        <div className="h-9 w-9 bg-white rounded-lg flex items-center justify-center shrink-0">
-          <Leaf className="h-5 w-5 text-emerald-600" />
-        </div>
+        <img
+          src="/logo/logo.png"
+          alt="Admin Logo"
+          className="h-10 w-10 object-contain rounded-md bg-white p-1 shrink-0"
+        />
         <div className="flex flex-col">
           <span className="font-bold text-white text-lg leading-none tracking-tight">
             Tea4Life

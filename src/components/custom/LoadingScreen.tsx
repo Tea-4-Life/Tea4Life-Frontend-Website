@@ -1,4 +1,4 @@
-import { Loader2, Leaf } from "lucide-react";
+import { Loader2 } from "lucide-react";
 
 interface LoadingScreenProps {
   title?: string;
@@ -36,7 +36,11 @@ export default function LoadingScreen({
           <div className="absolute inset-0 animate-ping rounded-full bg-emerald-300 opacity-20" />
 
           <div className="relative flex h-24 w-24 items-center justify-center rounded-full bg-white shadow-2xl shadow-emerald-900/10 border border-emerald-50">
-            <Leaf className="h-10 w-10 text-emerald-600 animate-bounce" />
+            <img
+              src="/logo/logo.png"
+              alt="Loading Logo"
+              className="h-10 w-10 object-contain rounded-full animate-bounce"
+            />
 
             <Loader2
               className="absolute h-16 w-16 animate-spin text-emerald-600/20"

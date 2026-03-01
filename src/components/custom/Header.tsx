@@ -5,15 +5,7 @@ import { UserMenu } from "@/components/custom/UserMenu";
 import { useAuth } from "@/features/auth/useAuth";
 import { getMediaUrl } from "@/lib/utils";
 import keycloak from "@/lib/keycloak";
-import {
-  Menu,
-  X,
-  Leaf,
-  ShoppingCart,
-  Store,
-  UserCircle,
-  LogOut,
-} from "lucide-react";
+import { Menu, X, ShoppingCart, Store, UserCircle, LogOut } from "lucide-react";
 
 const navLinks = [{ name: "[ TRANG CHỦ ]", href: "/" }];
 
@@ -33,9 +25,11 @@ export default function Header() {
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 shrink-0 group">
-            <div className="flex h-10 w-10 items-center justify-center bg-[#1A4331] pixel-border group-hover:bg-[#8A9A7A] transition-colors">
-              <Leaf className="h-5 w-5 text-white" />
-            </div>
+            <img
+              src="/logo/logo.png"
+              alt="Tea4Life Logo"
+              className="h-10 w-10 object-contain rounded-md"
+            />
             <span className="text-2xl font-bold text-[#1A4331] tracking-tight pixel-text uppercase">
               Tea4Life
             </span>

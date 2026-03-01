@@ -8,7 +8,7 @@ export function IntroVideo() {
         playsInline
         className="absolute inset-0 w-full h-full object-cover filter contrast-125 saturate-110"
       >
-        <source src="/introduce-vid.webm" type="video/webm" />
+        <source src="/common/introduce-vid.webm" type="video/webm" />
       </video>
 
       {/* Retro scanline overlay */}
