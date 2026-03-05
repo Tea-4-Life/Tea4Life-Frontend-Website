@@ -2,7 +2,6 @@
 
 import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { Badge } from "@/components/ui/badge.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import {
@@ -13,7 +12,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table.tsx";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card.tsx";
 import {
   Select,
   SelectContent,
@@ -29,6 +27,8 @@ import {
   Eye,
   Search,
   Calendar,
+  Leaf,
+  X,
 } from "lucide-react";
 
 // Mock data đơn hàng
@@ -64,35 +64,53 @@ const orders = [
 ];
 
 const getStatusBadge = (status: string) => {
+  const baseClass =
+    "inline-flex items-center gap-1 px-3 py-1 text-xs font-bold border";
   switch (status) {
     case "Delivered":
       return (
-        <Badge className="bg-emerald-100 text-emerald-700 hover:bg-emerald-100">
-          <CheckCircle2 className="w-3 h-3 mr-1" /> Hoàn thành
-        </Badge>
+        <span
+          className={`${baseClass} bg-[#8A9A7A]/10 text-[#1A4331] border-[#8A9A7A]/30`}
+        >
+          <CheckCircle2 className="w-3 h-3" /> Hoàn thành
+        </span>
       );
     case "Shipped":
       return (
-        <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-100">
-          <Truck className="w-3 h-3 mr-1" /> Đang giao
-        </Badge>
+        <span
+          className={`${baseClass} bg-blue-50 text-blue-700 border-blue-200`}
+        >
+          <Truck className="w-3 h-3" /> Đang giao
+        </span>
       );
     case "Processing":
       return (
-        <Badge className="bg-amber-100 text-amber-700 hover:bg-amber-100">
-          <Clock className="w-3 h-3 mr-1" /> Đang xử lý
-        </Badge>
+        <span
+          className={`${baseClass} bg-[#D2A676]/10 text-[#D2A676] border-[#D2A676]/30`}
+        >
+          <Clock className="w-3 h-3" /> Đang xử lý
+        </span>
       );
     case "Cancelled":
-      return <Badge variant="destructive">Đã hủy</Badge>;
+      return (
+        <span className={`${baseClass} bg-red-50 text-red-600 border-red-200`}>
+          <X className="w-3 h-3" /> Đã hủy
+        </span>
+      );
     default:
-      return <Badge variant="secondary">{status}</Badge>;
+      return (
+        <span
+          className={`${baseClass} bg-gray-50 text-gray-600 border-gray-200`}
+        >
+          {status}
+        </span>
+      );
   }
 };
 
 export default function OrderPage() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [dateSearch, setDateSearch] = useState(""); // Tìm kiếm theo ngày
+  const [dateSearch, setDateSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
 
   const formatPrice = (price: number) => {
@@ -102,77 +120,110 @@ export default function OrderPage() {
     }).format(price);
   };
 
-  // Logic lọc dữ liệu tổng hợp
   const filteredOrders = useMemo(() => {
     return orders.filter((order) => {
-      // Tìm theo mã đơn hàng
       const matchesId = order.id
         .toLowerCase()
         .includes(searchTerm.toLowerCase());
-      // Tìm theo ngày (định dạng YYYY-MM-DD hoặc một phần của chuỗi ngày)
       const matchesDate = order.date.includes(dateSearch);
-      // Lọc theo trạng thái
       const matchesStatus =
         statusFilter === "all" || order.status === statusFilter;
-
       return matchesId && matchesDate && matchesStatus;
     });
   }, [searchTerm, dateSearch, statusFilter]);
 
   return (
-    <div className="min-h-screen bg-linear-to-b from-emerald-50/50 to-white py-12">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center gap-3 mb-8">
-          <ShoppingBag className="h-8 w-8 text-emerald-600" />
-          <h1 className="text-3xl font-bold text-emerald-900">
-            Lịch sử đơn hàng
+    <div className="min-h-screen bg-[#F8F5F0] text-[#1A4331] relative">
+      {/* Background Grid */}
+      <div
+        className="fixed inset-0 pointer-events-none opacity-[0.03] z-0"
+        style={{
+          backgroundImage:
+            "linear-gradient(#1A4331 1px, transparent 1px), linear-gradient(90deg, #1A4331 1px, transparent 1px)",
+          backgroundSize: "32px 32px",
+        }}
+      ></div>
+
+      <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8 relative z-10">
+        {/* Header */}
+        <div className="mb-10 border-b-2 border-[#1A4331]/10 pb-6">
+          <div className="flex items-center gap-2 mb-2">
+            <Leaf className="w-5 h-5 text-[#8A9A7A]" />
+            <p className="text-[#8A9A7A] font-bold text-sm uppercase tracking-wider">
+              Theo Dõi Đơn Hàng
+            </p>
+          </div>
+          <h1 className="text-3xl md:text-4xl pixel-text text-[#1A4331] flex items-center gap-3">
+            <ShoppingBag className="h-7 w-7 text-[#8A9A7A]" />
+            Lịch Sử Đơn Hàng
           </h1>
         </div>
 
-        {/* Khu vực tìm kiếm và bộ lọc */}
+        {/* Filters */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-          {/* Tìm theo Mã đơn */}
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-emerald-500" />
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8A9A7A]" />
             <Input
               placeholder="Tìm mã đơn (vd: 7291)..."
-              className="pl-10 border-emerald-100 focus-visible:ring-emerald-500"
+              className="pl-10 border-2 border-[#1A4331]/20 bg-white rounded-none focus-visible:ring-0 focus-visible:border-[#1A4331] text-sm"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
-
-          {/* Tìm theo Ngày đặt */}
           <div className="relative">
-            <Calendar className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-emerald-500" />
+            <Calendar className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8A9A7A]" />
             <Input
               type="date"
-              className="pl-10 border-emerald-100 focus-visible:ring-emerald-500"
+              className="pl-10 border-2 border-[#1A4331]/20 bg-white rounded-none focus-visible:ring-0 focus-visible:border-[#1A4331] text-sm"
               value={dateSearch}
               onChange={(e) => setDateSearch(e.target.value)}
             />
           </div>
-
-          {/* Lọc theo Trạng thái */}
           <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="border-emerald-100">
+            <SelectTrigger className="border-2 border-[#1A4331]/20 bg-white text-[#1A4331] text-sm focus:ring-0 focus:ring-offset-0 rounded-none">
               <SelectValue placeholder="Trạng thái" />
             </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Tất cả trạng thái</SelectItem>
-              <SelectItem value="Processing">Đang xử lý</SelectItem>
-              <SelectItem value="Shipped">Đang giao</SelectItem>
-              <SelectItem value="Delivered">Hoàn thành</SelectItem>
-              <SelectItem value="Cancelled">Đã hủy</SelectItem>
+            <SelectContent className="border border-[#1A4331]/20 bg-[#F8F5F0] rounded-none shadow-lg">
+              <SelectItem
+                value="all"
+                className="text-sm text-[#1A4331] focus:bg-[#8A9A7A] focus:text-[#F8F5F0] rounded-none cursor-pointer"
+              >
+                Tất cả trạng thái
+              </SelectItem>
+              <SelectItem
+                value="Processing"
+                className="text-sm text-[#1A4331] focus:bg-[#8A9A7A] focus:text-[#F8F5F0] rounded-none cursor-pointer"
+              >
+                Đang xử lý
+              </SelectItem>
+              <SelectItem
+                value="Shipped"
+                className="text-sm text-[#1A4331] focus:bg-[#8A9A7A] focus:text-[#F8F5F0] rounded-none cursor-pointer"
+              >
+                Đang giao
+              </SelectItem>
+              <SelectItem
+                value="Delivered"
+                className="text-sm text-[#1A4331] focus:bg-[#8A9A7A] focus:text-[#F8F5F0] rounded-none cursor-pointer"
+              >
+                Hoàn thành
+              </SelectItem>
+              <SelectItem
+                value="Cancelled"
+                className="text-sm text-[#1A4331] focus:bg-[#8A9A7A] focus:text-[#F8F5F0] rounded-none cursor-pointer"
+              >
+                Đã hủy
+              </SelectItem>
             </SelectContent>
           </Select>
         </div>
 
-        <Card className="border-emerald-100 shadow-sm overflow-hidden">
-          <CardHeader className="bg-white border-b border-emerald-50 flex flex-row items-center justify-between">
-            <CardTitle className="text-emerald-800 text-lg font-semibold">
+        {/* Orders Table */}
+        <div className="bg-white border-2 border-[#1A4331]/15 overflow-hidden">
+          <div className="px-6 py-4 border-b-2 border-[#1A4331]/10 flex items-center justify-between">
+            <h2 className="text-[#1A4331] font-bold text-sm uppercase tracking-wider">
               Danh sách đơn hàng
-            </CardTitle>
+            </h2>
             {(searchTerm || dateSearch || statusFilter !== "all") && (
               <Button
                 variant="ghost"
@@ -182,86 +233,84 @@ export default function OrderPage() {
                   setDateSearch("");
                   setStatusFilter("all");
                 }}
-                className="text-xs text-red-500 hover:text-red-600 hover:bg-red-50"
+                className="text-xs text-red-500 hover:text-red-600 hover:bg-red-50 rounded-none"
               >
                 Đặt lại bộ lọc
               </Button>
             )}
-          </CardHeader>
-          <CardContent className="p-0">
-            <Table>
-              <TableHeader className="bg-emerald-50/50">
-                <TableRow className="hover:bg-transparent border-emerald-100">
-                  <TableHead className="font-bold text-emerald-900 text-center">
-                    Mã đơn
-                  </TableHead>
-                  <TableHead className="font-bold text-emerald-900 text-center">
-                    Ngày đặt
-                  </TableHead>
-                  <TableHead className="font-bold text-emerald-900 text-center">
-                    Số lượng
-                  </TableHead>
-                  <TableHead className="font-bold text-emerald-900 text-center">
-                    Trạng thái
-                  </TableHead>
-                  <TableHead className="font-bold text-emerald-900 text-center">
-                    Tổng tiền
-                  </TableHead>
-                  <TableHead className="font-bold text-emerald-900 text-center">
-                    Thao tác
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredOrders.length > 0 ? (
-                  filteredOrders.map((order) => (
-                    <TableRow
-                      key={order.id}
-                      className="border-emerald-50 hover:bg-emerald-50/20 transition-colors"
-                    >
-                      <TableCell className="font-medium text-emerald-900 text-center">
-                        {order.id}
-                      </TableCell>
-                      <TableCell className="text-emerald-700 text-center">
-                        {order.date}
-                      </TableCell>
-                      <TableCell className="text-center text-emerald-700">
-                        {order.items}
-                      </TableCell>
-                      <TableCell className="text-center">
-                        {getStatusBadge(order.status)}
-                      </TableCell>
-                      <TableCell className="font-bold text-emerald-700 text-center">
-                        {formatPrice(order.total)}
-                      </TableCell>
-                      <TableCell className="text-center">
-                        <Link to={`/order/${order.id}`}>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="text-emerald-600 hover:text-emerald-700 hover:bg-emerald-100/50 gap-2"
-                          >
-                            <Eye className="h-4 w-4" />
-                            Chi tiết
-                          </Button>
-                        </Link>
-                      </TableCell>
-                    </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell
-                      colSpan={6}
-                      className="text-center py-20 text-emerald-600"
-                    >
-                      Không tìm thấy đơn hàng nào khớp với yêu cầu tìm kiếm.
+          </div>
+          <Table>
+            <TableHeader className="bg-[#F8F5F0]">
+              <TableRow className="hover:bg-transparent border-[#1A4331]/10">
+                <TableHead className="font-bold text-[#1A4331] text-center text-xs uppercase tracking-wider">
+                  Mã đơn
+                </TableHead>
+                <TableHead className="font-bold text-[#1A4331] text-center text-xs uppercase tracking-wider">
+                  Ngày đặt
+                </TableHead>
+                <TableHead className="font-bold text-[#1A4331] text-center text-xs uppercase tracking-wider">
+                  Số lượng
+                </TableHead>
+                <TableHead className="font-bold text-[#1A4331] text-center text-xs uppercase tracking-wider">
+                  Trạng thái
+                </TableHead>
+                <TableHead className="font-bold text-[#1A4331] text-center text-xs uppercase tracking-wider">
+                  Tổng tiền
+                </TableHead>
+                <TableHead className="font-bold text-[#1A4331] text-center text-xs uppercase tracking-wider">
+                  Thao tác
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filteredOrders.length > 0 ? (
+                filteredOrders.map((order) => (
+                  <TableRow
+                    key={order.id}
+                    className="border-[#1A4331]/10 hover:bg-[#F8F5F0]/50 transition-colors"
+                  >
+                    <TableCell className="font-bold text-[#1A4331] text-center text-sm">
+                      {order.id}
+                    </TableCell>
+                    <TableCell className="text-[#1A4331]/70 text-center text-sm">
+                      {order.date}
+                    </TableCell>
+                    <TableCell className="text-center text-[#1A4331]/70 text-sm">
+                      {order.items}
+                    </TableCell>
+                    <TableCell className="text-center">
+                      {getStatusBadge(order.status)}
+                    </TableCell>
+                    <TableCell className="font-bold text-[#1A4331] text-center text-sm">
+                      {formatPrice(order.total)}
+                    </TableCell>
+                    <TableCell className="text-center">
+                      <Link to={`/order/${order.id}`}>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="text-[#8A9A7A] hover:text-[#1A4331] hover:bg-[#8A9A7A]/10 rounded-none gap-1 text-xs font-bold"
+                        >
+                          <Eye className="h-4 w-4" />
+                          Chi tiết
+                        </Button>
+                      </Link>
                     </TableCell>
                   </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={6}
+                    className="text-center py-20 text-[#8A9A7A]"
+                  >
+                    Không tìm thấy đơn hàng nào khớp với yêu cầu tìm kiếm.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
       </div>
     </div>
   );

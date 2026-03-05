@@ -96,14 +96,23 @@ export default function ProfileLayout() {
   const avatarDisplay = avatarPreview || null;
 
   return (
-    <div className="min-h-screen bg-linear-to-b from-emerald-50/50 to-white py-12">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#F8F5F0] text-[#1A4331] py-12 relative">
+      {/* Background Grid */}
+      <div
+        className="fixed inset-0 pointer-events-none opacity-[0.03] z-0"
+        style={{
+          backgroundImage:
+            "linear-gradient(#1A4331 1px, transparent 1px), linear-gradient(90deg, #1A4331 1px, transparent 1px)",
+          backgroundSize: "32px 32px",
+        }}
+      ></div>
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Profile Header */}
         <div className="flex flex-col md:flex-row items-start md:items-center gap-6 mb-8">
           <div className="relative group">
-            <div className="h-24 w-24 rounded-full bg-emerald-100 flex items-center justify-center border-2 border-emerald-200 overflow-hidden relative">
+            <div className="h-24 w-24 bg-[#F8F5F0] flex items-center justify-center border-2 border-[#1A4331]/20 overflow-hidden relative">
               {loading ? (
-                <div className="h-full w-full animate-pulse bg-emerald-100" />
+                <div className="h-full w-full animate-pulse bg-[#8A9A7A]/20" />
               ) : avatarDisplay ? (
                 <img
                   src={avatarDisplay}
@@ -111,12 +120,12 @@ export default function ProfileLayout() {
                   className="h-full w-full object-cover"
                 />
               ) : (
-                <span className="text-2xl font-bold text-emerald-600">
+                <span className="text-2xl font-bold text-[#1A4331]">
                   {getNameInitials(profile?.fullName)}
                 </span>
               )}
               {uploading && (
-                <div className="absolute inset-0 bg-black/40 flex items-center justify-center rounded-full">
+                <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
                   <Loader2 className="h-6 w-6 text-white animate-spin" />
                 </div>
               )}
@@ -124,7 +133,7 @@ export default function ProfileLayout() {
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
-              className="absolute bottom-0 right-0 p-1.5 bg-emerald-500 rounded-full text-white border-2 border-white hover:bg-emerald-600 transition-colors"
+              className="absolute bottom-0 right-0 p-1.5 bg-[#1A4331] text-[#F8F5F0] border-2 border-white hover:bg-[#8A9A7A] transition-colors"
             >
               <Camera className="h-4 w-4" />
             </button>
@@ -137,21 +146,21 @@ export default function ProfileLayout() {
             />
           </div>
           <div>
-            <h1 className="text-3xl font-bold text-emerald-900">
+            <h1 className="text-3xl font-bold text-[#1A4331] pixel-text">
               {loading ? (
-                <span className="inline-block h-8 w-48 animate-pulse bg-emerald-100 rounded" />
+                <span className="inline-block h-8 w-48 animate-pulse bg-[#8A9A7A]/20" />
               ) : (
                 authFullName || profile?.fullName || "Hồ sơ cá nhân"
               )}
             </h1>
-            <p className="text-emerald-600">
+            <p className="text-[#8A9A7A] text-sm">
               Quản lý thông tin tài khoản và bảo mật của bạn
             </p>
           </div>
         </div>
 
         {/* Navigation Menu */}
-        <div className="flex gap-2 bg-emerald-50 p-1 rounded-lg mb-6 w-full">
+        <div className="flex gap-0 border-b-2 border-[#1A4331]/10 mb-6 w-full">
           {menuItems.map((item) => {
             const Icon = item.icon;
             const isActive = pathname === item.href;
@@ -160,10 +169,10 @@ export default function ProfileLayout() {
                 key={item.href}
                 to={item.href}
                 className={cn(
-                  "flex-1 flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium rounded-md transition-all",
+                  "flex-1 flex items-center justify-center gap-2 px-4 py-3 text-sm font-bold transition-all border-b-2",
                   isActive
-                    ? "bg-white text-emerald-700 shadow-sm"
-                    : "text-emerald-600 hover:text-emerald-800 hover:bg-emerald-100/50",
+                    ? "text-[#1A4331] border-[#1A4331] bg-white"
+                    : "text-[#8A9A7A] border-transparent hover:text-[#1A4331] hover:bg-[#F8F5F0]",
                 )}
               >
                 <Icon className="h-4 w-4" />

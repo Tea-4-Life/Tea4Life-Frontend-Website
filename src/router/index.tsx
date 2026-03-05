@@ -2,73 +2,48 @@ import { createBrowserRouter, Navigate } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import LoadingScreen from "@/components/custom/LoadingScreen";
 
+// ========================================
+// LAYOUTS — import trực tiếp
+// ========================================
+import RootLayout from "@/layouts/RootLayout";
+import AdminLayout from "@/layouts/AdminLayout";
+import DriverLayout from "@/layouts/DriverLayout";
+
+// ========================================
+// PUBLIC PAGES — import trực tiếp (không lazy, chuyển trang tức thì)
+// ========================================
+import LandingPage from "@/pages/public-route-pages/landing";
+import ShopPage from "@/pages/public-route-pages/shop";
+import ProductDetail from "@/pages/public-route-pages/product-details/index.tsx";
+import CartPage from "@/pages/public-route-pages/cart";
+import BrandsListPage from "@/pages/public-route-pages/brands";
+import CategoriesPage from "@/pages/public-route-pages/categories";
+import AboutPage from "@/pages/public-route-pages/about";
+
+// ========================================
+// CUSTOMER PAGES — import trực tiếp (không lazy)
+// ========================================
+import ProfileLayout from "@/pages/customer-route-pages/profile/layout";
+import OrderPage from "@/pages/customer-route-pages/orders";
+import OrderDetailPage from "@/pages/customer-route-pages/order-details";
+import CheckoutPage from "@/pages/customer-route-pages/checkout";
+import GeneralPage from "@/pages/customer-route-pages/profile/general";
+import AddressPage from "@/pages/customer-route-pages/profile/address";
+import CreateAddressPage from "@/pages/customer-route-pages/profile/address/create";
+import EditAddressPage from "@/pages/customer-route-pages/profile/address/edit";
+import SecurityPage from "@/pages/customer-route-pages/profile/security";
+
+// ========================================
+// ADMIN PAGES — lazy load theo cụm (admin ít khi dùng, tách chunk riêng)
+// ========================================
 /* eslint-disable react-refresh/only-export-components */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// Helper để lazy load component kèm theo Suspense LoadingScreen
 const Loadable = (Component: any) => (props: any) => (
   <Suspense fallback={<LoadingScreen />}>
     <Component {...props} />
   </Suspense>
 );
 
-// Layouts
-const RootLayout = Loadable(lazy(() => import("@/layouts/RootLayout")));
-const AdminLayout = Loadable(lazy(() => import("@/layouts/AdminLayout")));
-const DriverLayout = Loadable(lazy(() => import("@/layouts/DriverLayout")));
-const ProfileLayout = Loadable(
-  lazy(() => import("@/pages/customer-route-pages/profile/layout")),
-);
-
-// Public Pages
-const LandingPage = Loadable(
-  lazy(() => import("@/pages/public-route-pages/landing")),
-);
-const ShopPage = Loadable(
-  lazy(() => import("@/pages/public-route-pages/shop")),
-);
-const ProductDetail = Loadable(
-  lazy(() => import("@/pages/public-route-pages/product-details/index.tsx")),
-);
-const CartPage = Loadable(
-  lazy(() => import("@/pages/public-route-pages/cart")),
-);
-const BrandsListPage = Loadable(
-  lazy(() => import("@/pages/public-route-pages/brands")),
-);
-const CategoriesPage = Loadable(
-  lazy(() => import("@/pages/public-route-pages/categories")),
-);
-const AboutPage = Loadable(
-  lazy(() => import("@/pages/public-route-pages/about")),
-);
-
-// Customer Pages
-const OrderPage = Loadable(
-  lazy(() => import("@/pages/customer-route-pages/orders")),
-);
-const OrderDetailPage = Loadable(
-  lazy(() => import("@/pages/customer-route-pages/order-details")),
-);
-const CheckoutPage = Loadable(
-  lazy(() => import("@/pages/customer-route-pages/checkout")),
-);
-const GeneralPage = Loadable(
-  lazy(() => import("@/pages/customer-route-pages/profile/general")),
-);
-const AddressPage = Loadable(
-  lazy(() => import("@/pages/customer-route-pages/profile/address")),
-);
-const CreateAddressPage = Loadable(
-  lazy(() => import("@/pages/customer-route-pages/profile/address/create")),
-);
-const EditAddressPage = Loadable(
-  lazy(() => import("@/pages/customer-route-pages/profile/address/edit")),
-);
-const SecurityPage = Loadable(
-  lazy(() => import("@/pages/customer-route-pages/profile/security")),
-);
-
-// Admin Pages
 const AdminDashboard = Loadable(
   lazy(() => import("@/pages/admin-route-pages/dashboard")),
 );
@@ -103,7 +78,9 @@ const AdminRoleCreatePage = Loadable(
   lazy(() => import("@/pages/admin-route-pages/roles/create")),
 );
 
-// Driver Pages
+// ========================================
+// DRIVER PAGES — lazy load theo cụm
+// ========================================
 const DriverDashboard = Loadable(
   lazy(() => import("@/pages/driver-route-pages/dashboard")),
 );

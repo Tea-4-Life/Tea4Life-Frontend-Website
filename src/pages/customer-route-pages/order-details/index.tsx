@@ -2,9 +2,6 @@
 
 import { useParams, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button.tsx";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card.tsx";
-import { Badge } from "@/components/ui/badge.tsx";
-import { Separator } from "@/components/ui/separator.tsx";
 import {
   ArrowLeft,
   Package,
@@ -12,6 +9,7 @@ import {
   CreditCard,
   Truck,
   CheckCircle2,
+  Leaf,
 } from "lucide-react";
 
 // Mock data chi tiết cho một đơn hàng (Thực tế sẽ fetch theo ID)
@@ -59,137 +57,155 @@ export default function OrderDetailPage() {
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-b from-emerald-50/50 to-white py-12">
-      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#F8F5F0] text-[#1A4331] relative">
+      {/* Background Grid */}
+      <div
+        className="fixed inset-0 pointer-events-none opacity-[0.03] z-0"
+        style={{
+          backgroundImage:
+            "linear-gradient(#1A4331 1px, transparent 1px), linear-gradient(90deg, #1A4331 1px, transparent 1px)",
+          backgroundSize: "32px 32px",
+        }}
+      ></div>
+
+      <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8 relative z-10">
         {/* Back Button */}
         <Link to="/order">
           <Button
             variant="ghost"
-            className="mb-6 text-emerald-700 hover:bg-emerald-100 gap-2"
+            className="mb-6 text-[#8A9A7A] hover:text-[#1A4331] hover:bg-[#8A9A7A]/10 rounded-none gap-2 font-bold text-sm"
           >
             <ArrowLeft className="h-4 w-4" /> Quay lại lịch sử đơn hàng
           </Button>
         </Link>
 
         {/* Header Info */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-emerald-900">
-              Chi tiết đơn hàng #{id}
-            </h1>
-            <p className="text-emerald-600 mt-1">Ngày đặt: {orderData.date}</p>
+        <div className="mb-10 border-b-2 border-[#1A4331]/10 pb-6">
+          <div className="flex items-center gap-2 mb-2">
+            <Leaf className="w-5 h-5 text-[#8A9A7A]" />
+            <p className="text-[#8A9A7A] font-bold text-sm uppercase tracking-wider">
+              Chi Tiết Đơn Hàng
+            </p>
           </div>
-          <Badge className="w-fit bg-emerald-100 text-emerald-700 text-sm px-4 py-1">
-            <CheckCircle2 className="w-4 h-4 mr-2" /> Hoàn thành
-          </Badge>
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+              <h1 className="text-3xl md:text-4xl pixel-text text-[#1A4331]">
+                Đơn hàng #{id}
+              </h1>
+              <p className="text-sm text-[#8A9A7A] mt-1">
+                Ngày đặt: {orderData.date}
+              </p>
+            </div>
+            <span className="inline-flex items-center gap-1 bg-[#8A9A7A]/10 text-[#1A4331] border border-[#8A9A7A]/30 px-4 py-2 text-sm font-bold w-fit">
+              <CheckCircle2 className="w-4 h-4 text-[#8A9A7A]" /> Hoàn thành
+            </span>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Content: Items List */}
           <div className="lg:col-span-2 space-y-6">
-            <Card className="border-emerald-100 shadow-sm">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-emerald-800">
-                  <Package className="h-5 w-5" /> Sản phẩm đã mua
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
+            <div className="bg-white border-2 border-[#1A4331]/15">
+              <div className="px-6 py-4 border-b-2 border-[#1A4331]/10">
+                <h2 className="flex items-center gap-2 text-[#1A4331] font-bold text-sm uppercase tracking-wider">
+                  <Package className="h-4 w-4 text-[#8A9A7A]" /> Sản phẩm đã mua
+                </h2>
+              </div>
+              <div className="p-6 space-y-4">
                 {orderData.items.map((item) => (
                   <div key={item.id} className="flex gap-4 items-center">
                     <img
                       src={item.image}
                       alt={item.name}
-                      className="h-20 w-20 rounded-lg object-cover border border-emerald-50"
+                      className="h-20 w-20 object-cover border border-[#1A4331]/10"
                     />
                     <div className="flex-1">
-                      <h4 className="font-semibold text-emerald-900">
-                        {item.name}
-                      </h4>
-                      <p className="text-sm text-emerald-600">
+                      <h4 className="font-bold text-[#1A4331]">{item.name}</h4>
+                      <p className="text-sm text-[#8A9A7A]">
                         Số lượng: {item.quantity}
                       </p>
                     </div>
-                    <p className="font-bold text-emerald-700">
+                    <p className="font-bold text-[#1A4331]">
                       {formatPrice(item.price * item.quantity)}
                     </p>
                   </div>
                 ))}
 
-                <Separator className="my-6 bg-emerald-50" />
-
-                <div className="space-y-2">
-                  <div className="flex justify-between text-emerald-700">
+                <div className="border-t-2 border-dashed border-[#1A4331]/15 pt-4 mt-6 space-y-2">
+                  <div className="flex justify-between text-sm text-[#1A4331]/70">
                     <span>Tạm tính</span>
-                    <span>{formatPrice(orderData.subtotal)}</span>
-                  </div>
-                  <div className="flex justify-between text-emerald-700">
-                    <span>Phí vận chuyển</span>
-                    <span>{formatPrice(orderData.shippingFee)}</span>
-                  </div>
-                  <div className="flex justify-between text-xl font-bold text-emerald-900 pt-2">
-                    <span>Tổng cộng</span>
-                    <span className="text-emerald-600">
-                      {formatPrice(orderData.total)}
+                    <span className="font-bold text-[#1A4331]">
+                      {formatPrice(orderData.subtotal)}
                     </span>
                   </div>
+                  <div className="flex justify-between text-sm text-[#1A4331]/70">
+                    <span>Phí vận chuyển</span>
+                    <span className="font-bold text-[#1A4331]">
+                      {formatPrice(orderData.shippingFee)}
+                    </span>
+                  </div>
+                  <div className="flex justify-between text-xl font-bold text-[#1A4331] pt-3 border-t border-[#1A4331]/10">
+                    <span>Tổng cộng</span>
+                    <span>{formatPrice(orderData.total)}</span>
+                  </div>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           </div>
 
           {/* Sidebar: Customer & Shipping Info */}
           <div className="space-y-6">
-            <Card className="border-emerald-100 shadow-sm">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-emerald-800 text-lg">
-                  <MapPin className="h-5 w-5" /> Thông tin nhận hàng
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3 text-sm">
-                <div>
-                  <p className="font-bold text-emerald-900">
-                    {orderData.shippingAddress.name}
-                  </p>
-                  <p className="text-emerald-700">
-                    {orderData.shippingAddress.phone}
-                  </p>
-                  <p className="text-emerald-600 mt-1">
-                    {orderData.shippingAddress.address}
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
+            {/* Shipping Info */}
+            <div className="bg-white border-2 border-[#1A4331]/15">
+              <div className="px-6 py-4 border-b-2 border-[#1A4331]/10">
+                <h2 className="flex items-center gap-2 text-[#1A4331] font-bold text-sm uppercase tracking-wider">
+                  <MapPin className="h-4 w-4 text-[#8A9A7A]" /> Thông tin nhận
+                  hàng
+                </h2>
+              </div>
+              <div className="p-6 space-y-2 text-sm">
+                <p className="font-bold text-[#1A4331]">
+                  {orderData.shippingAddress.name}
+                </p>
+                <p className="text-[#1A4331]/70">
+                  {orderData.shippingAddress.phone}
+                </p>
+                <p className="text-[#8A9A7A] mt-1">
+                  {orderData.shippingAddress.address}
+                </p>
+              </div>
+            </div>
 
-            <Card className="border-emerald-100 shadow-sm">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-emerald-800 text-lg">
-                  <CreditCard className="h-5 w-5" /> Thanh toán
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-emerald-700">
+            {/* Payment Info */}
+            <div className="bg-white border-2 border-[#1A4331]/15">
+              <div className="px-6 py-4 border-b-2 border-[#1A4331]/10">
+                <h2 className="flex items-center gap-2 text-[#1A4331] font-bold text-sm uppercase tracking-wider">
+                  <CreditCard className="h-4 w-4 text-[#8A9A7A]" /> Thanh toán
+                </h2>
+              </div>
+              <div className="p-6">
+                <p className="text-sm text-[#1A4331]">
                   {orderData.paymentMethod}
                 </p>
-                <div className="mt-4 flex items-center gap-2 text-xs text-emerald-500">
-                  <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+                <div className="mt-3 flex items-center gap-2 text-xs text-[#8A9A7A]">
+                  <CheckCircle2 className="h-4 w-4" />
                   Đã thanh toán thành công
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
 
-            <Card className="border-emerald-100 shadow-sm bg-emerald-900 text-white">
-              <CardContent className="pt-6">
-                <div className="flex items-center gap-3">
-                  <Truck className="h-10 w-10 text-emerald-400" />
-                  <div>
-                    <p className="font-bold">Đơn hàng đã giao</p>
-                    <p className="text-xs text-emerald-200">
-                      Cảm ơn bạn đã tin dùng Tea4Life!
-                    </p>
-                  </div>
+            {/* Delivery Status Card */}
+            <div className="bg-[#1A4331] border-2 border-[#1A4331] text-[#F8F5F0] p-6">
+              <div className="flex items-center gap-3">
+                <Truck className="h-8 w-8 text-[#8A9A7A]" />
+                <div>
+                  <p className="font-bold">Đơn hàng đã giao</p>
+                  <p className="text-xs text-[#F8F5F0]/60">
+                    Cảm ơn bạn đã tin dùng Tea4Life!
+                  </p>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           </div>
         </div>
       </div>

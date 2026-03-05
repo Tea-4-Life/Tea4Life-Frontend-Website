@@ -35,15 +35,15 @@ export function CraftingProcessSection() {
         ].map((step, index) => (
           <div
             key={index}
-            className="relative z-10 pixel-border bg-[#F8F5F0] p-8 text-center group hover:-translate-y-2 transition-transform duration-300"
+            className="relative z-10 bg-white border-2 border-[#1A4331]/15 p-8 text-center group hover:-translate-y-2 hover:shadow-[3px_3px_0px_rgba(26,67,49,0.1)] transition-all duration-300"
           >
-            <div className="w-20 h-20 mx-auto bg-[#1A4331] text-[#F8F5F0] flex items-center justify-center pixel-border mb-6 group-hover:bg-[#8A9A7A] group-hover:text-[#1A4331] transition-colors shadow-[2px_2px_0px_#1A4331] rounded-full">
+            <div className="w-16 h-16 mx-auto bg-[#1A4331] text-[#F8F5F0] flex items-center justify-center mb-6 group-hover:bg-[#8A9A7A] group-hover:text-[#1A4331] transition-colors rounded-full">
               {step.icon}
             </div>
-            <h4 className="font-bold text-2xl text-[#1A4331] pixel-text mb-4">
+            <h4 className="font-bold text-xl text-[#1A4331] pixel-text mb-4">
               {step.title}
             </h4>
-            <p className="text-[#1A4331] font-bold font-sans bg-white p-4 pixel-border border-2">
+            <p className="text-[#1A4331]/70 text-sm font-medium leading-relaxed">
               {step.desc}
             </p>
           </div>
