@@ -165,63 +165,95 @@ export default function OnboardingPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row bg-white font-sans text-slate-900">
-      {/* CỘT TRÁI */}
-      <div className="relative w-full md:w-[45%] lg:w-[40%] bg-emerald-700 p-8 md:p-16 flex flex-col justify-between text-white overflow-hidden">
-        <div className="absolute top-[-10%] left-[-10%] h-[40%] w-[60%] rounded-full bg-emerald-600/30 blur-[80px]" />
-        <div className="absolute bottom-[-5%] right-[-5%] h-[30%] w-[50%] rounded-full bg-emerald-800/50 blur-[80px]" />
+    <div className="relative min-h-screen flex flex-col md:flex-row bg-[#1A4331] font-mono text-[#1A4331] overflow-hidden">
+      {/* Background pixel grid pattern (full page) */}
+      <div
+        className="absolute inset-0 opacity-[0.04]"
+        style={{
+          backgroundImage:
+            "linear-gradient(#F8F5F0 1px, transparent 1px), linear-gradient(90deg, #F8F5F0 1px, transparent 1px)",
+          backgroundSize: "24px 24px",
+        }}
+      />
 
-        <div className="relative z-10">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-black leading-tight mb-6">
-            Gia nhập cộng đồng <br />
-            <span className="text-emerald-300">Trà Việt</span> <br />
-            lớn nhất miền Nam.
-          </h1>
-          <p className="text-emerald-100/80 text-lg max-w-sm leading-relaxed">
-            Hơn 10,000 người yêu trà đang chờ đón bạn. Khám phá những hương vị
-            độc bản và kết nối cùng tri kỷ.
-          </p>
+      {/* Decorative shapes */}
+      <div className="absolute top-6 left-6 w-20 h-20 border-4 border-[#8A9A7A]/20 rotate-45" />
+      <div className="absolute top-12 left-12 w-8 h-8 bg-[#8A9A7A]/10 rotate-45" />
+      <div className="absolute bottom-6 right-6 w-16 h-16 border-4 border-[#8A9A7A]/15 rotate-12" />
+      <div className="absolute bottom-12 right-12 w-6 h-6 bg-[#8A9A7A]/10 rotate-12" />
+      <div className="absolute top-1/4 right-[45%] w-10 h-10 border-2 border-[#8A9A7A]/10 rotate-45" />
+      <div className="absolute bottom-1/3 left-[5%] w-14 h-14 border-2 border-[#8A9A7A]/10 -rotate-12" />
+
+      {/* CỘT TRÁI — Thông tin */}
+      <div className="relative z-10 w-full md:w-[45%] lg:w-[40%] p-8 md:p-12 lg:p-16 flex flex-col justify-center text-[#F8F5F0]">
+        {/* Logo */}
+        <div className="flex items-center gap-3 mb-10">
+          <img
+            src="/logo/logo.png"
+            alt="Tea4Life"
+            className="h-12 w-12 object-contain"
+          />
+          <span className="text-xl font-bold pixel-text uppercase tracking-wide">
+            Tea4Life
+          </span>
+        </div>
+
+        <h1 className="text-3xl md:text-4xl lg:text-5xl font-black leading-tight mb-6 pixel-text">
+          Gia nhập cộng đồng <br />
+          <span className="text-[#8A9A7A]">[ Trà Việt ]</span> <br />
+          lớn nhất miền Nam.
+        </h1>
+        <p className="text-[#F8F5F0]/60 text-sm md:text-base max-w-sm leading-relaxed">
+          Hơn 10,000 người yêu trà đang chờ đón bạn. Khám phá những hương vị độc
+          bản và kết nối cùng tri kỷ.
+        </p>
+
+        {/* Decorative divider */}
+        <div className="flex items-center gap-2 mt-8">
+          <div className="h-1 w-8 bg-[#8A9A7A]" />
+          <div className="h-1 w-4 bg-[#8A9A7A]/50" />
+          <div className="h-1 w-2 bg-[#8A9A7A]/30" />
         </div>
       </div>
 
-      {/* CỘT PHẢI */}
-      <div className="w-full md:w-[55%] lg:w-[60%] flex items-center justify-center p-6 md:p-12 lg:p-20 bg-slate-50/30">
-        <div className="w-full max-w-lg bg-white rounded-[2.5rem] p-8 md:p-10 shadow-sm border border-slate-100">
-          <div className="mb-10 text-center md:text-left">
-            <h2 className="text-2xl font-bold mb-2 text-slate-900">
+      {/* CỘT PHẢI — Form */}
+      <div className="relative z-10 w-full md:w-[55%] lg:w-[60%] flex items-center justify-center p-6 md:p-10 lg:p-16">
+        <div className="w-full max-w-lg bg-[#F8F5F0] border-2 border-[#F8F5F0]/50 p-8 md:p-10 shadow-[6px_6px_0px_0px_rgba(0,0,0,0.3)]">
+          <div className="mb-8">
+            <h2 className="text-xl font-black mb-2 text-[#1A4331] pixel-text">
               Hoàn tất hồ sơ
             </h2>
-            <p className="text-slate-500 text-sm">
+            <p className="text-[#8A9A7A] text-sm">
               Chúng tôi cần thêm một vài thông tin để bắt đầu trải nghiệm cùng
               bạn.
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-5">
             {/* Avatar Section */}
-            <div className="flex items-center gap-6 p-4 rounded-3xl bg-slate-50/50 border border-slate-100 transition-all hover:border-emerald-100">
-              <div className="relative">
-                <Avatar className="h-20 w-20 border-2 border-white shadow-md">
+            <div className="flex items-center gap-4 p-3.5 bg-[#1A4331]/5 border-2 border-[#1A4331]/15 transition-all hover:border-[#1A4331]/30">
+              <div className="relative shrink-0">
+                <Avatar className="h-16 w-16 rounded-none border-2 border-[#1A4331]">
                   <AvatarImage
                     src={avatarPreview || ""}
-                    className="object-cover"
+                    className="object-cover rounded-none"
                   />
-                  <AvatarFallback className="bg-emerald-100 text-emerald-600">
-                    <UserCircle className="h-10 w-10" />
+                  <AvatarFallback className="bg-[#8A9A7A]/20 text-[#1A4331] rounded-none">
+                    <UserCircle className="h-8 w-8" />
                   </AvatarFallback>
                 </Avatar>
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
-                  className="absolute -bottom-1 -right-1 h-7 w-7 rounded-full bg-emerald-600 text-white flex items-center justify-center shadow-md hover:bg-emerald-700 border-2 border-white transition-all active:scale-90"
+                  className="absolute -bottom-1.5 -right-1.5 h-6 w-6 bg-[#1A4331] text-[#F8F5F0] flex items-center justify-center border-2 border-[#F8F5F0] hover:bg-[#8A9A7A] transition-colors active:translate-y-px"
                 >
-                  <Camera className="h-4 w-4" />
+                  <Camera className="h-3 w-3" />
                 </button>
               </div>
-              <div className="flex-1">
-                <p className="text-sm font-bold text-slate-800">Ảnh đại diện</p>
-                <p className="text-xs text-slate-500 mt-1">
-                  Dùng ảnh chân dung rõ mặt giúp cộng đồng kết nối tốt hơn.
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-bold text-[#1A4331]">Ảnh đại diện</p>
+                <p className="text-xs text-[#8A9A7A] mt-0.5">
+                  Ảnh chân dung rõ mặt giúp cộng đồng kết nối tốt hơn.
                 </p>
                 <input
                   ref={fileInputRef}
@@ -231,7 +263,7 @@ export default function OnboardingPage() {
                   className="hidden"
                 />
                 {errors.avatar && (
-                  <p className="text-xs font-semibold text-red-500 mt-1">
+                  <p className="text-xs font-bold text-red-600 mt-1">
                     {errors.avatar}
                   </p>
                 )}
@@ -239,62 +271,62 @@ export default function OnboardingPage() {
             </div>
 
             {/* Inputs Section */}
-            <div className="space-y-5">
-              <div className="space-y-2">
+            <div className="space-y-4">
+              <div className="space-y-1.5">
                 <Label
                   htmlFor="fullName"
-                  className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1"
+                  className="text-xs font-bold text-[#1A4331]/60 uppercase tracking-widest"
                 >
-                  Họ và tên <span className="text-red-500">*</span>
+                  Họ và tên <span className="text-red-600">*</span>
                 </Label>
                 <div className="relative">
-                  <User className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                  <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#8A9A7A]" />
                   <Input
                     id="fullName"
                     placeholder="Nguyễn Văn Trà"
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    className="h-12 pl-10 rounded-2xl bg-white border-slate-200 focus:ring-emerald-500 focus:border-emerald-500"
+                    className="h-10 pl-10 rounded-none bg-white border-2 border-[#1A4331]/20 focus:border-[#1A4331] focus:ring-0 text-[#1A4331] placeholder:text-[#8A9A7A]/50"
                   />
                 </div>
                 {errors.fullName && (
-                  <p className="text-xs font-medium text-red-500 ml-1">
+                  <p className="text-xs font-bold text-red-600">
                     {errors.fullName}
                   </p>
                 )}
               </div>
 
-              <div className="space-y-2">
+              <div className="space-y-1.5">
                 <Label
                   htmlFor="phone"
-                  className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1"
+                  className="text-xs font-bold text-[#1A4331]/60 uppercase tracking-widest"
                 >
-                  Số điện thoại <span className="text-red-500">*</span>
+                  Số điện thoại <span className="text-red-600">*</span>
                 </Label>
                 <div className="relative">
-                  <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                  <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#8A9A7A]" />
                   <Input
                     id="phone"
                     placeholder="0912345678"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    className="h-12 pl-10 rounded-2xl bg-white border-slate-200 focus:ring-emerald-500 focus:border-emerald-500"
+                    className="h-10 pl-10 rounded-none bg-white border-2 border-[#1A4331]/20 focus:border-[#1A4331] focus:ring-0 text-[#1A4331] placeholder:text-[#8A9A7A]/50"
                   />
                 </div>
                 {errors.phone && (
-                  <p className="text-xs font-medium text-red-500 ml-1">
+                  <p className="text-xs font-bold text-red-600">
                     {errors.phone}
                   </p>
                 )}
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1.5">
                   <Label
                     htmlFor="dob"
-                    className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1"
+                    className="text-xs font-bold text-[#1A4331]/60 uppercase tracking-widest"
                   >
-                    Ngày sinh <span className="text-red-500">*</span>
+                    Ngày sinh <span className="text-red-600">*</span>
                   </Label>
                   <Input
                     id="dob"
@@ -302,18 +334,18 @@ export default function OnboardingPage() {
                     max="2010-12-31"
                     value={dob}
                     onChange={(e) => setDob(e.target.value)}
-                    className="h-12 rounded-2xl bg-white border-slate-200 focus:ring-emerald-500"
+                    className="h-10 rounded-none bg-white border-2 border-[#1A4331]/20 focus:border-[#1A4331] focus:ring-0 text-[#1A4331]"
                   />
                   {errors.dob && (
-                    <p className="text-xs font-medium text-red-500 ml-1">
+                    <p className="text-xs font-bold text-red-600">
                       {errors.dob}
                     </p>
                   )}
                 </div>
 
-                <div className="space-y-2">
-                  <Label className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1">
-                    Giới tính <span className="text-red-500">*</span>
+                <div className="space-y-1.5">
+                  <Label className="text-xs font-bold text-[#1A4331]/60 uppercase tracking-widest">
+                    Giới tính <span className="text-red-600">*</span>
                   </Label>
                   <Select
                     value={gender}
@@ -321,17 +353,17 @@ export default function OnboardingPage() {
                       setGender(val)
                     }
                   >
-                    <SelectTrigger className="h-12 rounded-2xl bg-white border-slate-200 focus:ring-emerald-500">
+                    <SelectTrigger className="h-10 rounded-none bg-white border-2 border-[#1A4331]/20 focus:border-[#1A4331] focus:ring-0 text-[#1A4331]">
                       <SelectValue placeholder="Chọn..." />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="rounded-none border-2 border-[#1A4331] bg-[#F8F5F0]">
                       <SelectItem value="MALE">Nam</SelectItem>
                       <SelectItem value="FEMALE">Nữ</SelectItem>
                       <SelectItem value="OTHER">Khác</SelectItem>
                     </SelectContent>
                   </Select>
                   {errors.gender && (
-                    <p className="text-xs font-medium text-red-500 ml-1">
+                    <p className="text-xs font-bold text-red-600">
                       {errors.gender}
                     </p>
                   )}
@@ -341,17 +373,17 @@ export default function OnboardingPage() {
 
             {/* Error Message */}
             {errors.submit && (
-              <div className="p-3 rounded-2xl bg-red-50 text-red-600 text-xs font-bold text-center animate-pulse">
+              <div className="p-3 bg-red-50 border-2 border-red-600 text-red-600 text-xs font-bold text-center">
                 {errors.submit}
               </div>
             )}
 
             {/* Actions */}
-            <div className="pt-4 space-y-3">
+            <div className="pt-2 space-y-3">
               <Button
                 type="submit"
                 disabled={isLoading || isUploading}
-                className="w-full h-11 bg-emerald-700 hover:bg-emerald-800 text-white rounded-2xl text-sm font-semibold shadow-md shadow-emerald-200/50 transition-all flex items-center justify-center gap-2 group active:scale-[0.98]"
+                className="w-full h-10 bg-[#1A4331] hover:bg-[#8A9A7A] hover:text-[#1A4331] text-[#F8F5F0] pixel-button text-sm font-bold flex items-center justify-center gap-2 group transition-colors"
               >
                 {isLoading || isUploading ? (
                   <>
@@ -360,7 +392,7 @@ export default function OnboardingPage() {
                   </>
                 ) : (
                   <>
-                    Hoàn tất
+                    HOÀN TẤT HỒ SƠ
                     <ChevronRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
                   </>
                 )}
@@ -369,7 +401,7 @@ export default function OnboardingPage() {
               <button
                 type="button"
                 onClick={handleLogout}
-                className="w-full py-2 text-slate-400 hover:text-red-500 text-xs font-bold uppercase tracking-widest transition-colors flex items-center justify-center gap-2 group"
+                className="w-full py-2 text-[#8A9A7A] hover:text-red-600 text-xs font-bold uppercase tracking-widest transition-colors flex items-center justify-center gap-2 group"
               >
                 <LogOut className="h-3 w-3 transition-transform group-hover:-translate-x-1" />
                 Đăng xuất

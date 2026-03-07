@@ -1,5 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { initializeAuthStatus, executeOnboarding, executeUpdateProfile, executeUpdateAvatar } from "./authThunk";
+import {
+  initializeAuthStatus,
+  executeOnboarding,
+  executeUpdateProfile,
+  executeUpdateAvatar,
+} from "./authThunk";
 
 interface AuthState {
   isAuthenticated: boolean;
@@ -9,7 +14,7 @@ interface AuthState {
   isLoading: boolean;
   initialized: boolean;
   onboarded: boolean;
-  avatarUrl: string |null;
+  avatarUrl: string | null;
 }
 
 const initialState: AuthState = {
@@ -72,8 +77,10 @@ export const authSlice = createSlice({
         state.isLoading = false;
         if (action.payload) {
           state.onboarded = action.payload.onboarded;
+          state.fullName = action.payload.fullName;
           state.email = action.payload.email;
           state.role = action.payload.role ?? "";
+          state.avatarUrl = action.payload.avatarUrl ?? "";
         }
       })
       .addCase(executeOnboarding.rejected, (state) => {

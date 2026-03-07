@@ -8,7 +8,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { LogOut, PackageSearch, UserCircle } from "lucide-react";
+import { LogOut, MapPin, PackageSearch, UserCircle } from "lucide-react";
 import { getNameInitials } from "@/lib/utils";
 import keycloak from "@/lib/keycloak";
 
@@ -33,7 +33,7 @@ export function UserMenu({ user }: UserMenuProps) {
           variant="ghost"
           className="relative flex items-center gap-2 px-2 rounded-none hover:bg-[#8A9A7A]/10 focus-visible:ring-0 focus-visible:ring-offset-0"
         >
-          <div className="h-8 w-8 bg-[#F8F5F0] flex items-center justify-center border-2 border-[#1A4331]/20 overflow-hidden">
+          <div className="h-8 w-8 bg-[#F8F5F0] flex items-center justify-center overflow-hidden">
             {user.avatar ? (
               <img
                 src={user.avatar}
@@ -52,17 +52,17 @@ export function UserMenu({ user }: UserMenuProps) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
-        className="w-56 rounded-none border-2 border-[#1A4331] bg-[#F8F5F0] shadow-[4px_4px_0px_0px_#1A4331] p-0"
+        className="w-48 rounded-none border-2 border-[#1A4331] bg-[#F8F5F0] shadow-[2px_2px_0px_0px_#1A4331] p-0"
         align="end"
         forceMount
       >
-        <DropdownMenuLabel className="font-normal px-4 py-3 bg-[#1A4331]/5">
-          <div className="flex flex-col space-y-1">
-            <p className="text-sm font-bold leading-none text-[#1A4331]">
+        <DropdownMenuLabel className="font-normal px-3 py-2 bg-[#1A4331]/5">
+          <div className="flex flex-col space-y-0.5">
+            <p className="text-xs font-bold leading-none text-[#1A4331]">
               {user.name || "Người dùng"}
             </p>
             {user.email && (
-              <p className="text-xs leading-none text-[#8A9A7A] mt-1">
+              <p className="text-[10px] leading-none text-[#8A9A7A] mt-0.5">
                 {user.email}
               </p>
             )}
@@ -72,16 +72,23 @@ export function UserMenu({ user }: UserMenuProps) {
         <div className="p-1">
           <DropdownMenuItem
             onClick={() => navigate("/profile")}
-            className="cursor-pointer rounded-none px-3 py-2.5 text-[#1A4331] font-bold text-sm uppercase tracking-wide focus:bg-[#1A4331] focus:text-[#F8F5F0] transition-colors"
+            className="cursor-pointer rounded-none px-2.5 py-1.5 text-[#1A4331] font-medium text-xs focus:bg-[#1A4331] focus:text-[#F8F5F0] transition-colors"
           >
-            <UserCircle className="mr-2 h-4 w-4" />
+            <UserCircle className="mr-1.5 h-3.5 w-3.5" />
             <span>Thông tin cá nhân</span>
           </DropdownMenuItem>
           <DropdownMenuItem
-            onClick={() => navigate("/order")}
-            className="cursor-pointer rounded-none px-3 py-2.5 text-[#1A4331] font-bold text-sm uppercase tracking-wide focus:bg-[#1A4331] focus:text-[#F8F5F0] transition-colors"
+            onClick={() => navigate("/profile/address")}
+            className="cursor-pointer rounded-none px-2.5 py-1.5 text-[#1A4331] font-medium text-xs focus:bg-[#1A4331] focus:text-[#F8F5F0] transition-colors"
           >
-            <PackageSearch className="mr-2 h-4 w-4" />
+            <MapPin className="mr-1.5 h-3.5 w-3.5" />
+            <span>Địa chỉ</span>
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => navigate("/order")}
+            className="cursor-pointer rounded-none px-2.5 py-1.5 text-[#1A4331] font-medium text-xs focus:bg-[#1A4331] focus:text-[#F8F5F0] transition-colors"
+          >
+            <PackageSearch className="mr-1.5 h-3.5 w-3.5" />
             <span>Đơn hàng của tôi</span>
           </DropdownMenuItem>
         </div>
@@ -89,9 +96,9 @@ export function UserMenu({ user }: UserMenuProps) {
         <div className="p-1">
           <DropdownMenuItem
             onClick={handleLogout}
-            className="cursor-pointer rounded-none px-3 py-2.5 text-red-600 font-bold text-sm uppercase tracking-wide focus:bg-red-600 focus:text-white transition-colors"
+            className="cursor-pointer rounded-none px-2.5 py-1.5 text-red-600 font-medium text-xs focus:bg-red-600 focus:text-white transition-colors"
           >
-            <LogOut className="mr-2 h-4 w-4" />
+            <LogOut className="mr-1.5 h-3.5 w-3.5" />
             <span>Đăng xuất</span>
           </DropdownMenuItem>
         </div>
