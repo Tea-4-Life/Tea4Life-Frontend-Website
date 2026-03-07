@@ -70,20 +70,8 @@ export default function ProfileLayout() {
     if (!file || !file.type.startsWith("image/")) return;
 
     const objectUrl = URL.createObjectURL(file);
-    const img = new Image();
-    img.onload = () => {
-      if (
-        img.width > AVATAR_MAX_SIZE ||
-        img.height > AVATAR_MAX_SIZE ||
-        img.width !== img.height
-      ) {
-        setCropperSrc(objectUrl);
-        setCropperOpen(true);
-      } else {
-        uploadAvatar(file);
-      }
-    };
-    img.src = objectUrl;
+    setCropperSrc(objectUrl);
+    setCropperOpen(true);
     e.target.value = "";
   };
 
