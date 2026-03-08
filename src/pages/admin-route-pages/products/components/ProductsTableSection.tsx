@@ -8,8 +8,9 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search, Edit, Trash2 } from "lucide-react";
+import { Search, Edit, Trash2, Image as ImageIcon } from "lucide-react";
 import type { ProductResponse } from "@/types/product/ProductResponse";
+import { getMediaUrl } from "@/lib/utils";
 
 function formatPrice(v: number) {
   return new Intl.NumberFormat("vi-VN", {
@@ -58,6 +59,9 @@ export default function ProductsTableSection({
           <TableHeader>
             <TableRow className="bg-slate-50 border-b border-slate-200">
               <TableHead className="font-semibold text-slate-600">ID</TableHead>
+              <TableHead className="font-semibold text-slate-600 w-[60px]">
+                Ảnh
+              </TableHead>
               <TableHead className="font-semibold text-slate-600">
                 Tên sản phẩm
               </TableHead>
@@ -79,7 +83,7 @@ export default function ProductsTableSection({
             {loading ? (
               <TableRow>
                 <TableCell
-                  colSpan={6}
+                  colSpan={7}
                   className="h-24 text-center text-slate-500"
                 >
                   Đang tải dữ liệu...
@@ -88,7 +92,7 @@ export default function ProductsTableSection({
             ) : filtered.length === 0 ? (
               <TableRow>
                 <TableCell
-                  colSpan={6}
+                  colSpan={7}
                   className="h-24 text-center text-slate-500"
                 >
                   Không tìm thấy sản phẩm nào.
@@ -102,6 +106,19 @@ export default function ProductsTableSection({
                 >
                   <TableCell className="font-mono text-xs text-slate-500">
                     {p.id.slice(0, 8)}...
+                  </TableCell>
+                  <TableCell>
+                    <div className="h-10 w-10 rounded-md border border-slate-200 bg-slate-50 overflow-hidden flex items-center justify-center shrink-0">
+                      {p.imageUrl ? (
+                        <img
+                          src={getMediaUrl(p.imageUrl)}
+                          alt={p.name}
+                          className="h-full w-full object-cover"
+                        />
+                      ) : (
+                        <ImageIcon className="h-4 w-4 text-slate-300" />
+                      )}
+                    </div>
                   </TableCell>
                   <TableCell className="font-semibold text-slate-800">
                     {p.name}
