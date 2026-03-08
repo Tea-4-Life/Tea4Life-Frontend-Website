@@ -80,6 +80,9 @@ const AdminWorkflowDashboardPage = Loadable(
 const AdminWorkflowAdminPage = Loadable(
   lazy(() => import("@/pages/admin-route-pages/workflow-admin")),
 );
+const AdminWorkflowDiagramPage = Loadable(
+  lazy(() => import("@/pages/admin-route-pages/workflow-diagram")),
+);
 
 // ========================================
 // DRIVER PAGES — lazy load theo cụm
@@ -140,6 +143,10 @@ const adminRoutes = [
   { path: "roles/edit/:id", element: <AdminRoleCreatePage /> },
   { path: "workflow-dashboard", element: <AdminWorkflowDashboardPage /> },
   { path: "workflow-admin", element: <AdminWorkflowAdminPage /> },
+  {
+    path: "workflow-admin/diagram/:bpmnProcessId/:version",
+    element: <AdminWorkflowDiagramPage />,
+  },
 ];
 
 // --- 4. NHÓM ROUTE TÀI XẾ (DRIVER) ---

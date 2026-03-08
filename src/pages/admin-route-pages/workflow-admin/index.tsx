@@ -4,12 +4,12 @@ import {
   deployWorkflowApi,
   cancelWorkflowInstanceApi,
   getWorkflowMetricsApi,
-  getWorkflowDiagramXmlApi,
 } from "@/services/admin/workflowAdminApi";
 import type { WorkflowDefinitionResponse } from "@/types/workflow/response/WorkflowDefinitionResponse";
 import type { WorkflowMetricsResponse } from "@/types/workflow/response/WorkflowMetricsResponse";
 import { handleError } from "@/lib/utils";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 // Sub-components
 import HeaderSection from "./components/HeaderSection";
@@ -18,9 +18,9 @@ import ActionsSection from "./components/ActionsSection";
 import DefinitionsSection from "./components/DefinitionsSection";
 import DeployModal from "./components/DeployModal";
 import CancelInstanceModal from "./components/CancelInstanceModal";
-import DiagramModal from "./components/DiagramModal";
 
 export default function WorkflowAdminPage() {
+  const navigate = useNavigate();
   // Definitions
   const [definitions, setDefinitions] = useState<WorkflowDefinitionResponse[]>(
     [],
@@ -38,11 +38,6 @@ export default function WorkflowAdminPage() {
   // Cancel modal
   const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
   const [cancelLoading, setCancelLoading] = useState(false);
-
-  // Diagram modal
-  const [diagramOpen, setDiagramOpen] = useState(false);
-  const [diagramLoading, setDiagramLoading] = useState(false);
-  const [diagramXml, setDiagramXml] = useState<string | null>(null);
 
   const fetchDefinitions = useCallback(async () => {
     setDefsLoading(true);
@@ -98,19 +93,8 @@ export default function WorkflowAdminPage() {
     }
   };
 
-  const handleViewDiagram = async (bpmnProcessId: string, version: number) => {
-    setDiagramOpen(true);
-    setDiagramLoading(true);
-    setDiagramXml(null);
-    try {
-      const res = await getWorkflowDiagramXmlApi(bpmnProcessId, version);
-      setDiagramXml(res.data);
-    } catch (error) {
-      handleError(error, "Không thể tải mô hình BPMN.");
-      setDiagramOpen(false);
-    } finally {
-      setDiagramLoading(false);
-    }
+  const handleViewDiagram = (bpmnProcessId: string, version: number) => {
+    navigate(`/admin/workflow-admin/diagram/${bpmnProcessId}/${version}`);
   };
 
   const handleRefreshAll = () => {
@@ -164,14 +148,6 @@ export default function WorkflowAdminPage() {
         onClose={() => setCancelDialogOpen(false)}
         onCancel={handleCancel}
         loading={cancelLoading}
-      />
-
-      {/* Diagram Modal */}
-      <DiagramModal
-        isOpen={diagramOpen}
-        onClose={() => setDiagramOpen(false)}
-        xmlData={diagramXml}
-        loading={diagramLoading}
       />
     </div>
   );
