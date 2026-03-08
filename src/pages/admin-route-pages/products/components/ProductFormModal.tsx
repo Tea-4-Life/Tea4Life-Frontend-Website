@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
 import {
   Dialog,
   DialogContent,
@@ -10,6 +10,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Loader2, Upload, X, Image as ImageIcon } from "lucide-react";
+import { handleUpload } from "@/services/storageApi";
+import { getMediaUrl } from "@/lib/utils";
 import type { CreateProductRequest } from "@/types/product/CreateProductRequest";
 import type { ProductResponse } from "@/types/product/ProductResponse";
 import type { ProductCategoryResponse } from "@/types/product-category/ProductCategoryResponse";
@@ -38,22 +41,32 @@ export default function ProductFormModal({
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [basePrice, setBasePrice] = useState<number>(0);
-  const [imageKey, setImageKey] = useState("");
   const [selectedOptionIds, setSelectedOptionIds] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (!isOpen) return;
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [uploadingImage, setUploadingImage] = useState(false);
 
-    // eslint-disable-next-line react-hooks/set-state-in-effect
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (!isOpen) {
+      setImageFile(null);
+      return;
+    }
+
     setProductCategoryId(
       initialData?.productCategoryId || (categories[0]?.id ?? ""),
     );
     setName(initialData?.name || "");
     setDescription(initialData?.description || "");
     setBasePrice(initialData?.basePrice || 0);
-    setImageKey("");
     setSelectedOptionIds(initialData?.productOptionIds || []);
+    setImagePreview(
+      initialData?.imageUrl ? getMediaUrl(initialData.imageUrl) : null,
+    );
+    setImageFile(null);
     setError(null);
   }, [isOpen, initialData, categories]);
 
@@ -68,6 +81,31 @@ export default function ProductFormModal({
         ? prev.filter((id) => id !== optionId)
         : [...prev, optionId],
     );
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (!file.type.startsWith("image/")) {
+        setError("Vui lòng chọn file hình ảnh hợp lệ.");
+        return;
+      }
+      if (file.size > 2 * 1024 * 1024) {
+        setError("Kích thước hình ảnh tối đa 2MB.");
+        return;
+      }
+      setImageFile(file);
+      setImagePreview(URL.createObjectURL(file));
+      setError(null);
+    }
+  };
+
+  const handleClearImage = () => {
+    setImageFile(null);
+    setImagePreview(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -86,17 +124,44 @@ export default function ProductFormModal({
       return;
     }
 
-    await onSubmit(
-      {
-        productCategoryId,
-        name: name.trim(),
-        description: description.trim() || undefined,
-        basePrice: Number(basePrice),
-        imageKey: imageKey.trim() || undefined,
-        productOptionIds: selectedOptionIds,
-      },
-      initialData?.id,
-    );
+    try {
+      let finalImageKey: string | undefined = undefined;
+
+      if (imageFile) {
+        setUploadingImage(true);
+        const uploadedKey = await handleUpload(imageFile);
+        if (uploadedKey) {
+          finalImageKey = uploadedKey;
+        } else {
+          setError("Tải ảnh thất bại, vui lòng thử lại.");
+          setUploadingImage(false);
+          return;
+        }
+        setUploadingImage(false);
+      } else if (initialData && initialData.imageUrl && !imagePreview) {
+        finalImageKey = ""; // Tức là clear ảnh
+      }
+
+      await onSubmit(
+        {
+          productCategoryId,
+          name: name.trim(),
+          description: description.trim() || undefined,
+          basePrice: Number(basePrice),
+          imageKey: finalImageKey,
+          productOptionIds: selectedOptionIds,
+        },
+        initialData?.id,
+      );
+    } catch (error) {
+      const err = error as {
+        response?: { data?: { message?: string } };
+        message?: string;
+      };
+      setError(err?.response?.data?.message || err.message || "Có lỗi xảy ra");
+    } finally {
+      setUploadingImage(false);
+    }
   };
 
   return (
@@ -163,22 +228,60 @@ export default function ProductFormModal({
                 type="number"
                 value={basePrice}
                 onChange={(e) => setBasePrice(Number(e.target.value))}
-                disabled={loading}
+                disabled={loading || uploadingImage}
                 className="rounded-lg focus-visible:ring-emerald-500"
               />
             </div>
 
             <div className="grid gap-2">
               <Label className="text-slate-700 font-medium">
-                Image key (từ storage)
+                Ảnh sản phẩm (Tuỳ chọn)
               </Label>
-              <Input
-                value={imageKey}
-                onChange={(e) => setImageKey(e.target.value)}
-                placeholder="tmp/xxx.png"
-                disabled={loading}
-                className="rounded-lg focus-visible:ring-emerald-500"
-              />
+              <div className="flex items-start gap-4">
+                <div className="h-20 w-20 rounded-xl border-2 border-dashed border-slate-200 bg-slate-50/50 flex items-center justify-center relative overflow-hidden group shrink-0">
+                  {imagePreview ? (
+                    <>
+                      <img
+                        src={imagePreview}
+                        alt="Preview"
+                        className="h-full w-full object-cover"
+                      />
+                      <button
+                        type="button"
+                        onClick={handleClearImage}
+                        className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                        title="Xóa ảnh"
+                      >
+                        <X className="h-6 w-6 text-white" />
+                      </button>
+                    </>
+                  ) : (
+                    <ImageIcon className="h-8 w-8 text-slate-300" />
+                  )}
+                </div>
+                <div className="flex-1 space-y-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="h-9 text-sm text-slate-700 hover:bg-slate-100"
+                    disabled={loading || uploadingImage}
+                  >
+                    <Upload className="h-4 w-4 mr-2" />
+                    Tải Ảnh Lên
+                  </Button>
+                  <p className="text-xs text-slate-500 leading-relaxed">
+                    JPG, PNG hoặc WebP. Tối đa 2MB. Tỉ lệ 1:1.
+                  </p>
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    className="hidden"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                  />
+                </div>
+              </div>
             </div>
           </div>
 
@@ -226,17 +329,24 @@ export default function ProductFormModal({
               type="button"
               variant="outline"
               onClick={onClose}
-              disabled={loading}
+              disabled={loading || uploadingImage}
               className="rounded-lg"
             >
               Huỷ
             </Button>
             <Button
               type="submit"
-              disabled={loading}
-              className="rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white transition-all shadow-sm shadow-emerald-200"
+              disabled={loading || uploadingImage}
+              className="rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white transition-all shadow-sm shadow-emerald-200 min-w-[100px]"
             >
-              {loading ? "Đang lưu..." : "Lưu"}
+              {loading || uploadingImage ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Đang lưu...
+                </>
+              ) : (
+                "Lưu"
+              )}
             </Button>
           </DialogFooter>
         </form>
