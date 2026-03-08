@@ -59,9 +59,6 @@ const AdminUsersPage = Loadable(
 const AdminReportsPage = Loadable(
   lazy(() => import("@/pages/admin-route-pages/reports")),
 );
-const AdminRegionsPage = Loadable(
-  lazy(() => import("@/pages/admin-route-pages/regions")),
-);
 const AdminCategoriesPage = Loadable(
   lazy(() => import("@/pages/admin-route-pages/categories")),
 );
@@ -76,6 +73,12 @@ const AdminRolesPage = Loadable(
 );
 const AdminRoleCreatePage = Loadable(
   lazy(() => import("@/pages/admin-route-pages/roles/create")),
+);
+const AdminWorkflowDashboardPage = Loadable(
+  lazy(() => import("@/pages/admin-route-pages/workflow-dashboard")),
+);
+const AdminWorkflowAdminPage = Loadable(
+  lazy(() => import("@/pages/admin-route-pages/workflow-admin")),
 );
 
 // ========================================
@@ -128,7 +131,6 @@ const adminRoutes = [
   { path: "products", element: <AdminProductsPage /> },
   { path: "orders", element: <AdminOrdersPage /> },
   { path: "categories", element: <AdminCategoriesPage /> },
-  { path: "regions", element: <AdminRegionsPage /> },
   { path: "product-options", element: <AdminProductOptionsPage /> },
   { path: "users", element: <AdminUsersPage /> },
   { path: "reports", element: <AdminReportsPage /> },
@@ -136,6 +138,8 @@ const adminRoutes = [
   { path: "roles", element: <AdminRolesPage /> },
   { path: "roles/create", element: <AdminRoleCreatePage /> },
   { path: "roles/edit/:id", element: <AdminRoleCreatePage /> },
+  { path: "workflow-dashboard", element: <AdminWorkflowDashboardPage /> },
+  { path: "workflow-admin", element: <AdminWorkflowAdminPage /> },
 ];
 
 // --- 4. NHÓM ROUTE TÀI XẾ (DRIVER) ---

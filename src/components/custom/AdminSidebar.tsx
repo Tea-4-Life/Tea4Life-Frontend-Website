@@ -12,6 +12,8 @@ import {
   LayoutGrid,
   ShieldCheck,
   Lock,
+  Activity,
+  GitBranch,
   type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -55,6 +57,21 @@ const adminGroups: SidebarGroup[] = [
   {
     label: "Kinh doanh",
     links: [{ name: "Đơn hàng", href: "/admin/orders", icon: ShoppingCart }],
+  },
+  {
+    label: "Quản lý luồng",
+    links: [
+      {
+        name: "Giám sát luồng",
+        href: "/admin/workflow-dashboard",
+        icon: Activity,
+      },
+      {
+        name: "Quản trị luồng",
+        href: "/admin/workflow-admin",
+        icon: GitBranch,
+      },
+    ],
   },
 ];
 
