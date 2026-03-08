@@ -26,6 +26,7 @@ export default function WorkflowAdminPage() {
     [],
   );
   const [defsLoading, setDefsLoading] = useState(true);
+  const [latestOnly, setLatestOnly] = useState(true);
 
   // Metrics
   const [metrics, setMetrics] = useState<WorkflowMetricsResponse | null>(null);
@@ -42,14 +43,14 @@ export default function WorkflowAdminPage() {
   const fetchDefinitions = useCallback(async () => {
     setDefsLoading(true);
     try {
-      const res = await getWorkflowDefinitionsApi();
+      const res = await getWorkflowDefinitionsApi(latestOnly);
       setDefinitions(res.data.data);
     } catch (error) {
       handleError(error, "Không thể tải danh sách workflow definitions.");
     } finally {
       setTimeout(() => setDefsLoading(false), 500);
     }
-  }, []);
+  }, [latestOnly]);
 
   const fetchMetrics = useCallback(async () => {
     setMetricsLoading(true);
@@ -132,6 +133,8 @@ export default function WorkflowAdminPage() {
         loading={defsLoading}
         data={definitions}
         onViewDiagram={handleViewDiagram}
+        latestOnly={latestOnly}
+        onLatestOnlyChange={setLatestOnly}
       />
 
       {/* Deploy Modal */}

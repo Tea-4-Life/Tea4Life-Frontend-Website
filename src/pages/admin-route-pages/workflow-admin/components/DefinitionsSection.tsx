@@ -10,6 +10,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
 import EmptyState from "@/components/custom/EmptyState";
 import type { WorkflowDefinitionResponse } from "@/types/workflow/response/WorkflowDefinitionResponse";
 
@@ -17,6 +18,8 @@ interface DefinitionsSectionProps {
   loading: boolean;
   data: WorkflowDefinitionResponse[];
   onViewDiagram: (bpmnProcessId: string, version: number) => void;
+  latestOnly: boolean;
+  onLatestOnlyChange: (checked: boolean) => void;
 }
 
 function formatDate(dateStr: string | null | undefined) {
@@ -38,18 +41,35 @@ const DefinitionsSection: React.FC<DefinitionsSectionProps> = ({
   loading,
   data,
   onViewDiagram,
+  latestOnly,
+  onLatestOnlyChange,
 }) => {
   return (
     <div className="space-y-6">
       {/* Section Header */}
-      <div className="flex flex-col gap-1 px-4">
-        <h2 className="text-2xl font-black text-slate-800 tracking-tight flex items-center gap-2">
-          <GitBranch className="h-5 w-5 text-purple-600" />
-          Workflow Definitions
-        </h2>
-        <p className="text-sm text-slate-500 font-medium">
-          Danh sách các workflow đã deploy lên engine
-        </p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 px-4">
+        <div className="flex flex-col gap-1">
+          <h2 className="text-2xl font-black text-slate-800 tracking-tight flex items-center gap-2">
+            <GitBranch className="h-5 w-5 text-purple-600" />
+            Workflow Definitions
+          </h2>
+          <p className="text-sm text-slate-500 font-medium">
+            Danh sách các workflow đã deploy lên engine
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <Checkbox
+            id="latestOnly"
+            checked={latestOnly}
+            onCheckedChange={onLatestOnlyChange}
+          />
+          <label
+            htmlFor="latestOnly"
+            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-slate-700 cursor-pointer"
+          >
+            Chỉ hiện phiên bản mới nhất
+          </label>
+        </div>
       </div>
 
       {/* Definitions Table */}
