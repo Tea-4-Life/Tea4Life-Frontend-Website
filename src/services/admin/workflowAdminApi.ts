@@ -3,6 +3,7 @@ import type ApiResponse from "@/types/base/ApiResponse";
 import type { DeployWorkflowResponse } from "@/types/workflow/response/DeployWorkflowResponse";
 import type { WorkflowDefinitionResponse } from "@/types/workflow/response/WorkflowDefinitionResponse";
 import type { WorkflowMetricsResponse } from "@/types/workflow/response/WorkflowMetricsResponse";
+import type { WorkflowTaskDefinitionResponse } from "@/types/workflow/response/WorkflowTaskDefinitionResponse";
 
 const BASE_URL = "/workflow-service/admin/workflows";
 
@@ -43,6 +44,18 @@ export const getWorkflowDiagramXmlApi = async (
     {
       params: { version },
       responseType: "text",
+    },
+  );
+};
+
+export const getWorkflowTaskDefinitionsApi = async (
+  bpmnProcessId: string,
+  version?: number,
+) => {
+  return await axiosClient.get<ApiResponse<WorkflowTaskDefinitionResponse[]>>(
+    `${BASE_URL}/definitions/${bpmnProcessId}/tasks`,
+    {
+      params: { version },
     },
   );
 };
