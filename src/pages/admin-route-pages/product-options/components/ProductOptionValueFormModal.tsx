@@ -58,7 +58,7 @@ export default function ProductOptionValueFormModal({
       setSortOrder(initialData ? initialData.sortOrder : 0);
       setOptionId(
         initialData
-          ? initialOptionId || ""
+          ? initialData.productOptionId || initialOptionId || ""
           : initialOptionId || (options.length > 0 ? options[0].id : ""),
       );
       setError(null);
@@ -84,6 +84,7 @@ export default function ProductOptionValueFormModal({
       await onSubmit(
         optionId,
         {
+          productOptionId: optionId,
           valueName: valueName.trim(),
           extraPrice: Number(extraPrice),
           sortOrder: Number(sortOrder),
@@ -126,7 +127,7 @@ export default function ProductOptionValueFormModal({
               <Select
                 value={optionId}
                 onValueChange={setOptionId}
-                disabled={loading || !!initialData}
+                disabled={loading}
               >
                 <SelectTrigger className="w-full border-emerald-200 focus:ring-emerald-500 rounded-xl">
                   <SelectValue placeholder="Chọn Tùy chọn" />
@@ -228,3 +229,4 @@ export default function ProductOptionValueFormModal({
     </Dialog>
   );
 }
+
