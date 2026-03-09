@@ -9,7 +9,7 @@ import ProductFormModal from "./components/ProductFormModal";
 import ProductsTableSection from "./components/ProductsTableSection";
 import HeaderSection from "./components/HeaderSection";
 import SearchSection from "./components/SearchSection";
-import PaginationSection from "./components/PaginationSection";
+import PaginationComponent from "@/components/custom/PaginationComponent";
 import {
   createAdminProductApi,
   deleteAdminProductApi,
@@ -30,8 +30,8 @@ export default function AdminProductsPage() {
 
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
-  const [size] = useState(20);
-  const [totalPages, setTotalPages] = useState(1);
+  const [size, setSize] = useState(20);
+  const [totalElements, setTotalElements] = useState(0);
 
   const [keyword, setKeyword] = useState("");
 
@@ -51,7 +51,7 @@ export default function AdminProductsPage() {
       const res = await getAdminProductsApi({ page, size });
       const pageData = res.data.data;
       setItems(pageData.content || []);
-      setTotalPages(pageData.totalPages || 1);
+      setTotalElements(pageData.totalElements || 0);
     } catch (error) {
       handleError(error, "Không thể tải danh sách sản phẩm.");
     } finally {
@@ -153,11 +153,18 @@ export default function AdminProductsPage() {
         openDelete={openDelete}
       />
 
-      <PaginationSection
-        page={page}
-        totalPages={totalPages}
-        setPage={setPage}
-      />
+      {totalElements > 0 && (
+        <PaginationComponent
+          currentPage={page}
+          pageSize={size}
+          totalCount={totalElements}
+          onPageChange={setPage}
+          onSizeChange={(newSize) => {
+            setSize(newSize);
+            setPage(1);
+          }}
+        />
+      )}
 
       <ProductFormModal
         isOpen={modalOpen}
