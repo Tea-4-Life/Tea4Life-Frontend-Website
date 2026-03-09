@@ -44,45 +44,19 @@ const Loadable = (Component: any) => (props: any) => (
   </Suspense>
 );
 
-const AdminDashboard = Loadable(
-  lazy(() => import("@/pages/admin-route-pages/dashboard")),
-);
-const AdminProductsPage = Loadable(
-  lazy(() => import("@/pages/admin-route-pages/products")),
-);
-const AdminOrdersPage = Loadable(
-  lazy(() => import("@/pages/admin-route-pages/orders")),
-);
-const AdminUsersPage = Loadable(
-  lazy(() => import("@/pages/admin-route-pages/users")),
-);
-const AdminReportsPage = Loadable(
-  lazy(() => import("@/pages/admin-route-pages/reports")),
-);
-const AdminCategoriesPage = Loadable(
-  lazy(() => import("@/pages/admin-route-pages/categories")),
-);
-const AdminProductOptionsPage = Loadable(
-  lazy(() => import("@/pages/admin-route-pages/product-options")),
-);
-const AdminPermissionsPage = Loadable(
-  lazy(() => import("@/pages/admin-route-pages/permissions")),
-);
-const AdminRolesPage = Loadable(
-  lazy(() => import("@/pages/admin-route-pages/roles")),
-);
-const AdminRoleCreatePage = Loadable(
-  lazy(() => import("@/pages/admin-route-pages/roles/create")),
-);
-const AdminWorkflowDashboardPage = Loadable(
-  lazy(() => import("@/pages/admin-route-pages/workflow-dashboard")),
-);
-const AdminWorkflowAdminPage = Loadable(
-  lazy(() => import("@/pages/admin-route-pages/workflow-admin")),
-);
-const AdminWorkflowDiagramPage = Loadable(
-  lazy(() => import("@/pages/admin-route-pages/workflow-diagram")),
-);
+import AdminDashboard from "@/pages/admin-route-pages/dashboard";
+import AdminProductsPage from "@/pages/admin-route-pages/products";
+import AdminOrdersPage from "@/pages/admin-route-pages/orders";
+import AdminUsersPage from "@/pages/admin-route-pages/users";
+import AdminReportsPage from "@/pages/admin-route-pages/reports";
+import AdminCategoriesPage from "@/pages/admin-route-pages/categories";
+import AdminProductOptionsPage from "@/pages/admin-route-pages/product-options";
+import AdminPermissionsPage from "@/pages/admin-route-pages/permissions";
+import AdminRolesPage from "@/pages/admin-route-pages/roles";
+import AdminRoleCreatePage from "@/pages/admin-route-pages/roles/create";
+import AdminWorkflowDashboardPage from "@/pages/admin-route-pages/workflow-dashboard";
+import AdminWorkflowAdminPage from "@/pages/admin-route-pages/workflow-admin";
+import AdminWorkflowDiagramPage from "@/pages/admin-route-pages/workflow-diagram";
 
 // ========================================
 // DRIVER PAGES — lazy load theo cụm
