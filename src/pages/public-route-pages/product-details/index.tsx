@@ -222,7 +222,7 @@ export default function ProductDetail() {
           {/* Product Image - 5 cols */}
           <div className="lg:col-span-5 relative">
             <div className="sticky top-24">
-              <div className="overflow-hidden bg-[#F8F5F0] border-4 border-[#1A4331] rounded-none shadow-[8px_8px_0px_#1A4331] group">
+              <div className="overflow-hidden bg-[#F8F5F0] border border-[#1A4331]/20 rounded-2xl shadow-sm group">
                 <img
                   src={
                     product.imageUrl
@@ -235,7 +235,7 @@ export default function ProductDetail() {
               </div>
               {product.productCategory && (
                 <Link to={`/shop?categoryId=${product.productCategory.id}`}>
-                  <span className="absolute -top-3 -left-3 bg-[#D2A676] text-[#1A4331] text-xs px-4 py-2 font-bold border-2 border-[#1A4331] uppercase tracking-wider hover:bg-[#1A4331] hover:text-[#F8F5F0] transition-colors cursor-pointer rounded-none shadow-[4px_4px_0px_#1A4331]">
+                  <span className="absolute top-4 left-4 bg-[#D2A676] text-[#1A4331] text-xs px-4 py-2 font-bold uppercase tracking-wider hover:bg-[#1A4331] hover:text-[#F8F5F0] transition-colors cursor-pointer rounded-xl shadow-md">
                     {product.productCategory.name}
                   </span>
                 </Link>
@@ -245,13 +245,13 @@ export default function ProductDetail() {
 
           {/* Product Info - 7 cols */}
           <div className="lg:col-span-7 flex flex-col">
-            <h1 className="text-4xl font-bold text-[#1A4331] sm:text-5xl pixel-text tracking-tight leading-tight uppercase drop-shadow-[2px_2px_0px_#8A9A7A]">
+            <h1 className="text-4xl font-bold text-[#1A4331] sm:text-5xl tracking-tight leading-tight">
               {product.name}
             </h1>
 
             {/* Rating Placeholder */}
             <div className="mt-4 flex items-center gap-1">
-              <div className="flex bg-white border-2 border-[#1A4331] px-2 py-1 shadow-[2px_2px_0px_#1A4331]">
+              <div className="flex bg-white border border-[#1A4331]/20 px-2 py-1 rounded-lg shadow-sm">
                 {Array.from({ length: 5 }).map((_, i) => (
                   <Star
                     key={i}
@@ -259,13 +259,13 @@ export default function ProductDetail() {
                   />
                 ))}
               </div>
-              <span className="text-xs text-[#1A4331] ml-2 font-bold uppercase tracking-widest bg-white border-2 border-[#1A4331] px-2 py-1 shadow-[2px_2px_0px_#1A4331]">
+              <span className="text-xs text-[#1A4331] ml-2 font-bold uppercase tracking-widest bg-white border border-[#1A4331]/20 px-2 py-1 rounded-lg shadow-sm">
                 5.0 Đánh giá
               </span>
             </div>
 
             {/* Price */}
-            <div className="mt-8 bg-[#1A4331] text-[#F8F5F0] inline-block w-fit px-6 py-3 border-2 border-[#1A4331] shadow-[4px_4px_0px_rgba(26,67,49,0.3)]">
+            <div className="mt-8 bg-[#1A4331] text-[#F8F5F0] inline-block w-fit px-6 py-3 rounded-2xl shadow-md">
               <span className="text-xl text-[#D2A676] font-bold block mb-1 uppercase tracking-widest text-[10px]">
                 Giá cơ bản
               </span>
@@ -276,7 +276,7 @@ export default function ProductDetail() {
 
             {/* Description */}
             {product.description && (
-              <p className="mt-8 text-[#1A4331] text-sm leading-relaxed whitespace-pre-line bg-white border-2 border-[#1A4331] p-5 shadow-[4px_4px_0px_#1A4331] font-medium border-dashed">
+              <p className="mt-8 text-[#1A4331] text-sm leading-relaxed whitespace-pre-line bg-white border border-[#1A4331]/20 p-5 rounded-xl shadow-sm font-medium">
                 {product.description}
               </p>
             )}
@@ -288,18 +288,18 @@ export default function ProductDetail() {
                 .map((option) => (
                   <div
                     key={option.id}
-                    className="bg-white p-5 border-2 border-[#1A4331] shadow-[4px_4px_0px_rgba(26,67,49,0.1)] relative"
+                    className="bg-white p-5 pt-8 border border-[#1A4331]/20 rounded-2xl shadow-sm relative"
                   >
-                    <div className="absolute -top-3 left-4 bg-[#F8F5F0] px-2 flex items-center gap-2">
-                      <label className="text-sm font-bold uppercase tracking-wider flex items-center gap-2 m-0 bg-[#8A9A7A] px-3 py-1 border-2 border-[#1A4331]">
+                    <div className="absolute top-0 left-4 -translate-y-1/2 bg-white px-2 flex items-center gap-2">
+                      <label className="text-sm font-bold uppercase tracking-wider flex items-center gap-2 m-0 text-[#1A4331]">
                         {option.name}
                         {option.isRequired && (
-                          <span className="text-red-500 normal-case text-[10px] bg-red-50 px-1.5 rounded-none border border-red-500 ml-2">
+                          <span className="text-red-500 normal-case text-[10px] bg-red-50 px-2 py-0.5 rounded-full border border-red-200 ml-2">
                             *Bắt buộc
                           </span>
                         )}
                         {option.isMultiSelect && (
-                          <span className="text-[#1A4331] normal-case text-[10px] bg-white px-1.5 rounded-none border border-[#1A4331] ml-2">
+                          <span className="text-[#8A9A7A] normal-case text-[10px] bg-slate-100 px-2 py-0.5 rounded-full ml-2">
                             (Chọn nhiều)
                           </span>
                         )}
@@ -325,17 +325,17 @@ export default function ProductDetail() {
                                   option.isMultiSelect,
                                 )
                               }
-                              className={`flex items-center gap-3 px-4 py-3 text-sm font-bold border-2 transition-all rounded-none ${
+                              className={`flex items-center gap-3 px-4 py-3 text-sm font-bold border-2 transition-all rounded-xl ${
                                 isSelected
-                                  ? "bg-[#1A4331] text-[#F8F5F0] border-[#1A4331] shadow-[4px_4px_0px_#D2A676] -translate-y-1"
-                                  : "bg-white text-[#1A4331] border-[#1A4331]/30 hover:border-[#1A4331] hover:-translate-y-0.5 shadow-[2px_2px_0px_transparent] hover:shadow-[4px_4px_0px_#8A9A7A]"
+                                  ? "bg-[#1A4331] text-[#F8F5F0] border-[#1A4331] shadow-md -translate-y-0.5"
+                                  : "bg-white text-[#1A4331] border-[#1A4331]/20 hover:border-[#1A4331] hover:-translate-y-0.5 hover:shadow-md"
                               }`}
                             >
                               {val.imageUrl && (
                                 <img
                                   src={getMediaUrl(val.imageUrl)}
                                   alt={val.valueName}
-                                  className={`w-6 h-6 object-cover border border-[#1A4331]/20 bg-white p-0.5 shrink-0 ${isSelected ? "" : "grayscale"}`}
+                                  className={`w-10 h-10 object-cover border border-[#1A4331]/20 bg-white p-0.5 shrink-0 rounded-full ${isSelected ? "" : "grayscale"}`}
                                 />
                               )}
                               <span>{val.valueName}</span>
@@ -355,9 +355,9 @@ export default function ProductDetail() {
             </div>
 
             {/* Note */}
-            <div className="mt-8 bg-white p-5 border-2 border-[#1A4331] shadow-[4px_4px_0px_rgba(26,67,49,0.1)] relative">
-              <div className="absolute -top-3 left-4 bg-[#F8F5F0] px-2 flex items-center gap-2">
-                <label className="text-sm font-bold text-[#1A4331] uppercase tracking-wider flex items-center gap-2 m-0 bg-[#D2A676] px-3 py-1 border-2 border-[#1A4331]">
+            <div className="mt-8 bg-white p-5 pt-6 border border-[#1A4331]/20 rounded-2xl shadow-sm relative">
+              <div className="absolute top-0 left-4 -translate-y-1/2 bg-white px-2 flex items-center gap-2">
+                <label className="text-sm font-bold text-[#1A4331] uppercase tracking-wider flex items-center gap-2 m-0">
                   Ghi chú cho quán
                 </label>
               </div>
@@ -365,7 +365,7 @@ export default function ProductDetail() {
                 value={note}
                 onChange={(e) => setNote(e.target.value)}
                 placeholder="Ví dụ: Ít ngọt, thêm thật nhiều đá..."
-                className="w-full h-24 mt-2 bg-[#F8F5F0] border-2 border-[#1A4331] px-4 py-3 text-sm text-[#1A4331] focus:outline-none focus:ring-2 focus:ring-[#8A9A7A] placeholder-[#8A9A7A]/70 resize-none rounded-none shadow-inner"
+                className="w-full h-24 mt-2 bg-slate-50 border border-[#1A4331]/20 px-4 py-3 text-sm text-[#1A4331] focus:outline-none focus:ring-2 focus:ring-[#8A9A7A] placeholder-[#8A9A7A]/70 resize-none rounded-xl"
               />
             </div>
 
@@ -375,19 +375,19 @@ export default function ProductDetail() {
                 <label className="text-xs font-bold text-[#8A9A7A] uppercase tracking-wider mb-2 block">
                   Số lượng
                 </label>
-                <div className="flex items-center bg-white border-2 border-[#1A4331] shadow-[4px_4px_0px_#1A4331] rounded-none">
+                <div className="flex items-center bg-white border border-[#1A4331]/30 shadow-sm rounded-xl overflow-hidden">
                   <button
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="w-14 h-14 flex items-center justify-center text-[#1A4331] hover:bg-[#1A4331] hover:text-[#F8F5F0] transition-colors font-bold text-xl"
+                    className="w-14 h-14 flex items-center justify-center text-[#1A4331] hover:bg-slate-100 transition-colors font-bold text-xl"
                   >
                     <Minus className="h-5 w-5" />
                   </button>
-                  <span className="w-16 h-14 flex items-center justify-center text-lg font-bold text-[#1A4331] border-x-2 border-[#1A4331] bg-[#F8F5F0]">
+                  <span className="w-16 h-14 flex items-center justify-center text-lg font-bold text-[#1A4331] border-x border-[#1A4331]/30 bg-slate-50">
                     {quantity}
                   </span>
                   <button
                     onClick={() => setQuantity(quantity + 1)}
-                    className="w-14 h-14 flex items-center justify-center text-[#1A4331] hover:bg-[#1A4331] hover:text-[#F8F5F0] transition-colors font-bold text-xl"
+                    className="w-14 h-14 flex items-center justify-center text-[#1A4331] hover:bg-slate-100 transition-colors font-bold text-xl"
                   >
                     <Plus className="h-5 w-5" />
                   </button>
@@ -398,7 +398,7 @@ export default function ProductDetail() {
               <div className="flex gap-4 flex-1 w-full relative">
                 <Button
                   size="lg"
-                  className="flex-1 bg-[#1A4331] text-[#F8F5F0] hover:bg-[#0c261a] hover:shadow-none hover:translate-y-1 shadow-[4px_4px_0px_#D2A676] transition-all rounded-none h-14 font-bold text-base border-2 border-[#1A4331] uppercase tracking-wider"
+                  className="flex-1 bg-[#1A4331] text-[#F8F5F0] hover:bg-[#0c261a] hover:shadow-lg shadow-md transition-all rounded-xl h-14 font-bold text-base border-none uppercase tracking-wider"
                 >
                   <ShoppingCart className="h-5 w-5 mr-3" />
                   Thêm vào giỏ • {formatPrice(totalPrice)}
@@ -407,10 +407,10 @@ export default function ProductDetail() {
                   variant="outline"
                   size="icon"
                   onClick={() => setIsFavorite(!isFavorite)}
-                  className={`rounded-none w-14 h-14 border-2 border-[#1A4331] flex-shrink-0 transition-all shadow-[4px_4px_0px_#1A4331] hover:shadow-none hover:translate-y-1 ${
+                  className={`rounded-xl w-14 h-14 border border-[#1A4331]/30 flex-shrink-0 transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5 ${
                     isFavorite
-                      ? "bg-red-50 text-red-500"
-                      : "bg-white text-[#1A4331] hover:bg-[#8A9A7A] hover:text-white"
+                      ? "bg-red-50 text-red-500 border-red-200"
+                      : "bg-white text-[#1A4331] hover:bg-slate-100"
                   }`}
                 >
                   <Heart
@@ -423,15 +423,15 @@ export default function ProductDetail() {
         </div>
 
         {/* Product Details - Info */}
-        <div className="mt-20 bg-[#F8F5F0] border-4 border-[#1A4331] p-8 rounded-none shadow-[8px_8px_0px_rgba(26,67,49,0.1)] relative">
-          <div className="absolute -top-5 left-8 bg-[#8A9A7A] px-6 py-2 border-2 border-[#1A4331] shadow-[4px_4px_0px_#1A4331]">
-            <h3 className="text-sm font-bold text-white uppercase tracking-widest flex items-center gap-2 m-0">
-              <Leaf className="h-4 w-4 text-[#F8F5F0]" />
+        <div className="mt-20 bg-white border border-[#1A4331]/20 p-8 rounded-2xl shadow-sm relative">
+          <div className="absolute top-0 left-8 -translate-y-1/2 bg-[#1A4331] text-white px-6 py-2 rounded-xl shadow-md">
+            <h3 className="text-sm font-bold uppercase tracking-widest flex items-center gap-2 m-0">
+              <Leaf className="h-4 w-4 text-emerald-300" />
               Thông tin chi tiết
             </h3>
           </div>
           <div className="grid gap-8 sm:grid-cols-2 text-sm mt-4">
-            <div className="bg-white p-4 border-2 border-[#1A4331] border-dashed">
+            <div className="bg-[#F8F5F0] p-5 rounded-2xl">
               <span className="text-[#8A9A7A] text-[10px] uppercase tracking-widest font-bold block mb-1">
                 Danh mục
               </span>
@@ -439,7 +439,7 @@ export default function ProductDetail() {
                 {product.productCategory?.name || "Khác"}
               </p>
             </div>
-            <div className="bg-white p-4 border-2 border-[#1A4331] border-dashed">
+            <div className="bg-[#F8F5F0] p-5 rounded-2xl">
               <span className="text-[#8A9A7A] text-[10px] uppercase tracking-widest font-bold block mb-1">
                 Đơn giá cơ bản
               </span>
@@ -448,7 +448,7 @@ export default function ProductDetail() {
               </p>
             </div>
             {product.productCategory?.description && (
-              <div className="sm:col-span-2 bg-white p-5 border-2 border-[#1A4331] border-dashed">
+              <div className="sm:col-span-2 bg-[#F8F5F0] p-6 rounded-2xl">
                 <span className="text-[#8A9A7A] text-[10px] uppercase tracking-widest font-bold block mb-2">
                   Mô tả danh mục
                 </span>
@@ -463,14 +463,14 @@ export default function ProductDetail() {
         {/* Related Products */}
         {relatedProducts.length > 0 && (
           <div className="mt-20 pb-12">
-            <div className="flex items-center justify-between mb-8 pb-4 border-b-4 border-[#1A4331]">
-              <h2 className="text-2xl font-bold text-[#1A4331] uppercase tracking-wider flex items-center gap-3 drop-shadow-[2px_2px_0px_#8A9A7A]">
+            <div className="flex items-center justify-between mb-8 pb-4 border-b border-[#1A4331]/10">
+              <h2 className="text-2xl font-bold text-[#1A4331] uppercase tracking-wider flex items-center gap-3">
                 <Star className="h-6 w-6 text-[#D2A676] fill-[#D2A676]" />
                 Có thể bạn thích
               </h2>
               <Link
                 to={`/shop?categoryId=${product.productCategory?.id}`}
-                className="text-sm font-bold bg-[#1A4331] text-[#F8F5F0] hover:bg-[#8A9A7A] px-4 py-2 border-2 border-[#1A4331] shadow-[2px_2px_0px_#1A4331] transition-all hover:translate-y-0.5 hover:shadow-none uppercase tracking-widest hidden sm:block"
+                className="text-sm font-bold bg-white text-[#1A4331] hover:bg-[#1A4331] hover:text-[#F8F5F0] px-5 py-2.5 rounded-xl border border-[#1A4331]/20 shadow-sm transition-all uppercase tracking-widest hidden sm:block"
               >
                 Xem thêm &rarr;
               </Link>
@@ -478,8 +478,8 @@ export default function ProductDetail() {
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
               {relatedProducts.map((p) => (
                 <Link key={p.id} to={`/shop/products/${p.id}`}>
-                  <div className="group bg-white border-2 border-[#1A4331] p-4 transition-all duration-300 hover:-translate-y-2 shadow-[4px_4px_0px_#1A4331] hover:shadow-[8px_8px_0px_#8A9A7A] flex flex-col h-full rounded-none">
-                    <div className="relative aspect-square overflow-hidden border-2 border-[#1A4331] bg-[#F8F5F0] mb-4">
+                  <div className="group bg-white border border-[#1A4331]/10 p-4 transition-all duration-300 hover:-translate-y-2 shadow-sm hover:shadow-xl flex flex-col h-full rounded-2xl">
+                    <div className="relative aspect-square overflow-hidden rounded-xl bg-slate-50 mb-4">
                       {p.imageUrl ? (
                         <img
                           src={getMediaUrl(p.imageUrl)}
@@ -496,14 +496,14 @@ export default function ProductDetail() {
                       <h3 className="font-bold text-[#1A4331] text-base line-clamp-2 mb-2 group-hover:text-[#8A9A7A] transition-colors leading-tight">
                         {p.name}
                       </h3>
-                      <p className="text-[10px] bg-[#D2A676] text-[#1A4331] px-2 py-0.5 w-fit border border-[#1A4331] mb-3 font-bold uppercase tracking-widest shadow-[1px_1px_0px_#1A4331]">
+                      <p className="text-[10px] bg-[#D2A676]/20 text-[#1A4331] px-2 py-1 w-fit rounded-md mb-3 font-bold uppercase tracking-widest">
                         {p.productCategoryName}
                       </p>
-                      <div className="mt-auto pt-3 flex items-center justify-between border-t-2 border-dashed border-[#1A4331]/30">
+                      <div className="mt-auto pt-4 flex items-center justify-between border-t border-slate-100">
                         <span className="text-lg font-bold text-[#1A4331] font-mono tracking-tight">
                           {formatPrice(p.basePrice)}
                         </span>
-                        <div className="w-8 h-8 bg-[#F8F5F0] text-[#1A4331] border-2 border-[#1A4331] flex items-center justify-center group-hover:bg-[#1A4331] group-hover:text-[#F8F5F0] transition-colors shadow-[2px_2px_0px_#1A4331] group-hover:shadow-[1px_1px_0px_transparent] group-hover:translate-y-0.5">
+                        <div className="w-9 h-9 bg-slate-50 text-[#1A4331] rounded-full flex items-center justify-center group-hover:bg-[#1A4331] group-hover:text-[#F8F5F0] transition-colors border border-[#1A4331]/10">
                           <Plus className="w-4 h-4 font-bold" />
                         </div>
                       </div>
@@ -514,7 +514,7 @@ export default function ProductDetail() {
             </div>
             <Link
               to={`/shop?categoryId=${product.productCategory?.id}`}
-              className="mt-6 text-sm font-bold bg-[#1A4331] text-[#F8F5F0] hover:bg-[#8A9A7A] px-4 py-3 border-2 border-[#1A4331] shadow-[4px_4px_0px_#1A4331] transition-all hover:translate-y-0.5 hover:shadow-none uppercase tracking-widest block text-center sm:hidden"
+              className="mt-6 text-sm font-bold bg-white text-[#1A4331] hover:bg-[#1A4331] hover:text-[#F8F5F0] px-4 py-3 rounded-xl shadow-sm border border-[#1A4331]/20 transition-all uppercase tracking-widest block text-center sm:hidden"
             >
               Xem thêm &rarr;
             </Link>
