@@ -1,13 +1,15 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+
 import { toast } from "sonner";
 import { handleError } from "@/lib/utils";
 import { ConfirmationDialog } from "@/components/custom/ConfirmationDialog";
 import ProductFormModal from "./components/ProductFormModal";
 import ProductsTableSection from "./components/ProductsTableSection";
+import HeaderSection from "./components/HeaderSection";
+import SearchSection from "./components/SearchSection";
+import PaginationSection from "./components/PaginationSection";
 import {
   createAdminProductApi,
   deleteAdminProductApi,
@@ -138,29 +140,23 @@ export default function AdminProductsPage() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
-          Quản lý sản phẩm
-        </h1>
-        <Button
-          className="bg-emerald-600 hover:bg-emerald-700 text-white font-medium shadow-sm transition-all shadow-emerald-200"
-          onClick={openCreate}
-        >
-          <Plus className="h-4 w-4 mr-2" /> Thêm sản phẩm
-        </Button>
-      </div>
+    <div className="space-y-6 animate-in fade-in duration-500">
+      <HeaderSection />
+
+      <SearchSection keyword={keyword} setKeyword={setKeyword} />
 
       <ProductsTableSection
         loading={loading}
         filtered={filtered}
-        keyword={keyword}
-        setKeyword={setKeyword}
+        openCreate={openCreate}
+        openEdit={openEdit}
+        openDelete={openDelete}
+      />
+
+      <PaginationSection
         page={page}
         totalPages={totalPages}
         setPage={setPage}
-        openEdit={openEdit}
-        openDelete={openDelete}
       />
 
       <ProductFormModal

@@ -7,12 +7,12 @@ import {
 } from "@/services/admin/productCategoryAdminApi";
 import type { ProductCategoryResponse } from "@/types/product-category/ProductCategoryResponse";
 import type { CreateProductCategoryRequest } from "@/types/product-category/CreateProductCategoryRequest";
-import { Button } from "@/components/ui/button";
-import { Plus, LayoutGrid } from "lucide-react";
 import { toast } from "sonner";
 import { handleError } from "@/lib/utils";
 
 // Sub-components
+import HeaderSection from "./components/HeaderSection";
+import SearchSection from "./components/SearchSection";
 import TableSection from "./components/TableSection";
 import CategoryFormModal from "./components/CategoryFormModal";
 import { ConfirmationDialog } from "@/components/custom/ConfirmationDialog";
@@ -32,6 +32,8 @@ export default function AdminCategoriesPage() {
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [deleteName, setDeleteName] = useState("");
+
+  const [searchQuery, setSearchQuery] = useState("");
 
   const fetchCategories = useCallback(async () => {
     setLoading(true);
@@ -109,34 +111,24 @@ export default function AdminCategoriesPage() {
     }
   };
 
+  const filteredData = data.filter((cat) =>
+    cat.name.toLowerCase().includes(searchQuery.toLowerCase()),
+  );
+
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
-            <LayoutGrid className="h-6 w-6 text-emerald-600" /> Quản lý Danh mục
-          </h1>
-          <p className="mt-1 text-sm text-slate-500">
-            Tổng cộng:{" "}
-            <span className="font-semibold text-emerald-700">
-              {data?.length || 0}
-            </span>{" "}
-            danh mục
-          </p>
-        </div>
-        <Button
-          onClick={handleOpenCreateForm}
-          className="bg-emerald-600 hover:bg-emerald-700 text-white font-medium shadow-sm transition-all shadow-emerald-200"
-        >
-          <Plus className="h-4 w-4 mr-2" /> Thêm Danh Mục Mới
-        </Button>
-      </div>
+      <HeaderSection />
+
+      <SearchSection
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+      />
 
       {/* Table Content */}
       <TableSection
         loading={loading}
-        data={data}
+        data={filteredData}
+        onCreate={handleOpenCreateForm}
         onEdit={handleOpenEditForm}
         onDelete={handleOpenDeleteDialog}
       />

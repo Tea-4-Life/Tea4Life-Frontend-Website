@@ -1,24 +1,21 @@
-"use client";
-
-import { Settings2 } from "lucide-react";
+import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import HeaderSection from "./components/HeaderSection";
+import SearchSection from "./components/SearchSection";
 import ProductOptionsTab from "./components/ProductOptionsTab";
 import ProductOptionValuesTab from "./components/ProductOptionValuesTab";
 
 export default function AdminProductOptionsPage() {
+  const [searchQuery, setSearchQuery] = useState("");
+
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
-      {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
-          <Settings2 className="h-6 w-6 text-emerald-600" /> Quản lý Tùy Chọn
-          Sản Phẩm
-        </h1>
-        <p className="mt-1 text-sm text-slate-500">
-          Quản lý các tùy chọn (size, đường, đá, topping...) và giá trị tương
-          ứng
-        </p>
-      </div>
+      <HeaderSection />
+
+      <SearchSection
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+      />
 
       {/* Tabs */}
       <Tabs defaultValue="options" className="w-full">

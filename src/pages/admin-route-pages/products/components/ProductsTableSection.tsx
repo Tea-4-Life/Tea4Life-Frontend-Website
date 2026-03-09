@@ -7,10 +7,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Search, Edit, Trash2, Image as ImageIcon } from "lucide-react";
+import { Edit, Trash2, Image as ImageIcon, Plus } from "lucide-react";
 import type { ProductResponse } from "@/types/product/ProductResponse";
 import { getMediaUrl } from "@/lib/utils";
+import EmptyState from "@/components/custom/EmptyState";
 
 function formatPrice(v: number) {
   return new Intl.NumberFormat("vi-VN", {
@@ -22,11 +22,7 @@ function formatPrice(v: number) {
 interface ProductsTableSectionProps {
   loading: boolean;
   filtered: ProductResponse[];
-  keyword: string;
-  setKeyword: (kw: string) => void;
-  page: number;
-  totalPages: number;
-  setPage: (arg: number | ((prev: number) => number)) => void;
+  openCreate: () => void;
   openEdit: (item: ProductResponse) => void;
   openDelete: (item: ProductResponse) => void;
 }
@@ -34,155 +30,158 @@ interface ProductsTableSectionProps {
 export default function ProductsTableSection({
   loading,
   filtered,
-  keyword,
-  setKeyword,
-  page,
-  totalPages,
-  setPage,
+  openCreate,
   openEdit,
   openDelete,
 }: ProductsTableSectionProps) {
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
-      <div className="relative max-w-md mb-5">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-        <Input
-          value={keyword}
-          onChange={(e) => setKeyword(e.target.value)}
-          placeholder="Tìm theo tên sản phẩm / danh mục..."
-          className="pl-9 bg-slate-50 border-slate-200 focus-visible:ring-emerald-500 rounded-lg"
-        />
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 px-4">
+        <div className="flex flex-col">
+          <h2 className="text-2xl font-black text-slate-800 tracking-tight">
+            Danh sách sản phẩm {filtered.length > 0 && `(${filtered.length})`}
+          </h2>
+          <p className="text-sm text-slate-500 font-medium">
+            Quản lý các sản phẩm hiển thị trên trang bán hàng
+          </p>
+        </div>
+
+        <Button
+          onClick={openCreate}
+          className="bg-emerald-500 hover:bg-emerald-600 text-white rounded-2xl shadow-lg shadow-emerald-200/50 gap-2 px-8 h-12 font-bold transition-all active:scale-95 whitespace-nowrap"
+        >
+          <Plus className="h-5 w-5" />
+          Tạo sản phẩm mới
+        </Button>
       </div>
 
-      <div className="rounded-lg border border-slate-200 overflow-hidden">
-        <Table>
-          <TableHeader>
-            <TableRow className="bg-slate-50 border-b border-slate-200">
-              <TableHead className="font-semibold text-slate-600">ID</TableHead>
-              <TableHead className="font-semibold text-slate-600 w-[60px]">
-                Ảnh
-              </TableHead>
-              <TableHead className="font-semibold text-slate-600">
-                Tên sản phẩm
-              </TableHead>
-              <TableHead className="font-semibold text-slate-600">
-                Danh mục
-              </TableHead>
-              <TableHead className="font-semibold text-slate-600">
-                Giá bán
-              </TableHead>
-              <TableHead className="font-semibold text-slate-600">
-                Tuỳ chọn
-              </TableHead>
-              <TableHead className="text-right font-semibold text-slate-600">
-                Hành động
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody className="divide-y divide-slate-100">
-            {loading ? (
-              <TableRow>
-                <TableCell
-                  colSpan={7}
-                  className="h-24 text-center text-slate-500"
-                >
-                  Đang tải dữ liệu...
-                </TableCell>
-              </TableRow>
-            ) : filtered.length === 0 ? (
-              <TableRow>
-                <TableCell
-                  colSpan={7}
-                  className="h-24 text-center text-slate-500"
-                >
-                  Không tìm thấy sản phẩm nào.
-                </TableCell>
-              </TableRow>
-            ) : (
-              filtered.map((p) => (
-                <TableRow
-                  key={p.id}
-                  className="hover:bg-emerald-50/50 transition-colors"
-                >
-                  <TableCell className="font-mono text-xs text-slate-500">
-                    {p.id.slice(0, 8)}...
-                  </TableCell>
-                  <TableCell>
-                    <div className="h-10 w-10 rounded-md border border-slate-200 bg-slate-50 overflow-hidden flex items-center justify-center shrink-0">
-                      {p.imageUrl ? (
-                        <img
-                          src={getMediaUrl(p.imageUrl)}
-                          alt={p.name}
-                          className="h-full w-full object-cover"
-                        />
-                      ) : (
-                        <ImageIcon className="h-4 w-4 text-slate-300" />
-                      )}
-                    </div>
-                  </TableCell>
-                  <TableCell className="font-semibold text-slate-800">
-                    {p.name}
-                  </TableCell>
-                  <TableCell>
-                    <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-700">
-                      {p.productCategoryName}
-                    </span>
-                  </TableCell>
-                  <TableCell className="text-emerald-700 font-medium">
-                    {formatPrice(p.basePrice)}
-                  </TableCell>
-                  <TableCell>
-                    <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200">
-                      {p.productOptionIds?.length || 0} tuỳ chọn
-                    </span>
-                  </TableCell>
-                  <TableCell className="text-right space-x-1">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50"
-                      onClick={() => openEdit(p)}
-                    >
-                      <Edit className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8 text-slate-400 hover:text-red-600 hover:bg-red-50"
-                      onClick={() => openDelete(p)}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </TableCell>
+      <div className="overflow-hidden border border-emerald-200 rounded-[2rem] bg-white shadow-sm min-h-[500px] flex flex-col">
+        {loading ? (
+          <div className="flex-1 flex flex-col items-center justify-center bg-white">
+            <div className="h-12 w-12 animate-spin rounded-full border-4 border-emerald-500 border-t-transparent" />
+            <p className="text-slate-500 mt-4 font-bold italic tracking-wide">
+              Đang chuẩn bị dữ liệu...
+            </p>
+          </div>
+        ) : filtered.length === 0 ? (
+          <div className="flex-1 flex items-center justify-center">
+            <EmptyState
+              title="Chưa có dữ liệu"
+              description="Hiện tại chưa có sản phẩm nào phù hợp."
+              actionLabel="Bắt đầu tạo mới"
+              onAction={openCreate}
+              className="border-none shadow-none bg-white"
+            />
+          </div>
+        ) : (
+          <div className="flex-1">
+            <Table>
+              <TableHeader className="bg-emerald-50/50 transition-colors">
+                <TableRow className="hover:bg-transparent border-emerald-200">
+                  <TableHead className="w-[100px] font-black text-slate-700 pl-8 border-r border-emerald-200 uppercase text-[11px] tracking-wider text-left">
+                    Ảnh
+                  </TableHead>
+                  <TableHead className="font-black text-slate-700 border-r border-emerald-200 uppercase text-[11px] tracking-wider text-left pl-6">
+                    Tên sản phẩm
+                  </TableHead>
+                  <TableHead className="font-black text-slate-700 border-r border-emerald-200 uppercase text-[11px] tracking-wider text-left pl-6">
+                    Danh mục
+                  </TableHead>
+                  <TableHead className="font-black text-slate-700 border-r border-emerald-200 uppercase text-[11px] tracking-wider text-left pl-6">
+                    Giá bán
+                  </TableHead>
+                  <TableHead className="font-black text-slate-700 border-r border-emerald-200 uppercase text-[11px] tracking-wider text-left pl-6">
+                    Tuỳ chọn
+                  </TableHead>
+                  <TableHead className="pr-8 font-black text-slate-700 uppercase text-[11px] tracking-wider text-center w-[120px]">
+                    Thao tác
+                  </TableHead>
                 </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
-      </div>
-
-      <div className="flex items-center justify-end gap-3 mt-5">
-        <Button
-          variant="outline"
-          size="sm"
-          className="rounded-lg h-9"
-          disabled={page <= 1}
-          onClick={() => setPage((prev) => prev - 1)}
-        >
-          Trang trước
-        </Button>
-        <span className="text-sm text-slate-500">
-          Page {page}/{totalPages}
-        </span>
-        <Button
-          variant="outline"
-          size="sm"
-          className="rounded-lg h-9"
-          disabled={page >= totalPages}
-          onClick={() => setPage((prev) => prev + 1)}
-        >
-          Trang tiếp
-        </Button>
+              </TableHeader>
+              <TableBody>
+                {filtered.map((p) => (
+                  <TableRow
+                    key={p.id}
+                    className="group hover:bg-emerald-50/40 border-emerald-200 transition-colors h-20"
+                  >
+                    <TableCell className="pl-8 border-r border-emerald-100/50">
+                      <div className="h-12 w-12 rounded-lg border border-emerald-100 bg-emerald-50 overflow-hidden flex items-center justify-center shrink-0">
+                        {p.imageUrl ? (
+                          <img
+                            src={getMediaUrl(p.imageUrl)}
+                            alt={p.name}
+                            className="h-full w-full object-cover"
+                          />
+                        ) : (
+                          <ImageIcon className="h-5 w-5 text-emerald-400" />
+                        )}
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-[14px] font-bold text-slate-700 border-r border-emerald-100/50 text-left pl-6">
+                      <div className="font-semibold text-emerald-900">
+                        {p.name}
+                      </div>
+                      <div className="text-slate-400 font-mono text-xs mt-0.5 font-normal">
+                        Mã: {p.id.slice(0, 8)}...
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-[14px] font-medium text-slate-500 border-r border-emerald-100/50 text-left pl-6">
+                      <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-600 border border-slate-200">
+                        {p.productCategoryName}
+                      </span>
+                    </TableCell>
+                    <TableCell className="text-[14px] font-bold text-emerald-600 border-r border-emerald-100/50 text-left pl-6">
+                      {formatPrice(p.basePrice)}
+                    </TableCell>
+                    <TableCell className="text-[14px] font-medium text-slate-500 border-r border-emerald-100/50 text-left pl-6">
+                      <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200">
+                        {p.productOptionIds?.length || 0} tuỳ chọn
+                      </span>
+                    </TableCell>
+                    <TableCell className="pr-8 text-center bg-slate-50/30">
+                      <div className="flex items-center justify-center gap-2">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => openEdit(p)}
+                          className="h-10 w-10 rounded-2xl text-emerald-600 hover:bg-emerald-100 hover:text-emerald-700 transition-all active:scale-95 group"
+                          title="Chỉnh sửa"
+                        >
+                          <Edit className="h-4.5 w-4.5 group-hover:rotate-12 transition-transform" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => openDelete(p)}
+                          className="h-10 w-10 rounded-2xl text-red-500 hover:bg-red-50 hover:text-red-600 transition-all active:scale-95 group"
+                          title="Xóa"
+                        >
+                          <Trash2 className="h-4.5 w-4.5 group-hover:scale-110 transition-transform" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+                {/* Empty Spacer Rows */}
+                {Array.from({ length: Math.max(0, 5 - filtered.length) }).map(
+                  (_, index) => (
+                    <TableRow
+                      key={`empty-${index}`}
+                      className="h-20 border-emerald-100/30 hover:bg-transparent"
+                    >
+                      <TableCell className="border-r border-emerald-100/20" />
+                      <TableCell className="border-r border-emerald-100/20" />
+                      <TableCell className="border-r border-emerald-100/20" />
+                      <TableCell className="border-r border-emerald-100/20" />
+                      <TableCell className="border-r border-emerald-100/20" />
+                      <TableCell className="bg-slate-50/10" />
+                    </TableRow>
+                  ),
+                )}
+              </TableBody>
+            </Table>
+          </div>
+        )}
       </div>
     </div>
   );
