@@ -10,17 +10,17 @@ import type { ProductCategoryResponse } from "@/types/product-category/ProductCa
 export const getProductsApi = async (params: ProductQuery) => {
   return await axiosClient.get<
     ApiResponse<PageResponse<ProductSummaryResponse>>
-  >("/product-service/products", { params });
+  >("/product-service/public/products", { params });
 };
 
 export const getProductCategoriesApi = async () => {
   return await axiosClient.get<ApiResponse<ProductCategoryResponse[]>>(
-    "/product-service/products/categories",
+    "/product-service/public/products/categories",
   );
 };
 
 export const getProductByIdApi = async (id: string) => {
   return await axiosClient.get<ApiResponse<ProductDetailResponse>>(
-    `/product-service/products/${id}`,
+    `/product-service/public/products/${id}`,
   );
 };
