@@ -221,24 +221,26 @@ export default function ProductDetail() {
         <div className="grid gap-8 lg:grid-cols-12 lg:gap-12">
           {/* Product Image - 5 cols */}
           <div className="lg:col-span-5 relative">
-            <div className="overflow-hidden bg-[#F8F5F0] border-4 border-[#1A4331] rounded-none shadow-[8px_8px_0px_#1A4331] group">
-              <img
-                src={
-                  product.imageUrl
-                    ? getMediaUrl(product.imageUrl)
-                    : "/placeholder.svg"
-                }
-                alt={product.name}
-                className="h-full w-full object-cover aspect-square hover:scale-105 transition-transform duration-500"
-              />
+            <div className="sticky top-24">
+              <div className="overflow-hidden bg-[#F8F5F0] border-4 border-[#1A4331] rounded-none shadow-[8px_8px_0px_#1A4331] group">
+                <img
+                  src={
+                    product.imageUrl
+                      ? getMediaUrl(product.imageUrl)
+                      : "/placeholder.svg"
+                  }
+                  alt={product.name}
+                  className="h-full w-full object-cover aspect-square hover:scale-105 transition-transform duration-500"
+                />
+              </div>
+              {product.productCategory && (
+                <Link to={`/shop?categoryId=${product.productCategory.id}`}>
+                  <span className="absolute -top-3 -left-3 bg-[#D2A676] text-[#1A4331] text-xs px-4 py-2 font-bold border-2 border-[#1A4331] uppercase tracking-wider hover:bg-[#1A4331] hover:text-[#F8F5F0] transition-colors cursor-pointer rounded-none shadow-[4px_4px_0px_#1A4331]">
+                    {product.productCategory.name}
+                  </span>
+                </Link>
+              )}
             </div>
-            {product.productCategory && (
-              <Link to={`/shop?categoryId=${product.productCategory.id}`}>
-                <span className="absolute -top-3 -left-3 bg-[#D2A676] text-[#1A4331] text-xs px-4 py-2 font-bold border-2 border-[#1A4331] uppercase tracking-wider hover:bg-[#1A4331] hover:text-[#F8F5F0] transition-colors cursor-pointer rounded-none shadow-[4px_4px_0px_#1A4331]">
-                  {product.productCategory.name}
-                </span>
-              </Link>
-            )}
           </div>
 
           {/* Product Info - 7 cols */}
