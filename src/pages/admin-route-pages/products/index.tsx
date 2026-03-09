@@ -62,7 +62,7 @@ export default function AdminProductsPage() {
   const fetchMeta = useCallback(async () => {
     try {
       const [catRes, optionRes] = await Promise.all([
-        getProductCategoriesApi({ page: 1, size: 999 }),
+        getProductCategoriesApi(),
         getAllProductOptionsApi(),
       ]);
       setCategories(catRes.data.data || []);

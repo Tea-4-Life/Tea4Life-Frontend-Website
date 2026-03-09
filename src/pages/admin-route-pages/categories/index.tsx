@@ -38,9 +38,8 @@ export default function AdminCategoriesPage() {
   const fetchCategories = useCallback(async () => {
     setLoading(true);
     try {
-      // Product categoryService response: { code, message, data: { content: [] } } or { code, message, data: [] }
-      // The user mentioned it returns { data: [...] }, not PageResponse so we need to dynamically adapt.
-      const response = await getProductCategoriesApi({ page: 1, size: 1000 });
+      // Product categoryService response: { code, message, data: [] }
+      const response = await getProductCategoriesApi();
       const responseData = response.data.data;
       if (Array.isArray(responseData)) {
         setData(responseData);
