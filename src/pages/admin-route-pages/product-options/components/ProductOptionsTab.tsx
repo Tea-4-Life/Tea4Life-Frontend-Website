@@ -183,7 +183,7 @@ export default function ProductOptionsTab() {
                 Thứ tự
               </th>
               <th className="text-left px-5 py-3.5 font-semibold text-slate-600 text-xs uppercase tracking-wider">
-                Sản phẩm
+                Giá trị
               </th>
               <th className="text-right px-5 py-3.5 font-semibold text-slate-600 text-xs uppercase tracking-wider">
                 Thao tác
@@ -250,7 +250,7 @@ export default function ProductOptionsTab() {
                   </td>
                   <td className="px-5 py-4">
                     <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200">
-                      {option.productIds?.length || 0} sản phẩm
+                      {option.productOptionValues?.length || 0} giá trị
                     </span>
                   </td>
                   <td className="px-5 py-4 text-right">
