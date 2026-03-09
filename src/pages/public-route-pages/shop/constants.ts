@@ -23,6 +23,13 @@ export const sizes = [
   { value: "L", label: "Size L" },
 ];
 
+export const priceRanges = [
+  { value: "all", label: "Tất cả mức giá", min: null, max: null },
+  { value: "under-50", label: "Dưới 50.000đ", min: 0, max: 49999 },
+  { value: "50-100", label: "50.000đ - 100.000đ", min: 50000, max: 100000 },
+  { value: "over-100", label: "Trên 100.000đ", min: 100001, max: null },
+];
+
 export const categories = [
   {
     value: "tra-sua",

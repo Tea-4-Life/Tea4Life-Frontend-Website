@@ -1,21 +1,35 @@
 "use client";
 
 import { useNavigate } from "react-router-dom";
-import { Leaf, Coffee, Flower2, Sprout, ArrowRight } from "lucide-react";
-import { categories } from "@/pages/public-route-pages/shop/constants.ts";
-
-const iconMap = {
-  Leaf: Leaf,
-  Coffee: Coffee,
-  Flower2: Flower2,
-  Sprout: Sprout,
-};
+import { Leaf, ArrowRight, Loader2 } from "lucide-react";
+import { useEffect, useState, useCallback } from "react";
+import { getProductCategoriesApi } from "@/services/productApi";
+import type { ProductCategoryResponse } from "@/types/product-category/ProductCategoryResponse";
+import { handleError, getMediaUrl } from "@/lib/utils";
 
 export default function CategoriesPage() {
   const navigate = useNavigate();
+  const [categories, setCategories] = useState<ProductCategoryResponse[]>([]);
+  const [loading, setLoading] = useState(false);
 
-  const handleCategoryClick = (categoryValue: string) => {
-    navigate(`/shop?region=${categoryValue}`);
+  const fetchCategories = useCallback(async () => {
+    try {
+      setLoading(true);
+      const res = await getProductCategoriesApi();
+      setCategories(res.data.data || []);
+    } catch (error) {
+      handleError(error, "Không thể tải danh mục sản phẩm");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchCategories();
+  }, [fetchCategories]);
+
+  const handleCategoryClick = (categoryId: string) => {
+    navigate(`/shop?categoryId=${categoryId}`);
   };
 
   return (
@@ -47,40 +61,50 @@ export default function CategoriesPage() {
           </p>
         </div>
 
-        {/* Categories Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {categories.map((cat) => {
-            const IconComponent = iconMap[cat.icon as keyof typeof iconMap];
-            return (
+        {loading ? (
+          <div className="flex justify-center items-center py-20">
+            <Loader2 className="h-10 w-10 animate-spin text-[#8A9A7A]" />
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {categories.map((cat) => (
               <button
-                key={cat.value}
-                onClick={() => handleCategoryClick(cat.value)}
-                className="group bg-white border-2 border-[#1A4331]/15 p-6 text-left transition-all duration-200 hover:-translate-y-1 hover:shadow-[4px_4px_0px_rgba(26,67,49,0.1)] hover:border-[#1A4331]/40"
+                key={cat.id}
+                onClick={() => handleCategoryClick(cat.id)}
+                className="group bg-white border-2 border-[#1A4331]/15 p-6 flex flex-col items-start transition-all duration-200 hover:-translate-y-1 hover:shadow-[4px_4px_0px_rgba(26,67,49,0.1)] hover:border-[#1A4331]/40"
               >
                 {/* Icon */}
-                <div className="w-12 h-12 bg-[#F8F5F0] border border-[#1A4331]/10 flex items-center justify-center mb-4 group-hover:bg-[#1A4331] transition-colors">
-                  <IconComponent className="h-6 w-6 text-[#8A9A7A] group-hover:text-[#F8F5F0] transition-colors" />
+                <div className="w-12 h-12 bg-[#F8F5F0] border border-[#1A4331]/10 flex items-center justify-center mb-4 group-hover:bg-[#1A4331] transition-colors rounded-lg overflow-hidden shrink-0">
+                  {cat.iconUrl ? (
+                    <img
+                      src={getMediaUrl(cat.iconUrl)}
+                      alt={cat.name}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <Leaf className="h-6 w-6 text-[#8A9A7A] group-hover:text-[#F8F5F0] transition-colors" />
+                  )}
                 </div>
 
                 {/* Name */}
-                <h3 className="text-lg font-bold text-[#1A4331] mb-1.5">
-                  {cat.label}
+                <h3 className="text-lg font-bold text-[#1A4331] mb-1.5 text-left">
+                  {cat.name}
                 </h3>
 
                 {/* Description */}
-                <p className="text-xs text-[#1A4331]/50 mb-4 leading-relaxed">
-                  {cat.description}
+                <p className="text-xs text-[#1A4331]/50 mb-4 leading-relaxed text-left flex-1">
+                  {cat.description || "Thức uống thơm ngon, đậm đà hương vị."}
                 </p>
 
                 {/* CTA */}
-                <span className="inline-flex items-center text-xs font-bold text-[#8A9A7A] group-hover:text-[#1A4331] transition-colors">
+                <span className="inline-flex items-center text-xs font-bold text-[#8A9A7A] group-hover:text-[#1A4331] transition-colors mt-auto pt-2">
                   Xem thực đơn
                   <ArrowRight className="ml-1.5 h-3.5 w-3.5 group-hover:translate-x-1 transition-transform" />
                 </span>
               </button>
-            );
-          })}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

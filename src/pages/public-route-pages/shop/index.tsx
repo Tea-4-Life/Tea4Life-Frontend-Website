@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button.tsx";
 import {
@@ -9,22 +9,86 @@ import {
   Filter,
   Coffee,
   Leaf,
+  Loader2,
 } from "lucide-react";
 import FilterSidebar from "./components/FilterSidebar.tsx";
-import { brands, regions, allProducts } from "./constants.ts";
+import { priceRanges } from "./constants.ts";
+import PaginationComponent from "@/components/custom/PaginationComponent";
+import { getProductsApi, getProductCategoriesApi } from "@/services/productApi";
+import type { ProductSummaryResponse } from "@/types/product/ProductSummaryResponse";
+import type { ProductCategoryResponse } from "@/types/product-category/ProductCategoryResponse";
+import { handleError, getMediaUrl } from "@/lib/utils";
 
 export default function ShopPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [showMobileFilter, setShowMobileFilter] = useState(false);
 
+  // States for products from API
+  const [products, setProducts] = useState<ProductSummaryResponse[]>([]);
+  const [categories, setCategories] = useState<ProductCategoryResponse[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  // Pagination states
+  const [page, setPage] = useState(1);
+  const [size] = useState(12);
+  const [totalElements, setTotalElements] = useState(0);
+
   // Get filter values from URL
-  const name = searchParams.get("name") || "";
-  const brand = searchParams.get("brand") || "all";
-  const region = searchParams.get("region") || "all";
-  const size = searchParams.get("size") || "all";
+  const keyword = searchParams.get("keyword") || "";
+  const categoryId = searchParams.get("categoryId") || "all";
+  const priceRange = searchParams.get("priceRange") || "all";
 
   // Local state for name input
-  const [nameInput, setNameInput] = useState(name);
+  const [nameInput, setNameInput] = useState(keyword);
+
+  // Fetch categories
+  const fetchCategories = useCallback(async () => {
+    try {
+      const res = await getProductCategoriesApi();
+      setCategories(res.data.data || []);
+    } catch (error) {
+      handleError(error, "Không thể tải danh mục sản phẩm");
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchCategories();
+  }, [fetchCategories]);
+
+  // Fetch products
+  const fetchProducts = useCallback(async () => {
+    try {
+      setLoading(true);
+
+      const resolvedPrice = priceRanges.find((p) => p.value === priceRange);
+      let minPrice;
+      let maxPrice;
+      if (resolvedPrice) {
+        minPrice = resolvedPrice.min;
+        maxPrice = resolvedPrice.max;
+      }
+
+      const res = await getProductsApi({
+        page,
+        size,
+        keyword: keyword || null,
+        categoryId: categoryId === "all" ? null : categoryId,
+        minPrice,
+        maxPrice,
+      });
+
+      setProducts(res.data.data.content || []);
+      setTotalElements(res.data.data.totalElements || 0);
+    } catch (error) {
+      handleError(error, "Không thể tải sản phẩm");
+    } finally {
+      setLoading(false);
+    }
+  }, [page, size, keyword, categoryId, priceRange]);
+
+  useEffect(() => {
+    fetchProducts();
+  }, [fetchProducts]);
 
   // Update URL params
   const updateParams = (updates: Record<string, string>) => {
@@ -36,56 +100,26 @@ export default function ShopPage() {
         newParams.delete(key);
       }
     });
+    setPage(1); // Reset page on filter change
     setSearchParams(newParams);
   };
 
-  // Filter products
-  const filteredProducts = useMemo(() => {
-    return allProducts.filter((product) => {
-      if (name && !product.name.toLowerCase().includes(name.toLowerCase())) {
-        return false;
-      }
-      if (brand !== "all" && product.brand !== brand) {
-        return false;
-      }
-      if (region !== "all" && product.region !== region) {
-        return false;
-      }
-      if (size !== "all" && product.size !== size) {
-        return false;
-      }
-      return true;
-    });
-  }, [name, brand, region, size]);
-
-  // Group products by region (category)
-  const groupedProducts = useMemo(() => {
-    const groups: Record<string, typeof filteredProducts> = {};
-    filteredProducts.forEach((product) => {
-      if (!groups[product.region]) {
-        groups[product.region] = [];
-      }
-      groups[product.region].push(product);
-    });
-    return groups;
-  }, [filteredProducts]);
-
   // Handle name search submit
   const handleSearch = () => {
-    updateParams({ name: nameInput });
+    updateParams({ keyword: nameInput });
   };
 
   // Clear all filters
   const clearFilters = () => {
     setNameInput("");
+    setPage(1);
     setSearchParams(new URLSearchParams());
   };
 
   const hasActiveFilters = !!(
-    name ||
-    brand !== "all" ||
-    region !== "all" ||
-    size !== "all"
+    keyword ||
+    categoryId !== "all" ||
+    priceRange !== "all"
   );
 
   // Format price
@@ -94,11 +128,6 @@ export default function ShopPage() {
       style: "currency",
       currency: "VND",
     }).format(price);
-  };
-
-  // Get region label
-  const getRegionLabel = (regionValue: string) => {
-    return regions.find((r) => r.value === regionValue)?.label || regionValue;
   };
 
   return (
@@ -140,9 +169,9 @@ export default function ShopPage() {
               <FilterSidebar
                 nameInput={nameInput}
                 setNameInput={setNameInput}
-                brand={brand}
-                region={region}
-                size={size}
+                categoryId={categoryId}
+                priceRange={priceRange}
+                categories={categories}
                 hasActiveFilters={hasActiveFilters}
                 onSearch={handleSearch}
                 onUpdateParams={updateParams}
@@ -191,9 +220,9 @@ export default function ShopPage() {
                 <FilterSidebar
                   nameInput={nameInput}
                   setNameInput={setNameInput}
-                  brand={brand}
-                  region={region}
-                  size={size}
+                  categoryId={categoryId}
+                  priceRange={priceRange}
+                  categories={categories}
                   hasActiveFilters={hasActiveFilters}
                   onSearch={handleSearch}
                   onUpdateParams={updateParams}
@@ -210,7 +239,7 @@ export default function ShopPage() {
               <p className="text-[#1A4331] font-bold text-sm">
                 Hiển thị{" "}
                 <span className="text-[#8A9A7A] text-base">
-                  {filteredProducts.length}
+                  {totalElements}
                 </span>{" "}
                 sản phẩm
               </p>
@@ -219,13 +248,13 @@ export default function ShopPage() {
             {/* Active Filters Tags */}
             {hasActiveFilters && (
               <div className="flex flex-wrap gap-2 mb-6">
-                {name && (
+                {keyword && (
                   <span className="inline-flex items-center gap-1 bg-[#1A4331] text-[#F8F5F0] px-3 py-1 text-xs font-bold rounded-sm">
-                    Tên: {name}
+                    Tên: {keyword}
                     <button
                       onClick={() => {
                         setNameInput("");
-                        updateParams({ name: "" });
+                        updateParams({ keyword: "" });
                       }}
                       className="ml-1 hover:text-[#D2A676]"
                     >
@@ -233,22 +262,23 @@ export default function ShopPage() {
                     </button>
                   </span>
                 )}
-                {brand !== "all" && (
+                {categoryId !== "all" && (
                   <span className="inline-flex items-center gap-1 bg-[#8A9A7A] text-[#F8F5F0] px-3 py-1 text-xs font-bold rounded-sm">
-                    {brands.find((b) => b.value === brand)?.label}
+                    {categories.find((c) => c.id === categoryId)?.name ||
+                      "Danh mục"}
                     <button
-                      onClick={() => updateParams({ brand: "all" })}
+                      onClick={() => updateParams({ categoryId: "all" })}
                       className="ml-1 hover:text-[#1A4331]"
                     >
                       <X className="h-3 w-3" />
                     </button>
                   </span>
                 )}
-                {region !== "all" && (
+                {priceRange !== "all" && (
                   <span className="inline-flex items-center gap-1 bg-[#D2A676] text-[#1A4331] px-3 py-1 text-xs font-bold rounded-sm">
-                    {regions.find((r) => r.value === region)?.label}
+                    {priceRanges.find((p) => p.value === priceRange)?.label}
                     <button
-                      onClick={() => updateParams({ region: "all" })}
+                      onClick={() => updateParams({ priceRange: "all" })}
                       className="ml-1 hover:text-[#F8F5F0]"
                     >
                       <X className="h-3 w-3" />
@@ -258,92 +288,88 @@ export default function ShopPage() {
               </div>
             )}
 
-            {/* Products by Category */}
-            {filteredProducts.length > 0 ? (
+            {/* Loading / Products Grid */}
+            {loading ? (
+              <div className="flex items-center justify-center py-24 text-[#8A9A7A]">
+                <Loader2 className="h-8 w-8 animate-spin" />
+              </div>
+            ) : products.length > 0 ? (
               <div className="space-y-10">
-                {Object.entries(groupedProducts).map(
-                  ([regionKey, products]) => (
-                    <section key={regionKey}>
-                      {/* Category Header */}
-                      <div className="flex items-center gap-3 mb-4 pb-2 border-b border-[#1A4331]/10">
-                        <h2 className="text-lg font-bold text-[#1A4331] uppercase tracking-wider">
-                          {getRegionLabel(regionKey)}
-                        </h2>
-                        <span className="text-xs text-[#8A9A7A] font-bold bg-[#F8F5F0] px-2 py-0.5 border border-[#1A4331]/10">
-                          {products.length} món
-                        </span>
-                      </div>
+                {/* Product Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+                  {products.map((product) => (
+                    <div
+                      key={product.id}
+                      className="group bg-white border-2 border-[#1A4331]/15 p-3 flex flex-col relative transition-all duration-200 hover:-translate-y-1 hover:shadow-[4px_4px_0px_rgba(26,67,49,0.1)]"
+                    >
+                      {/* Image */}
+                      <Link to={`/shop/products/${product.id}`}>
+                        <div className="aspect-square bg-[#F8F5F0] border border-[#1A4331]/10 mb-3 relative overflow-hidden">
+                          <img
+                            src={
+                              product.imageUrl
+                                ? getMediaUrl(product.imageUrl)
+                                : "/placeholder.svg"
+                            }
+                            alt={product.name}
+                            className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          />
+                        </div>
+                      </Link>
 
-                      {/* Product Grid */}
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-                        {products.map((product) => (
-                          <div
-                            key={product.id}
-                            className="group bg-white border-2 border-[#1A4331]/15 p-3 flex flex-col relative transition-all duration-200 hover:-translate-y-1 hover:shadow-[4px_4px_0px_rgba(26,67,49,0.1)]"
-                          >
-                            {/* Size Badge */}
-                            <div className="absolute -top-2 -right-2 z-20 bg-[#D2A676] text-[#1A4331] border-2 border-[#1A4331] font-bold px-2 py-0.5 text-xs">
-                              {product.size}
-                            </div>
+                      {/* Details */}
+                      <div className="flex flex-col flex-1 space-y-2">
+                        {/* Rating (Mock) */}
+                        <div className="flex items-center gap-0.5">
+                          {Array.from({ length: 5 }).map((_, i) => (
+                            <Star
+                              key={i}
+                              className={`h-3.5 w-3.5 fill-[#D2A676] text-[#D2A676]`}
+                            />
+                          ))}
+                        </div>
 
-                            {/* Image */}
-                            <Link to={`/shop/products/${product.id}`}>
-                              <div className="aspect-square bg-[#F8F5F0] border border-[#1A4331]/10 mb-3 relative overflow-hidden">
-                                <img
-                                  src={product.image || "/placeholder.svg"}
-                                  alt={product.name}
-                                  className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300"
-                                />
-                              </div>
-                            </Link>
+                        {/* Name */}
+                        <Link to={`/shop/products/${product.id}`}>
+                          <h3 className="font-bold text-[#1A4331] text-sm leading-tight line-clamp-2 hover:text-[#8A9A7A] transition-colors">
+                            {product.name}
+                          </h3>
+                        </Link>
 
-                            {/* Details */}
-                            <div className="flex flex-col flex-1 space-y-2">
-                              {/* Rating */}
-                              <div className="flex items-center gap-0.5">
-                                {Array.from({ length: 5 }).map((_, i) => (
-                                  <Star
-                                    key={i}
-                                    className={`h-3.5 w-3.5 ${
-                                      i < product.rating
-                                        ? "fill-[#D2A676] text-[#D2A676]"
-                                        : "text-[#1A4331]/15"
-                                    }`}
-                                  />
-                                ))}
-                              </div>
+                        {/* Category */}
+                        <p className="text-xs text-[#8A9A7A]">
+                          {product.productCategoryName}
+                        </p>
 
-                              {/* Name */}
-                              <Link to={`/shop/products/${product.id}`}>
-                                <h3 className="font-bold text-[#1A4331] text-sm leading-tight line-clamp-2 hover:text-[#8A9A7A] transition-colors">
-                                  {product.name}
-                                </h3>
-                              </Link>
-
-                              {/* Brand */}
-                              <p className="text-xs text-[#8A9A7A]">
-                                {
-                                  brands.find((b) => b.value === product.brand)
-                                    ?.label
-                                }
-                              </p>
-
-                              {/* Price + Button */}
-                              <div className="mt-auto pt-2 border-t border-[#1A4331]/10">
-                                <div className="text-base font-bold text-[#1A4331] mb-2">
-                                  {formatPrice(product.price)}
-                                </div>
-                                <Button className="w-full bg-[#1A4331] text-[#F8F5F0] hover:bg-[#8A9A7A] rounded-none h-9 text-xs font-bold transition-colors">
-                                  <Coffee className="w-3.5 h-3.5 mr-1.5" />
-                                  Đặt Ngay
-                                </Button>
-                              </div>
-                            </div>
+                        {/* Price + Button */}
+                        <div className="mt-auto pt-2 border-t border-[#1A4331]/10">
+                          <div className="text-base font-bold text-[#1A4331] mb-2">
+                            {formatPrice(product.basePrice)}
                           </div>
-                        ))}
+                          <Link to={`/shop/products/${product.id}`}>
+                            <Button className="w-full bg-[#1A4331] text-[#F8F5F0] hover:bg-[#8A9A7A] rounded-none h-9 text-xs font-bold transition-colors">
+                              <Coffee className="w-3.5 h-3.5 mr-1.5" />
+                              Xem Chi Tiết
+                            </Button>
+                          </Link>
+                        </div>
                       </div>
-                    </section>
-                  ),
+                    </div>
+                  ))}
+                </div>
+
+                {/* Pagination */}
+                {totalElements > 0 && (
+                  <div className="mt-8 pt-6 border-t border-[#1A4331]/10">
+                    <PaginationComponent
+                      currentPage={page}
+                      pageSize={size}
+                      totalCount={totalElements}
+                      onPageChange={setPage}
+                      className="border-[#1A4331]/20 bg-white"
+                      showItemsPerPageSelect={false}
+                    />
+                  </div>
                 )}
               </div>
             ) : (

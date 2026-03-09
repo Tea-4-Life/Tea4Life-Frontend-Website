@@ -10,14 +10,15 @@ import {
   SelectValue,
 } from "@/components/ui/select.tsx";
 import { Search, X } from "lucide-react";
-import { brands, regions, sizes } from "../constants.ts";
+import type { ProductCategoryResponse } from "@/types/product-category/ProductCategoryResponse";
+import { priceRanges } from "../constants.ts";
 
 interface FilterSidebarProps {
   nameInput: string;
   setNameInput: (value: string) => void;
-  brand: string;
-  region: string;
-  size: string;
+  categoryId: string;
+  priceRange: string;
+  categories: ProductCategoryResponse[];
   hasActiveFilters: boolean;
   onSearch: () => void;
   onUpdateParams: (updates: Record<string, string>) => void;
@@ -27,9 +28,9 @@ interface FilterSidebarProps {
 export default function FilterSidebar({
   nameInput,
   setNameInput,
-  brand,
-  region,
-  size,
+  categoryId,
+  priceRange,
+  categories,
   hasActiveFilters,
   onSearch,
   onUpdateParams,
@@ -60,78 +61,58 @@ export default function FilterSidebar({
         </div>
       </div>
 
-      {/* Brand */}
+      {/* Category */}
       <div className="space-y-2">
         <Label className="text-[#1A4331] font-bold uppercase text-xs tracking-wider">
-          Thương hiệu
+          Danh mục
         </Label>
         <Select
-          value={brand}
-          onValueChange={(value) => onUpdateParams({ brand: value })}
+          value={categoryId}
+          onValueChange={(value) => onUpdateParams({ categoryId: value })}
         >
           <SelectTrigger className="border-2 border-[#1A4331]/20 bg-[#F8F5F0] text-[#1A4331] text-sm focus:ring-0 focus:ring-offset-0 rounded-none h-9">
-            <SelectValue placeholder="Chọn thương hiệu" />
+            <SelectValue placeholder="Chọn danh mục" />
           </SelectTrigger>
           <SelectContent className="border border-[#1A4331]/20 bg-[#F8F5F0] rounded-none shadow-lg">
-            {brands.map((b) => (
+            <SelectItem
+              value="all"
+              className="text-sm text-[#1A4331] focus:bg-[#8A9A7A] focus:text-[#F8F5F0] rounded-none cursor-pointer"
+            >
+              Tất cả
+            </SelectItem>
+            {categories.map((c) => (
               <SelectItem
-                key={b.value}
-                value={b.value}
+                key={c.id}
+                value={c.id}
                 className="text-sm text-[#1A4331] focus:bg-[#8A9A7A] focus:text-[#F8F5F0] rounded-none cursor-pointer"
               >
-                {b.label}
+                {c.name}
               </SelectItem>
             ))}
           </SelectContent>
         </Select>
       </div>
 
-      {/* Region */}
+      {/* Price Range */}
       <div className="space-y-2">
         <Label className="text-[#1A4331] font-bold uppercase text-xs tracking-wider">
-          Dòng sản phẩm
+          Mức giá
         </Label>
         <Select
-          value={region}
-          onValueChange={(value) => onUpdateParams({ region: value })}
+          value={priceRange}
+          onValueChange={(value) => onUpdateParams({ priceRange: value })}
         >
           <SelectTrigger className="border-2 border-[#1A4331]/20 bg-[#F8F5F0] text-[#1A4331] text-sm focus:ring-0 focus:ring-offset-0 rounded-none h-9">
-            <SelectValue placeholder="Chọn dòng sản phẩm" />
+            <SelectValue placeholder="Chọn mức giá" />
           </SelectTrigger>
           <SelectContent className="border border-[#1A4331]/20 bg-[#F8F5F0] rounded-none shadow-lg">
-            {regions.map((r) => (
+            {priceRanges.map((p) => (
               <SelectItem
-                key={r.value}
-                value={r.value}
+                key={p.value}
+                value={p.value}
                 className="text-sm text-[#1A4331] focus:bg-[#8A9A7A] focus:text-[#F8F5F0] rounded-none cursor-pointer"
               >
-                {r.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      {/* Size */}
-      <div className="space-y-2">
-        <Label className="text-[#1A4331] font-bold uppercase text-xs tracking-wider">
-          Kích cỡ
-        </Label>
-        <Select
-          value={size}
-          onValueChange={(value) => onUpdateParams({ size: value })}
-        >
-          <SelectTrigger className="border-2 border-[#1A4331]/20 bg-[#F8F5F0] text-[#1A4331] text-sm focus:ring-0 focus:ring-offset-0 rounded-none h-9">
-            <SelectValue placeholder="Chọn kích cỡ" />
-          </SelectTrigger>
-          <SelectContent className="border border-[#1A4331]/20 bg-[#F8F5F0] rounded-none shadow-lg">
-            {sizes.map((s) => (
-              <SelectItem
-                key={s.value}
-                value={s.value}
-                className="text-sm text-[#1A4331] focus:bg-[#8A9A7A] focus:text-[#F8F5F0] rounded-none cursor-pointer"
-              >
-                {s.label}
+                {p.label}
               </SelectItem>
             ))}
           </SelectContent>

@@ -1,15 +1,37 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ArrowRight, Leaf } from "lucide-react";
+import { useEffect, useState, useCallback } from "react";
+import { getProductCategoriesApi } from "@/services/productApi";
+import type { ProductCategoryResponse } from "@/types/product-category/ProductCategoryResponse";
+import { handleError, getMediaUrl } from "@/lib/utils";
 
-// --- Dữ liệu Danh mục (Pixel Style) ---
-const categories = [
-  { name: "Trà Sữa", icon: "🍵", class: "bg-[#8A9A7A]" },
-  { name: "Trà Trái Cây", icon: "🍓", class: "bg-[#D2A676]" },
-  { name: "Matcha", icon: "🌱", class: "bg-[#1A4331]" },
-  { name: "Topping", icon: "🍘", class: "bg-[#1A4331]" },
+// Lớp màu nền tạo hiệu ứng đan xen
+const bgClasses = [
+  "bg-[#8A9A7A]",
+  "bg-[#D2A676]",
+  "bg-[#1A4331]",
+  "bg-[#1A4331]",
 ];
 
 export function CategoriesSection() {
+  const navigate = useNavigate();
+  const [categories, setCategories] = useState<ProductCategoryResponse[]>([]);
+
+  const fetchCategories = useCallback(async () => {
+    try {
+      const res = await getProductCategoriesApi();
+      // Chúng ta sẽ lấy tối đa 4 danh mục cho landing page để bố cục đẹp nhất
+      setCategories((res.data.data || []).slice(0, 4));
+    } catch (error) {
+      handleError(error, "Không thể tải danh mục sản phẩm");
+    }
+  }, []);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    fetchCategories();
+  }, [fetchCategories]);
+
   return (
     <section className="space-y-12">
       {/* Section Header */}
@@ -34,19 +56,28 @@ export function CategoriesSection() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
         {categories.map((cat, i) => (
           <div
-            key={i}
+            key={cat.id}
+            onClick={() => navigate(`/shop?categoryId=${cat.id}`)}
             className="pixel-border bg-white flex flex-col items-center p-8 cursor-pointer group hover:-translate-y-2 hover:shadow-[4px_4px_0px_#1A4331] transition-all duration-200 relative overflow-hidden"
           >
             {/* Background sliding effect */}
             <div
-              className={`absolute inset-0 ${cat.class} translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-in-out opacity-90`}
+              className={`absolute inset-0 ${bgClasses[i % bgClasses.length]} translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-in-out opacity-90`}
             />
 
-            <div className="text-7xl mb-6 grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300 z-10 drop-shadow-xl">
-              {cat.icon}
+            <div className="w-24 h-24 mb-6 grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300 z-10 drop-shadow-xl flex items-center justify-center bg-[#F8F5F0]/80 rounded-full border border-[#1A4331]/10 overflow-hidden shrink-0">
+              {cat.iconUrl ? (
+                <img
+                  src={getMediaUrl(cat.iconUrl)}
+                  alt={cat.name}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <Leaf className="w-10 h-10 text-[#8A9A7A]" />
+              )}
             </div>
 
-            <span className="font-bold tracking-widest text-center w-full bg-[#1A4331] text-[#F8F5F0] py-2 border-2 border-transparent group-hover:bg-[#F8F5F0] group-hover:text-[#1A4331] group-hover:border-[#1A4331] text-lg z-10 transition-colors uppercase">
+            <span className="font-bold tracking-widest text-center w-full bg-[#1A4331] text-[#F8F5F0] py-2 border-2 border-transparent group-hover:bg-[#F8F5F0] group-hover:text-[#1A4331] group-hover:border-[#1A4331] text-[15px] z-10 transition-colors uppercase whitespace-nowrap overflow-hidden text-ellipsis px-2">
               {cat.name}
             </span>
           </div>
