@@ -4,4 +4,5 @@ export interface ProductOptionValueResponse {
   valueName: string;
   extraPrice: number;
   sortOrder: number;
+  imageUrl?: string;
 }

@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Plus, ListChecks, Pencil, Trash2, ArrowUpDown } from "lucide-react";
 import { toast } from "sonner";
-import { handleError } from "@/lib/utils";
+import { handleError, getMediaUrl } from "@/lib/utils";
 import {
   Select,
   SelectContent,
@@ -280,6 +280,9 @@ export default function ProductOptionValuesTab() {
                 </div>
               </th>
               <th className="text-left px-5 py-3.5 font-semibold text-slate-600 text-xs uppercase tracking-wider">
+                Ảnh
+              </th>
+              <th className="text-left px-5 py-3.5 font-semibold text-slate-600 text-xs uppercase tracking-wider">
                 Tên giá trị
               </th>
               {selectedOptionId === "all" && (
@@ -301,7 +304,7 @@ export default function ProductOptionValuesTab() {
           <tbody className="divide-y divide-slate-100">
             {!selectedOptionId ? (
               <tr>
-                <td colSpan={5} className="text-center py-12 text-slate-400">
+                <td colSpan={6} className="text-center py-12 text-slate-400">
                   <ListChecks className="h-10 w-10 mx-auto mb-3 text-slate-300" />
                   <p className="font-medium">Chưa chọn tùy chọn cha</p>
                   <p className="text-xs mt-1">
@@ -312,7 +315,7 @@ export default function ProductOptionValuesTab() {
             ) : loading ? (
               Array.from({ length: 5 }).map((_, i) => (
                 <tr key={i} className="animate-pulse">
-                  {Array.from({ length: 5 }).map((_, j) => (
+                  {Array.from({ length: 6 }).map((_, j) => (
                     <td key={j} className="px-5 py-4">
                       <div className="h-4 bg-slate-100 rounded w-full" />
                     </td>
@@ -321,7 +324,7 @@ export default function ProductOptionValuesTab() {
               ))
             ) : data.length === 0 ? (
               <tr>
-                <td colSpan={5} className="text-center py-12 text-slate-400">
+                <td colSpan={6} className="text-center py-12 text-slate-400">
                   <ListChecks className="h-10 w-10 mx-auto mb-3 text-slate-300" />
                   <p className="font-medium">Chưa có giá trị nào</p>
                   <p className="text-xs mt-1">
@@ -337,6 +340,21 @@ export default function ProductOptionValuesTab() {
                 >
                   <td className="px-5 py-4 text-slate-400 font-mono text-xs">
                     {value.id}
+                  </td>
+                  <td className="px-5 py-4">
+                    <div className="h-10 w-10 rounded-lg overflow-hidden border border-slate-200 bg-slate-50 flex items-center justify-center shrink-0">
+                      {value.imageUrl ? (
+                        <img
+                          src={getMediaUrl(value.imageUrl)}
+                          alt={value.valueName}
+                          className="h-full w-full object-cover"
+                        />
+                      ) : (
+                        <span className="text-[10px] text-slate-400">
+                          Trống
+                        </span>
+                      )}
+                    </div>
                   </td>
                   <td className="px-5 py-4 font-semibold text-slate-800">
                     {value.valueName}

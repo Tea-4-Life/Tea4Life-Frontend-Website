@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Dialog,
   DialogContent,
@@ -9,7 +9,9 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Loader2 } from "lucide-react";
+import { Loader2, Upload, X, Image as ImageIcon } from "lucide-react";
+import { handleUpload } from "@/services/storageApi";
+import { getMediaUrl } from "@/lib/utils";
 import {
   Select,
   SelectContent,
@@ -50,9 +52,14 @@ export default function ProductOptionValueFormModal({
   const [sortOrder, setSortOrder] = useState<number>(0);
   const [error, setError] = useState<string | null>(null);
 
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [uploadingImage, setUploadingImage] = useState(false);
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   useEffect(() => {
     if (isOpen) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setValueName(initialData ? initialData.valueName : "");
       setExtraPrice(initialData ? initialData.extraPrice : 0);
       setSortOrder(initialData ? initialData.sortOrder : 0);
@@ -61,6 +68,10 @@ export default function ProductOptionValueFormModal({
           ? initialData.productOptionId || initialOptionId || ""
           : initialOptionId || (options.length > 0 ? options[0].id : ""),
       );
+      setImagePreview(
+        initialData?.imageUrl ? getMediaUrl(initialData.imageUrl) : null,
+      );
+      setImageFile(null);
       setError(null);
     }
   }, [isOpen, initialData, initialOptionId, options]);
@@ -81,6 +92,23 @@ export default function ProductOptionValueFormModal({
     }
 
     try {
+      let finalImageKey: string | undefined = undefined;
+
+      if (imageFile) {
+        setUploadingImage(true);
+        const uploadedKey = await handleUpload(imageFile);
+        if (uploadedKey) {
+          finalImageKey = uploadedKey;
+        } else {
+          setError("Tải ảnh thất bại, vui lòng thử lại.");
+          setUploadingImage(false);
+          return;
+        }
+        setUploadingImage(false);
+      } else if (initialData && initialData.imageUrl && !imagePreview) {
+        finalImageKey = ""; // Tức là clear ảnh
+      }
+
       await onSubmit(
         optionId,
         {
@@ -88,6 +116,7 @@ export default function ProductOptionValueFormModal({
           valueName: valueName.trim(),
           extraPrice: Number(extraPrice),
           sortOrder: Number(sortOrder),
+          imageKey: finalImageKey,
         },
         initialData?.id,
       );
@@ -97,6 +126,33 @@ export default function ProductOptionValueFormModal({
         message?: string;
       };
       setError(err.response?.data?.message || err.message || "Có lỗi xảy ra");
+    } finally {
+      setUploadingImage(false);
+    }
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (!file.type.startsWith("image/")) {
+        setError("Vui lòng chọn file hình ảnh hợp lệ.");
+        return;
+      }
+      if (file.size > 2 * 1024 * 1024) {
+        setError("Kích thước hình ảnh tối đa 2MB.");
+        return;
+      }
+      setImageFile(file);
+      setImagePreview(URL.createObjectURL(file));
+      setError(null);
+    }
+  };
+
+  const handleClearImage = () => {
+    setImageFile(null);
+    setImagePreview(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
     }
   };
 
@@ -194,8 +250,59 @@ export default function ProductOptionValueFormModal({
                 value={sortOrder}
                 onChange={(e) => setSortOrder(Number(e.target.value))}
                 className="border-emerald-200 focus-visible:ring-emerald-500 focus-visible:border-emerald-500 rounded-xl"
-                disabled={loading}
+                disabled={loading || uploadingImage}
               />
+            </div>
+
+            <div className="space-y-2">
+              <Label className="text-emerald-900 font-semibold text-sm">
+                Ảnh minh họa (Tuỳ chọn)
+              </Label>
+              <div className="flex items-start gap-4">
+                <div className="h-20 w-20 rounded-xl border-2 border-dashed border-slate-200 bg-slate-50/50 flex items-center justify-center relative overflow-hidden group shrink-0">
+                  {imagePreview ? (
+                    <>
+                      <img
+                        src={imagePreview}
+                        alt="Preview"
+                        className="h-full w-full object-cover"
+                      />
+                      <button
+                        type="button"
+                        onClick={handleClearImage}
+                        className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                        title="Xóa ảnh"
+                      >
+                        <X className="h-6 w-6 text-white" />
+                      </button>
+                    </>
+                  ) : (
+                    <ImageIcon className="h-8 w-8 text-slate-300" />
+                  )}
+                </div>
+                <div className="flex-1 space-y-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="h-9 text-sm text-slate-700 hover:bg-slate-100"
+                    disabled={loading || uploadingImage}
+                  >
+                    <Upload className="h-4 w-4 mr-2" />
+                    Tải Ảnh Lên
+                  </Button>
+                  <p className="text-xs text-slate-500 leading-relaxed">
+                    JPG, PNG hoặc WebP. Tối đa 2MB. Tỉ lệ 1:1.
+                  </p>
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    className="hidden"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                  />
+                </div>
+              </div>
             </div>
           </div>
 
@@ -204,17 +311,17 @@ export default function ProductOptionValueFormModal({
               type="button"
               variant="ghost"
               onClick={onClose}
-              disabled={loading}
+              disabled={loading || uploadingImage}
               className="text-slate-600 hover:bg-slate-200 hover:text-slate-900 rounded-lg font-medium"
             >
               Hủy
             </Button>
             <Button
               type="submit"
-              disabled={loading}
+              disabled={loading || uploadingImage}
               className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-md rounded-lg font-medium min-w-[120px]"
             >
-              {loading ? (
+              {loading || uploadingImage ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   Đang Lưu
@@ -229,4 +336,3 @@ export default function ProductOptionValueFormModal({
     </Dialog>
   );
 }
-
