@@ -1,3 +1,5 @@
+import type { ProductPopularityResponse } from "../recommendation/ProductPopularityResponse";
+
 export interface ProductResponse {
   id: string;
   productCategoryId: string;
@@ -7,4 +9,5 @@ export interface ProductResponse {
   basePrice: number;
   imageUrl: string;
   productOptionIds: string[];
+  popularity: ProductPopularityResponse;
 }

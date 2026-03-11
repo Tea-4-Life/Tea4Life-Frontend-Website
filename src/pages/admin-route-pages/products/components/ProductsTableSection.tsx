@@ -7,7 +7,16 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Edit, Trash2, Image as ImageIcon, Plus } from "lucide-react";
+import {
+  Edit,
+  Trash2,
+  Image as ImageIcon,
+  Plus,
+  Eye,
+  MousePointerClick,
+  ShoppingCart,
+  Star,
+} from "lucide-react";
 import type { ProductResponse } from "@/types/product/ProductResponse";
 import { getMediaUrl } from "@/lib/utils";
 import EmptyState from "@/components/custom/EmptyState";
@@ -90,6 +99,9 @@ export default function ProductsTableSection({
                   <TableHead className="font-black text-slate-700 border-r border-emerald-200 uppercase text-[11px] tracking-wider text-left pl-6">
                     Giá bán
                   </TableHead>
+                  <TableHead className="font-black text-slate-700 border-r border-emerald-200 uppercase text-[11px] tracking-wider text-center px-4 w-[160px]">
+                    Tương Tác / Phổ Biến
+                  </TableHead>
                   <TableHead className="font-black text-slate-700 border-r border-emerald-200 uppercase text-[11px] tracking-wider text-left pl-6">
                     Tuỳ chọn
                   </TableHead>
@@ -133,6 +145,41 @@ export default function ProductsTableSection({
                     <TableCell className="text-[14px] font-bold text-emerald-600 border-r border-emerald-100/50 text-left pl-6">
                       {formatPrice(p.basePrice)}
                     </TableCell>
+                    <TableCell className="border-r border-emerald-100/50 p-2 align-middle">
+                      <div className="flex flex-col gap-2 w-max mx-auto text-xs">
+                        <div className="flex items-center justify-center gap-1.5 bg-rose-50 text-rose-600 border border-rose-200/60 px-2 py-1 rounded-md font-bold shadow-sm shadow-rose-100/50">
+                          <Star className="h-3.5 w-3.5 fill-rose-500 text-rose-500" />
+                          <span>{p.popularity?.totalScore ?? 0} Điểm</span>
+                        </div>
+                        <div className="flex items-center gap-2.5 px-1 text-slate-500 font-medium bg-slate-50/50 py-1 rounded-md border border-slate-100 justify-center">
+                          <div
+                            className="flex items-center gap-1 tooltip-trigger"
+                            title="Lượt hiển thị"
+                          >
+                            <Eye className="h-3.5 w-3.5 text-blue-400" />
+                            {p.popularity?.viewCount ?? 0}
+                          </div>
+                          <div className="w-px h-3 bg-slate-200"></div>
+                          <div
+                            className="flex items-center gap-1 tooltip-trigger"
+                            title="Lượt click"
+                          >
+                            <MousePointerClick className="h-3 w-3 text-amber-500" />
+                            {p.popularity?.clickCount ?? 0}
+                          </div>
+                          <div className="w-px h-3 bg-slate-200"></div>
+                          <div
+                            className="flex items-center gap-1 tooltip-trigger"
+                            title="Lượt mua"
+                          >
+                            <ShoppingCart className="h-3.5 w-3.5 text-emerald-500" />
+                            <span className="text-emerald-600 font-semibold">
+                              {p.popularity?.orderCount ?? 0}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </TableCell>
                     <TableCell className="text-[14px] font-medium text-slate-500 border-r border-emerald-100/50 text-left pl-6">
                       <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200">
                         {p.productOptionIds?.length || 0} tuỳ chọn
@@ -169,6 +216,7 @@ export default function ProductsTableSection({
                       key={`empty-${index}`}
                       className="h-20 border-emerald-100/30 hover:bg-transparent"
                     >
+                      <TableCell className="border-r border-emerald-100/20" />
                       <TableCell className="border-r border-emerald-100/20" />
                       <TableCell className="border-r border-emerald-100/20" />
                       <TableCell className="border-r border-emerald-100/20" />
