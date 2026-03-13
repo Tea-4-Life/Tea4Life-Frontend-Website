@@ -5,12 +5,12 @@ import { getProductCategoriesApi } from "@/services/productApi";
 import type { ProductCategoryResponse } from "@/types/product-category/ProductCategoryResponse";
 import { handleError, getMediaUrl } from "@/lib/utils";
 
-// Lớp màu nền tạo hiệu ứng đan xen
+// Lớp màu nền tạo hiệu ứng đan xen mềm mại
 const bgClasses = [
-  "bg-[#8A9A7A]",
-  "bg-[#D2A676]",
-  "bg-[#1A4331]",
-  "bg-[#1A4331]",
+  "bg-[#e0c4a4]",
+  "bg-[#d4b998]",
+  "bg-[#c9ad8c]",
+  "bg-[#be9f7f]",
 ];
 
 export function CategoriesSection() {
@@ -35,18 +35,19 @@ export function CategoriesSection() {
   return (
     <section className="space-y-12">
       {/* Section Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between border-b-4 border-[#1A4331] pb-6 gap-4">
+      {/* Section Header */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between border-b-2 border-[#5c4033]/20 pb-6 gap-4">
         <div>
-          <p className="text-[#8A9A7A] font-bold text-lg mb-2 flex items-center gap-2">
+          <p className="text-[#d97743] font-bold text-lg mb-2 flex items-center gap-2">
             <Leaf className="w-5 h-5" /> KHÁM PHÁ THIÊN NHIÊN
           </p>
-          <h3 className="text-4xl md:text-5xl pixel-text text-[#1A4331] drop-shadow-[2px_2px_0px_#8A9A7A]">
+          <h3 className="text-4xl md:text-5xl font-bold font-sans text-[#5c4033]">
             Thực Đơn Của Chúng Tôi
           </h3>
         </div>
         <Link
           to="/categories"
-          className="text-lg font-bold bg-[#1A4331] text-[#F8F5F0] px-6 py-2 pixel-button hover:bg-[#8A9A7A] flex items-center gap-2 w-fit"
+          className="text-lg font-semibold bg-[#5c4033] text-[#F8F5F0] px-6 py-2.5 rounded-full hover:bg-[#d97743] flex items-center gap-2 w-fit transition-colors shadow-sm hover:shadow-md"
         >
           Xem Tất Cả <ArrowRight className="h-5 w-5" />
         </Link>
@@ -58,14 +59,14 @@ export function CategoriesSection() {
           <div
             key={cat.id}
             onClick={() => navigate(`/shop?categoryId=${cat.id}`)}
-            className="pixel-border bg-white flex flex-col items-center p-8 cursor-pointer group hover:-translate-y-2 hover:shadow-[4px_4px_0px_#1A4331] transition-all duration-200 relative overflow-hidden"
+            className="pixel-border bg-white rounded-3xl flex flex-col items-center p-8 cursor-pointer group hover:-translate-y-2 transition-all duration-300 relative overflow-hidden"
           >
             {/* Background sliding effect */}
             <div
               className={`absolute inset-0 ${bgClasses[i % bgClasses.length]} translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-in-out opacity-90`}
             />
 
-            <div className="w-24 h-24 mb-6 grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300 z-10 drop-shadow-xl flex items-center justify-center bg-[#F8F5F0]/80 rounded-full border border-[#1A4331]/10 overflow-hidden shrink-0">
+            <div className="w-24 h-24 mb-6 opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300 z-10 drop-shadow-md flex items-center justify-center bg-[#F8F5F0] rounded-full border border-[#5c4033]/10 overflow-hidden shrink-0">
               {cat.iconUrl ? (
                 <img
                   src={getMediaUrl(cat.iconUrl)}
@@ -73,11 +74,11 @@ export function CategoriesSection() {
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <Leaf className="w-10 h-10 text-[#8A9A7A]" />
+                <Leaf className="w-10 h-10 text-[#d97743]" />
               )}
             </div>
 
-            <span className="font-bold tracking-widest text-center w-full bg-[#1A4331] text-[#F8F5F0] py-2 border-2 border-transparent group-hover:bg-[#F8F5F0] group-hover:text-[#1A4331] group-hover:border-[#1A4331] text-[15px] z-10 transition-colors uppercase whitespace-nowrap overflow-hidden text-ellipsis px-2">
+            <span className="font-semibold tracking-wide text-center w-full bg-[#5c4033] text-[#F8F5F0] py-2.5 rounded-2xl group-hover:bg-[#d97743] shadow-sm text-[16px] z-10 transition-all px-4">
               {cat.name}
             </span>
           </div>

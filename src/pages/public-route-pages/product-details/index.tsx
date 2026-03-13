@@ -160,11 +160,11 @@ export default function ProductDetail() {
     return (
       <div className="min-h-screen bg-[#F8F5F0] flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-[#1A4331] mb-4">
+          <h1 className="text-2xl font-bold font-sans text-[#5c4033] mb-4">
             Không tìm thấy sản phẩm
           </h1>
           <Link to="/shop">
-            <Button className="bg-[#1A4331] text-[#F8F5F0] hover:bg-[#8A9A7A] rounded-none text-sm font-bold">
+            <Button className="bg-[#5c4033] text-[#F8F5F0] hover:bg-[#d97743] hover:text-white rounded-full text-sm font-semibold px-6 transition-colors">
               <ChevronLeft className="h-4 w-4 mr-2" />
               Quay lại cửa hàng
             </Button>
@@ -175,12 +175,12 @@ export default function ProductDetail() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F8F5F0] text-[#1A4331] relative">
+    <div className="min-h-screen bg-[#F8F5F0] text-[#5c4033] relative pb-20">
       <div
-        className="fixed inset-0 pointer-events-none opacity-[0.03] z-0"
+        className="fixed inset-0 pointer-events-none opacity-[0.02] z-0"
         style={{
           backgroundImage:
-            "linear-gradient(#1A4331 1px, transparent 1px), linear-gradient(90deg, #1A4331 1px, transparent 1px)",
+            "linear-gradient(#5c4033 1px, transparent 1px), linear-gradient(90deg, #5c4033 1px, transparent 1px)",
           backgroundSize: "32px 32px",
         }}
       ></div>
@@ -218,11 +218,11 @@ export default function ProductDetail() {
           </BreadcrumbList>
         </Breadcrumb>
 
-        <div className="grid gap-8 lg:grid-cols-12 lg:gap-12">
-          {/* Product Image - 5 cols */}
-          <div className="lg:col-span-5 relative">
+        <div className="grid gap-8 lg:grid-cols-12 lg:gap-16">
+          {/* Product Image - 6 cols (Larger image) */}
+          <div className="lg:col-span-6 relative">
             <div className="sticky top-24">
-              <div className="overflow-hidden bg-[#F8F5F0] border border-[#1A4331]/20 rounded-2xl shadow-sm group">
+              <div className="overflow-hidden bg-white rounded-[2rem] shadow-sm group">
                 <img
                   src={
                     product.imageUrl
@@ -230,12 +230,12 @@ export default function ProductDetail() {
                       : "/placeholder.svg"
                   }
                   alt={product.name}
-                  className="h-full w-full object-cover aspect-square hover:scale-105 transition-transform duration-500"
+                  className="h-full w-full object-cover aspect-[4/5] md:aspect-square hover:scale-105 transition-transform duration-700"
                 />
               </div>
               {product.productCategory && (
                 <Link to={`/shop?categoryId=${product.productCategory.id}`}>
-                  <span className="absolute top-4 left-4 bg-[#D2A676] text-[#1A4331] text-xs px-4 py-2 font-bold uppercase tracking-wider hover:bg-[#1A4331] hover:text-[#F8F5F0] transition-colors cursor-pointer rounded-xl shadow-md">
+                  <span className="absolute top-4 left-4 bg-[#d97743] text-white text-xs px-4 py-2 font-semibold tracking-wide hover:bg-[#5c4033] transition-colors cursor-pointer rounded-full shadow-md">
                     {product.productCategory.name}
                   </span>
                 </Link>
@@ -243,70 +243,70 @@ export default function ProductDetail() {
             </div>
           </div>
 
-          {/* Product Info - 7 cols */}
-          <div className="lg:col-span-7 flex flex-col">
-            <h1 className="text-4xl font-bold text-[#1A4331] sm:text-5xl tracking-tight leading-tight">
+          {/* Product Info - 6 cols */}
+          <div className="lg:col-span-6 flex flex-col pt-4">
+            <h1 className="text-4xl md:text-5xl font-bold font-sans text-[#5c4033] tracking-tight leading-tight">
               {product.name}
             </h1>
 
             {/* Rating Placeholder */}
-            <div className="mt-4 flex items-center gap-1">
-              <div className="flex bg-white border border-[#1A4331]/20 px-2 py-1 rounded-lg shadow-sm">
+            <div className="mt-4 flex items-center gap-2">
+              <div className="flex bg-white px-3 py-1.5 rounded-full shadow-sm">
                 {Array.from({ length: 5 }).map((_, i) => (
                   <Star
                     key={i}
-                    className={`h-4 w-4 fill-[#D2A676] text-[#D2A676]`}
+                    className={`h-4 w-4 fill-[#d97743] text-[#d97743]`}
                   />
                 ))}
               </div>
-              <span className="text-xs text-[#1A4331] ml-2 font-bold uppercase tracking-widest bg-white border border-[#1A4331]/20 px-2 py-1 rounded-lg shadow-sm">
+              <span className="text-sm text-[#d97743] font-medium bg-white px-3 py-1.5 rounded-full shadow-sm">
                 5.0 Đánh giá
               </span>
             </div>
 
             {/* Price */}
-            <div className="mt-8 bg-[#1A4331] text-[#F8F5F0] inline-block w-fit px-6 py-3 rounded-2xl shadow-md">
-              <span className="text-xl text-[#D2A676] font-bold block mb-1 uppercase tracking-widest text-[10px]">
+            <div className="mt-8 bg-[#5c4033] text-white inline-block w-fit px-8 py-4 rounded-3xl shadow-md">
+              <span className="text-[#f0e6d8] font-medium block mb-1 text-sm">
                 Giá cơ bản
               </span>
-              <span className="text-3xl font-bold font-mono">
+              <span className="text-3xl font-bold">
                 {formatPrice(product.basePrice)}
               </span>
             </div>
 
             {/* Description */}
             {product.description && (
-              <p className="mt-8 text-[#1A4331] text-sm leading-relaxed whitespace-pre-line bg-white border border-[#1A4331]/20 p-5 rounded-xl shadow-sm font-medium">
+              <p className="mt-8 text-[#5c4033]/80 text-[15px] leading-relaxed whitespace-pre-line bg-white p-6 rounded-3xl shadow-sm font-medium">
                 {product.description}
               </p>
             )}
 
             {/* Dynamic Options */}
-            <div className="mt-10 space-y-8">
+            <div className="mt-10 space-y-6">
               {product.productOptions
                 ?.sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0))
                 .map((option) => (
                   <div
                     key={option.id}
-                    className="bg-white p-5 pt-8 border border-[#1A4331]/20 rounded-2xl shadow-sm relative"
+                    className="bg-white p-6 pt-8 rounded-3xl shadow-sm relative border border-[#5c4033]/5"
                   >
-                    <div className="absolute top-0 left-4 -translate-y-1/2 bg-white px-2 flex items-center gap-2">
-                      <label className="text-sm font-bold uppercase tracking-wider flex items-center gap-2 m-0 text-[#1A4331]">
+                    <div className="absolute top-0 left-6 -translate-y-1/2 bg-[#F8F5F0] px-4 py-1 rounded-full flex items-center gap-2 border border-[#5c4033]/10">
+                      <label className="text-sm font-bold text-[#5c4033] flex items-center gap-2 m-0">
                         {option.name}
                         {option.isRequired && (
-                          <span className="text-red-500 normal-case text-[10px] bg-red-50 px-2 py-0.5 rounded-full border border-red-200 ml-2">
+                          <span className="text-red-500 font-medium text-[11px] bg-red-50 px-2.5 py-0.5 rounded-full ml-1">
                             *Bắt buộc
                           </span>
                         )}
                         {option.isMultiSelect && (
-                          <span className="text-[#8A9A7A] normal-case text-[10px] bg-slate-100 px-2 py-0.5 rounded-full ml-2">
+                          <span className="text-[#d97743] font-medium text-[11px] bg-[#d97743]/10 px-2.5 py-0.5 rounded-full ml-1">
                             (Chọn nhiều)
                           </span>
                         )}
                       </label>
                     </div>
 
-                    <div className="flex flex-wrap gap-3 mt-4">
+                    <div className="flex flex-wrap gap-3 mt-2">
                       {option.productOptionValues
                         ?.sort(
                           (a, b) => (a.sortOrder || 0) - (b.sortOrder || 0),
@@ -325,23 +325,23 @@ export default function ProductDetail() {
                                   option.isMultiSelect,
                                 )
                               }
-                              className={`flex items-center gap-3 px-4 py-3 text-sm font-bold border-2 transition-all rounded-xl ${
+                              className={`flex items-center gap-3 px-5 py-3 text-sm font-semibold border-2 transition-all rounded-full ${
                                 isSelected
-                                  ? "bg-[#1A4331] text-[#F8F5F0] border-[#1A4331] shadow-md -translate-y-0.5"
-                                  : "bg-white text-[#1A4331] border-[#1A4331]/20 hover:border-[#1A4331] hover:-translate-y-0.5 hover:shadow-md"
+                                  ? "bg-[#5c4033] text-white border-[#5c4033] shadow-md -translate-y-0.5"
+                                  : "bg-white text-[#5c4033] border-[#5c4033]/10 hover:border-[#d97743] hover:-translate-y-0.5 hover:shadow-sm"
                               }`}
                             >
                               {val.imageUrl && (
                                 <img
                                   src={getMediaUrl(val.imageUrl)}
                                   alt={val.valueName}
-                                  className={`w-10 h-10 object-cover border border-[#1A4331]/20 bg-white p-0.5 shrink-0 rounded-full ${isSelected ? "" : "grayscale"}`}
+                                  className={`w-9 h-9 object-cover rounded-full shrink-0 ${isSelected ? "border border-white/20" : "grayscale opacity-80"}`}
                                 />
                               )}
                               <span>{val.valueName}</span>
                               {val.extraPrice > 0 && (
                                 <span
-                                  className={`text-xs ml-2 border-l pl-2 ${isSelected ? "text-emerald-200 border-white/20" : "text-[#8A9A7A] border-[#1A4331]/20"}`}
+                                  className={`text-xs ml-1 pl-2 border-l ${isSelected ? "text-emerald-100 border-white/20" : "text-[#d97743] border-[#5c4033]/20"}`}
                                 >
                                   +{formatPrice(val.extraPrice)}
                                 </span>
@@ -355,9 +355,9 @@ export default function ProductDetail() {
             </div>
 
             {/* Note */}
-            <div className="mt-8 bg-white p-5 pt-6 border border-[#1A4331]/20 rounded-2xl shadow-sm relative">
-              <div className="absolute top-0 left-4 -translate-y-1/2 bg-white px-2 flex items-center gap-2">
-                <label className="text-sm font-bold text-[#1A4331] uppercase tracking-wider flex items-center gap-2 m-0">
+            <div className="mt-8 bg-white p-6 pt-8 rounded-3xl shadow-sm relative border border-[#5c4033]/5">
+              <div className="absolute top-0 left-6 -translate-y-1/2 bg-[#F8F5F0] px-4 py-1 rounded-full flex items-center gap-2 border border-[#5c4033]/10">
+                <label className="text-sm font-bold text-[#5c4033] flex items-center gap-2 m-0">
                   Ghi chú cho quán
                 </label>
               </div>
@@ -365,29 +365,29 @@ export default function ProductDetail() {
                 value={note}
                 onChange={(e) => setNote(e.target.value)}
                 placeholder="Ví dụ: Ít ngọt, thêm thật nhiều đá..."
-                className="w-full h-24 mt-2 bg-slate-50 border border-[#1A4331]/20 px-4 py-3 text-sm text-[#1A4331] focus:outline-none focus:ring-2 focus:ring-[#8A9A7A] placeholder-[#8A9A7A]/70 resize-none rounded-xl"
+                className="w-full h-24 mt-2 bg-slate-50 border border-[#5c4033]/10 px-5 py-4 text-sm text-[#5c4033] focus:outline-none focus:ring-2 focus:ring-[#d97743]/50 focus:border-[#d97743] placeholder-gray-400 resize-none rounded-2xl transition-all"
               />
             </div>
 
             {/* Quantity + Actions (Sticky Bar) */}
-            <div className="mt-12 pt-6 border-t-4 border-[#1A4331] sticky bottom-0 bg-[#F8F5F0] pb-6 z-20 flex flex-col md:flex-row gap-4 items-end">
+            <div className="mt-12 pt-6 border-t-2 border-[#5c4033]/10 sticky bottom-0 bg-[#F8F5F0] pb-6 z-20 flex flex-col md:flex-row gap-4 items-end">
               <div className="w-full md:w-auto">
-                <label className="text-xs font-bold text-[#8A9A7A] uppercase tracking-wider mb-2 block">
+                <label className="text-sm font-bold text-[#d97743] mb-3 block">
                   Số lượng
                 </label>
-                <div className="flex items-center bg-white border border-[#1A4331]/30 shadow-sm rounded-xl overflow-hidden">
+                <div className="flex items-center bg-white border border-[#5c4033]/10 shadow-sm rounded-full overflow-hidden">
                   <button
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="w-14 h-14 flex items-center justify-center text-[#1A4331] hover:bg-slate-100 transition-colors font-bold text-xl"
+                    className="w-14 h-14 flex items-center justify-center text-[#5c4033] hover:bg-[#F8F5F0] transition-colors font-bold text-xl"
                   >
                     <Minus className="h-5 w-5" />
                   </button>
-                  <span className="w-16 h-14 flex items-center justify-center text-lg font-bold text-[#1A4331] border-x border-[#1A4331]/30 bg-slate-50">
+                  <span className="w-16 h-14 flex items-center justify-center text-lg font-bold text-[#5c4033] bg-slate-50">
                     {quantity}
                   </span>
                   <button
                     onClick={() => setQuantity(quantity + 1)}
-                    className="w-14 h-14 flex items-center justify-center text-[#1A4331] hover:bg-slate-100 transition-colors font-bold text-xl"
+                    className="w-14 h-14 flex items-center justify-center text-[#5c4033] hover:bg-[#F8F5F0] transition-colors font-bold text-xl"
                   >
                     <Plus className="h-5 w-5" />
                   </button>
@@ -398,7 +398,7 @@ export default function ProductDetail() {
               <div className="flex gap-4 flex-1 w-full relative">
                 <Button
                   size="lg"
-                  className="flex-1 bg-[#1A4331] text-[#F8F5F0] hover:bg-[#0c261a] hover:shadow-lg shadow-md transition-all rounded-xl h-14 font-bold text-base border-none uppercase tracking-wider"
+                  className="flex-1 bg-[#5c4033] text-white hover:bg-[#d97743] hover:shadow-lg shadow-md transition-all rounded-full h-14 font-semibold text-base border-none"
                 >
                   <ShoppingCart className="h-5 w-5 mr-3" />
                   Thêm vào giỏ • {formatPrice(totalPrice)}
@@ -407,14 +407,14 @@ export default function ProductDetail() {
                   variant="outline"
                   size="icon"
                   onClick={() => setIsFavorite(!isFavorite)}
-                  className={`rounded-xl w-14 h-14 border border-[#1A4331]/30 flex-shrink-0 transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5 ${
+                  className={`rounded-full w-14 h-14 border border-[#5c4033]/10 flex-shrink-0 transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5 ${
                     isFavorite
                       ? "bg-red-50 text-red-500 border-red-200"
-                      : "bg-white text-[#1A4331] hover:bg-slate-100"
+                      : "bg-white text-[#5c4033] hover:bg-slate-50"
                   }`}
                 >
                   <Heart
-                    className={`h-6 w-6 ${isFavorite ? "fill-red-500" : ""}`}
+                    className={`h-6 w-6 ${isFavorite ? "fill-red-500 text-red-500" : ""}`}
                   />
                 </Button>
               </div>
@@ -423,36 +423,36 @@ export default function ProductDetail() {
         </div>
 
         {/* Product Details - Info */}
-        <div className="mt-20 bg-white border border-[#1A4331]/20 p-8 rounded-2xl shadow-sm relative">
-          <div className="absolute top-0 left-8 -translate-y-1/2 bg-[#1A4331] text-white px-6 py-2 rounded-xl shadow-md">
-            <h3 className="text-sm font-bold uppercase tracking-widest flex items-center gap-2 m-0">
-              <Leaf className="h-4 w-4 text-emerald-300" />
+        <div className="mt-20 bg-white rounded-[2rem] p-10 shadow-sm relative border border-[#5c4033]/5">
+          <div className="absolute -top-6 left-10 bg-[#d97743] text-white px-6 py-3 rounded-full shadow-md">
+            <h3 className="text-base font-bold flex items-center gap-2 m-0">
+              <Leaf className="h-5 w-5 text-yellow-200" />
               Thông tin chi tiết
             </h3>
           </div>
-          <div className="grid gap-8 sm:grid-cols-2 text-sm mt-4">
-            <div className="bg-[#F8F5F0] p-5 rounded-2xl">
-              <span className="text-[#8A9A7A] text-[10px] uppercase tracking-widest font-bold block mb-1">
+          <div className="grid gap-8 sm:grid-cols-2 text-sm mt-6">
+            <div className="bg-[#F8F5F0] p-6 rounded-3xl">
+              <span className="text-[#d97743] font-semibold block mb-2">
                 Danh mục
               </span>
-              <p className="font-bold text-[#1A4331] text-lg">
+              <p className="font-bold text-[#5c4033] text-xl">
                 {product.productCategory?.name || "Khác"}
               </p>
             </div>
-            <div className="bg-[#F8F5F0] p-5 rounded-2xl">
-              <span className="text-[#8A9A7A] text-[10px] uppercase tracking-widest font-bold block mb-1">
+            <div className="bg-[#F8F5F0] p-6 rounded-3xl">
+              <span className="text-[#d97743] font-semibold block mb-2">
                 Đơn giá cơ bản
               </span>
-              <p className="font-bold text-emerald-700 text-lg">
+              <p className="font-bold text-emerald-600 text-xl">
                 {formatPrice(product.basePrice)}
               </p>
             </div>
             {product.productCategory?.description && (
-              <div className="sm:col-span-2 bg-[#F8F5F0] p-6 rounded-2xl">
-                <span className="text-[#8A9A7A] text-[10px] uppercase tracking-widest font-bold block mb-2">
+              <div className="sm:col-span-2 bg-[#F8F5F0] p-8 rounded-3xl">
+                <span className="text-[#d97743] font-semibold block mb-3">
                   Mô tả danh mục
                 </span>
-                <p className="text-[#1A4331] font-medium leading-relaxed">
+                <p className="text-[#5c4033] font-medium leading-relaxed text-base">
                   {product.productCategory.description}
                 </p>
               </div>
@@ -463,14 +463,14 @@ export default function ProductDetail() {
         {/* Related Products */}
         {relatedProducts.length > 0 && (
           <div className="mt-20 pb-12">
-            <div className="flex items-center justify-between mb-8 pb-4 border-b border-[#1A4331]/10">
-              <h2 className="text-2xl font-bold text-[#1A4331] uppercase tracking-wider flex items-center gap-3">
-                <Star className="h-6 w-6 text-[#D2A676] fill-[#D2A676]" />
+            <div className="flex items-center justify-between mb-8 pb-4 border-b-2 border-[#5c4033]/10">
+              <h2 className="text-3xl font-bold font-sans text-[#5c4033] flex items-center gap-3">
+                <Star className="h-7 w-7 text-[#d97743] fill-[#d97743]" />
                 Có thể bạn thích
               </h2>
               <Link
                 to={`/shop?categoryId=${product.productCategory?.id}`}
-                className="text-sm font-bold bg-white text-[#1A4331] hover:bg-[#1A4331] hover:text-[#F8F5F0] px-5 py-2.5 rounded-xl border border-[#1A4331]/20 shadow-sm transition-all uppercase tracking-widest hidden sm:block"
+                className="text-sm font-semibold bg-white text-[#5c4033] hover:bg-[#d97743] hover:text-white px-6 py-2.5 rounded-full border border-[#5c4033]/10 shadow-sm transition-all hidden sm:block"
               >
                 Xem thêm &rarr;
               </Link>
@@ -478,33 +478,33 @@ export default function ProductDetail() {
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
               {relatedProducts.map((p) => (
                 <Link key={p.id} to={`/shop/products/${p.id}`}>
-                  <div className="group bg-white border border-[#1A4331]/10 p-4 transition-all duration-300 hover:-translate-y-2 shadow-sm hover:shadow-xl flex flex-col h-full rounded-2xl">
-                    <div className="relative aspect-square overflow-hidden rounded-xl bg-slate-50 mb-4">
+                  <div className="group bg-white p-5 transition-all duration-300 hover:-translate-y-2 shadow-sm hover:shadow-lg flex flex-col h-full rounded-[2rem] border border-[#5c4033]/5">
+                    <div className="relative aspect-square overflow-hidden rounded-2xl bg-[#F8F5F0] mb-5">
                       {p.imageUrl ? (
                         <img
                           src={getMediaUrl(p.imageUrl)}
                           alt={p.name}
-                          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
                         />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center text-[#8A9A7A] grayscale">
+                        <div className="w-full h-full flex items-center justify-center text-[#d97743] opacity-40">
                           <Leaf className="w-12 h-12" />
                         </div>
                       )}
                     </div>
-                    <div className="flex-1 flex flex-col">
-                      <h3 className="font-bold text-[#1A4331] text-base line-clamp-2 mb-2 group-hover:text-[#8A9A7A] transition-colors leading-tight">
+                    <div className="flex-1 flex flex-col px-1">
+                      <h3 className="font-bold text-[#5c4033] text-lg line-clamp-2 mb-2 group-hover:text-[#d97743] transition-colors leading-tight">
                         {p.name}
                       </h3>
-                      <p className="text-[10px] bg-[#D2A676]/20 text-[#1A4331] px-2 py-1 w-fit rounded-md mb-3 font-bold uppercase tracking-widest">
+                      <p className="text-xs bg-[#e0c4a4] text-[#5c4033] px-3 py-1 w-fit rounded-full mb-4 font-semibold">
                         {p.productCategoryName}
                       </p>
-                      <div className="mt-auto pt-4 flex items-center justify-between border-t border-slate-100">
-                        <span className="text-lg font-bold text-[#1A4331] font-mono tracking-tight">
+                      <div className="mt-auto pt-4 flex items-center justify-between border-t border-dashed border-[#5c4033]/10">
+                        <span className="text-xl font-bold text-[#5c4033]">
                           {formatPrice(p.basePrice)}
                         </span>
-                        <div className="w-9 h-9 bg-slate-50 text-[#1A4331] rounded-full flex items-center justify-center group-hover:bg-[#1A4331] group-hover:text-[#F8F5F0] transition-colors border border-[#1A4331]/10">
-                          <Plus className="w-4 h-4 font-bold" />
+                        <div className="w-10 h-10 bg-[#F8F5F0] text-[#5c4033] rounded-full flex items-center justify-center group-hover:bg-[#d97743] group-hover:text-white transition-colors border border-[#5c4033]/5 shadow-sm">
+                          <Plus className="w-5 h-5 font-bold" />
                         </div>
                       </div>
                     </div>
@@ -514,7 +514,7 @@ export default function ProductDetail() {
             </div>
             <Link
               to={`/shop?categoryId=${product.productCategory?.id}`}
-              className="mt-6 text-sm font-bold bg-white text-[#1A4331] hover:bg-[#1A4331] hover:text-[#F8F5F0] px-4 py-3 rounded-xl shadow-sm border border-[#1A4331]/20 transition-all uppercase tracking-widest block text-center sm:hidden"
+              className="mt-8 text-sm font-semibold bg-white text-[#5c4033] hover:bg-[#d97743] hover:text-white px-6 py-3.5 rounded-full shadow-sm border border-[#5c4033]/10 transition-all block text-center sm:hidden"
             >
               Xem thêm &rarr;
             </Link>

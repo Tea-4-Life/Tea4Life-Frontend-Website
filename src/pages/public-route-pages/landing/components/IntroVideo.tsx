@@ -1,6 +1,6 @@
 export function IntroVideo() {
   return (
-    <section className="relative w-full h-[60vh] md:h-[80vh] border-b-2 border-[#1A4331] overflow-hidden z-10">
+    <section className="relative w-full h-[60vh] md:h-[80vh] overflow-hidden z-10 rounded-b-[3rem] shadow-sm">
       <video
         autoPlay
         muted
@@ -17,10 +17,10 @@ export function IntroVideo() {
       <div className="absolute inset-0 bg-black/40 z-10" />
 
       <div className="absolute inset-0 flex flex-col items-center justify-center z-20 text-center px-4 gap-6">
-        <h1 className="text-6xl md:text-9xl pixel-text text-[#F8F5F0] drop-shadow-[4px_4px_0px_rgba(26,67,49,0.5)]">
+        <h1 className="text-6xl md:text-9xl font-black font-sans text-white drop-shadow-md tracking-tight">
           TEA4LIFE
         </h1>
-        <p className="text-xl md:text-3xl font-bold font-sans text-[#F8F5F0] bg-[#1A4331]/90 px-8 py-3 border-2 border-[#F8F5F0]/60 shadow-[2px_2px_0px_rgba(26,67,49,0.3)] tracking-widest backdrop-blur-sm uppercase">
+        <p className="text-lg md:text-2xl font-semibold font-sans text-[#5c4033] bg-[#F8F5F0]/95 px-8 py-3 rounded-full shadow-lg backdrop-blur-md">
           Nơi Thiên Nhiên Hội Ngộ Hoài Niệm
         </p>
       </div>

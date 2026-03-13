@@ -39,18 +39,18 @@ export function BestDealsSection() {
   return (
     <section className="space-y-12">
       {/* Section Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between border-b-4 border-[#1A4331] pb-6 gap-4">
+      <div className="flex flex-col md:flex-row md:items-end justify-between border-b-2 border-[#5c4033]/20 pb-6 gap-4">
         <div>
-          <p className="text-[#8A9A7A] font-bold text-lg mb-2 flex items-center gap-2">
+          <p className="text-[#d97743] font-bold text-lg mb-2 flex items-center gap-2">
             <Sparkles className="w-5 h-5" /> PHA CHẾ MỚI MỖI NGÀY
           </p>
-          <h3 className="text-4xl md:text-5xl pixel-text text-[#1A4331] drop-shadow-[2px_2px_0px_#8A9A7A]">
+          <h3 className="text-4xl md:text-5xl font-bold font-sans text-[#5c4033]">
             Sản Phẩm Bán Chạy
           </h3>
         </div>
         <Link
           to="/shop"
-          className="text-lg font-bold bg-[#1A4331] text-[#F8F5F0] px-6 py-2 pixel-button hover:bg-[#8A9A7A] flex items-center gap-2 w-fit shadow-[4px_4px_0px_rgba(0,0,0,0.2)]"
+          className="text-lg font-semibold bg-[#5c4033] text-[#F8F5F0] px-6 py-2.5 rounded-full hover:bg-[#d97743] flex items-center gap-2 w-fit shadow-sm hover:shadow-md transition-all"
         >
           Toàn Bộ Thực Đơn <ArrowRight className="h-5 w-5" />
         </Link>
@@ -63,47 +63,47 @@ export function BestDealsSection() {
             className="group border-0 bg-transparent shadow-none h-full"
           >
             {/* Item Container */}
-            <div className="pixel-border bg-white p-5 h-full flex flex-col relative transition-transform duration-200 hover:-translate-y-2 hover:shadow-[4px_4px_0px_#1A4331]">
-              {/* Floating Pixel Badge */}
+            <div className="pixel-border rounded-3xl bg-white p-5 h-full flex flex-col relative transition-transform duration-300 hover:-translate-y-2">
+              {/* Floating Badge */}
               {item.badge && (
-                <div className="absolute -top-3 -right-3 z-20 bg-[#D2A676] text-[#1A4331] border-2 border-[#1A4331] font-black px-3 py-1 text-xs shadow-[2px_2px_0px_rgba(26,67,49,0.2)]">
+                <div className="absolute -top-3 -right-3 z-20 bg-[#d97743] text-white rounded-full font-bold px-4 py-1.5 text-xs shadow-md">
                   ★ {item.badge}
                 </div>
               )}
 
               {/* Image Display */}
-              <div className="aspect-square bg-[#8A9A7A]/20 border-2 border-[#1A4331] p-2 mb-6 relative overflow-hidden">
-                <div className="w-full h-full relative border-2 border-[#1A4331]">
+              <div className="aspect-square bg-[#F8F5F0] rounded-2xl p-2 mb-6 relative overflow-hidden group-hover:shadow-inner transition-shadow">
+                <div className="w-full h-full relative rounded-2xl overflow-hidden">
                   <img
                     src={item.image}
-                    className="h-full w-full object-cover filter contrast-125 saturate-50 group-hover:saturate-100 transition-all duration-300"
+                    className="h-full w-full object-cover transform group-hover:scale-110 transition-all duration-500"
                     alt={item.name}
                   />
                 </div>
               </div>
 
               {/* Item Details */}
-              <div className="flex flex-col flex-1 space-y-4">
-                <h4 className="font-bold text-[#1A4331] text-xl uppercase leading-tight line-clamp-2 pixel-text tracking-normal">
+              <div className="flex flex-col flex-1 space-y-4 px-1">
+                <h4 className="font-bold text-[#5c4033] text-xl leading-tight line-clamp-2 transition-colors group-hover:text-[#d97743]">
                   {item.name}
                 </h4>
 
                 {/* Taste Profile */}
                 <div className="space-y-2 mt-2 text-xs">
                   <div className="flex items-center gap-2">
-                    <span className="w-10 font-bold text-[#8A9A7A]">ĐƯỜNG</span>
-                    <div className="flex-1 h-3 border-2 border-[#1A4331] bg-white">
+                    <span className="w-10 font-bold text-[#b59b85]">ĐƯỜNG</span>
+                    <div className="flex-1 h-2 rounded-full bg-[#f0e6d8] overflow-hidden">
                       <div
-                        className="h-full bg-[#D2A676]"
+                        className="h-full bg-[#d0a775] rounded-full"
                         style={{ width: `${item.stats.sweet}%` }}
                       />
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="w-10 font-bold text-[#1A4331]">ĐÁ</span>
-                    <div className="flex-1 h-3 border-2 border-[#1A4331] bg-white">
+                    <span className="w-10 font-bold text-[#5c4033]">ĐÁ</span>
+                    <div className="flex-1 h-2 rounded-full bg-[#f0e6d8] overflow-hidden">
                       <div
-                        className="h-full bg-[#8A9A7A]"
+                        className="h-full bg-[#87b3e6] rounded-full"
                         style={{ width: `${item.stats.ice}%` }}
                       />
                     </div>
@@ -111,14 +111,14 @@ export function BestDealsSection() {
                 </div>
 
                 {/* Price and Action */}
-                <div className="mt-auto pt-4 border-t-2 border-dashed border-[#1A4331]/30">
-                  <div className="text-xl md:text-2xl font-black text-[#1A4331] bg-[#F8F5F0] px-3 py-1 mb-4 border-l-4 border-[#1A4331] inline-block shadow-[2px_2px_0px_rgba(26,67,49,0.2)]">
+                <div className="mt-auto pt-4 border-t-2 border-dashed border-[#5c4033]/10">
+                  <div className="text-xl md:text-2xl font-black text-[#5c4033] mb-4">
                     {item.price}
                   </div>
 
-                  <Button className="w-full bg-[#1A4331] text-[#F8F5F0] hover:bg-[#8A9A7A] hover:text-[#1A4331] pixel-button h-14 flex justify-between items-center group-hover:bg-[#8A9A7A] group-hover:text-[#F8F5F0] transition-colors text-[16px] xl:text-lg">
-                    <span className="font-bold uppercase">Tùy chỉnh</span>
-                    <span className="text-2xl group-hover:translate-x-2 transition-transform">
+                  <Button className="w-full bg-[#5c4033] text-[#F8F5F0] rounded-full hover:bg-[#d97743] h-12 flex justify-between items-center transition-all text-[16px]">
+                    <span className="font-semibold">Chọn mua</span>
+                    <span className="text-lg group-hover:translate-x-2 transition-transform">
                       ➔
                     </span>
                   </Button>

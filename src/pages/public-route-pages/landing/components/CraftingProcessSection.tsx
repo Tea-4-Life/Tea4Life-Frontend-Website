@@ -3,18 +3,18 @@ import { Sprout, Droplets, Sun } from "lucide-react";
 export function CraftingProcessSection() {
   return (
     <section className="space-y-12 pb-8">
-      <div className="flex flex-col md:flex-row md:items-end justify-between border-b-4 border-[#1A4331] pb-6 gap-4">
+      <div className="flex flex-col md:flex-row md:items-end justify-between border-b-2 border-[#5c4033]/20 pb-6 gap-4">
         <div>
-          <p className="text-[#8A9A7A] font-bold text-lg mb-2">
+          <p className="text-[#d97743] font-bold text-lg mb-2">
             ● QUY TRÌNH CỦA CHÚNG TÔI
           </p>
-          <h3 className="text-4xl md:text-5xl pixel-text text-[#1A4331] drop-shadow-[2px_2px_0px_#8A9A7A]">
+          <h3 className="text-4xl md:text-5xl font-bold font-sans text-[#5c4033]">
             Nghệ Thuật Pha Chế
           </h3>
         </div>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
-        <div className="absolute top-1/2 left-0 w-full h-2 bg-[#1A4331] -translate-y-1/2 hidden md:block z-0 opacity-20 border-y border-dashed border-[#F8F5F0]" />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative mt-16">
+        <div className="absolute top-[80px] left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#d97743] to-transparent hidden md:block z-0 opacity-30" />
 
         {[
           {
@@ -35,15 +35,15 @@ export function CraftingProcessSection() {
         ].map((step, index) => (
           <div
             key={index}
-            className="relative z-10 bg-white border-2 border-[#1A4331]/15 p-8 text-center group hover:-translate-y-2 hover:shadow-[3px_3px_0px_rgba(26,67,49,0.1)] transition-all duration-300"
+            className="relative z-10 bg-white rounded-3xl p-8 text-center group hover:-translate-y-2 shadow-sm hover:shadow-xl transition-all duration-300 border border-[#5c4033]/5"
           >
-            <div className="w-16 h-16 mx-auto bg-[#1A4331] text-[#F8F5F0] flex items-center justify-center mb-6 group-hover:bg-[#8A9A7A] group-hover:text-[#1A4331] transition-colors rounded-full">
+            <div className="w-20 h-20 mx-auto bg-[#F8F5F0] text-[#5c4033] flex items-center justify-center mb-6 group-hover:bg-[#d97743] group-hover:text-white transition-colors rounded-full shadow-inner group-hover:shadow-md">
               {step.icon}
             </div>
-            <h4 className="font-bold text-xl text-[#1A4331] pixel-text mb-4">
+            <h4 className="font-bold text-xl text-[#5c4033] mb-4">
               {step.title}
             </h4>
-            <p className="text-[#1A4331]/70 text-sm font-medium leading-relaxed">
+            <p className="text-[#5c4033]/70 font-medium leading-relaxed">
               {step.desc}
             </p>
           </div>
