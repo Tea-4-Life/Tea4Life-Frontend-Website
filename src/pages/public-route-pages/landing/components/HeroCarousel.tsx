@@ -6,11 +6,15 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselNext,
   CarouselPrevious,
+  CarouselNext,
 } from "@/components/ui/carousel.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { Leaf, Coffee } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { getPopularProductsApi } from "@/services/productApi";
+import { getMediaUrl } from "@/lib/utils";
+import type { PopularProductCardResponse } from "@/types/product/PopularProductCardResponse";
 
 const banners = [
   {
@@ -21,6 +25,7 @@ const banners = [
     image: "https://picsum.photos/seed/matcha/1200/800",
     bgColor: "bg-[#8A9A7A]", // Sage Green
     textColor: "text-[#F8F5F0]",
+    linkTo: "/shop",
   },
   {
     title: "HỒNG TRÀ SỮA ĐẶC TRƯNG",
@@ -30,6 +35,7 @@ const banners = [
     image: "https://picsum.photos/seed/milktea/1200/800",
     bgColor: "bg-[#D2A676]", // Caramel/Soft Brown
     textColor: "text-[#1A4331]",
+    linkTo: "/shop",
   },
   {
     title: "LỤC TRÀ TRÁI CÂY NHIỆT ĐỚI",
@@ -39,24 +45,70 @@ const banners = [
     image: "https://picsum.photos/seed/fruittea/1200/800",
     bgColor: "bg-[#1A4331]", // Forest Green
     textColor: "text-[#F8F5F0]",
+    linkTo: "/shop",
   },
 ];
 
+const slideStyles = [
+  { bgColor: "bg-[#8A9A7A]", textColor: "text-[#F8F5F0]" },
+  { bgColor: "bg-[#D2A676]", textColor: "text-[#1A4331]" },
+  { bgColor: "bg-[#1A4331]", textColor: "text-[#F8F5F0]" },
+  { bgColor: "bg-[#B19470]", textColor: "text-[#1A4331]" },
+];
+
 export function HeroCarousel() {
+  const navigate = useNavigate();
   const plugin = React.useRef(
     Autoplay({ delay: 6000, stopOnInteraction: true }),
   );
+  
+  const [popularProducts, setPopularProducts] = React.useState<PopularProductCardResponse[]>([]);
+
+  React.useEffect(() => {
+    const fetchPopularProducts = async () => {
+      try {
+        const res = await getPopularProductsApi(4);
+        if (res.data.data && res.data.data.length > 0) {
+          setPopularProducts(res.data.data);
+        }
+      } catch (error) {
+        console.error("Không thể tải sản phẩm bán chạy", error);
+      }
+    };
+    fetchPopularProducts();
+  }, []);
+
+  const displayItems = popularProducts.length > 0
+    ? popularProducts.map((item, index) => {
+        const style = slideStyles[index % slideStyles.length];
+        const formattedPrice = new Intl.NumberFormat("vi-VN", {
+          style: "currency",
+          currency: "VND",
+        }).format(item.basePrice);
+
+        return {
+          title: item.name,
+          subtitle: item.productCategoryName,
+          description: `Được yêu thích với ${item.popularity.orderCount} lượt mua! Giá mở bán chỉ từ ${formattedPrice}.`,
+          image: getMediaUrl(item.imageUrl),
+          bgColor: style.bgColor,
+          textColor: style.textColor,
+          linkTo: `/product-details/${item.id}`,
+        };
+      })
+    : banners;
 
   return (
     <section className="relative group rounded-3xl overflow-hidden pixel-border bg-[#F8F5F0] shadow-md transition-transform hover:-translate-y-1 duration-300">
       <Carousel
+        key={displayItems.length}
         plugins={[plugin.current]}
         className="w-full"
         onMouseEnter={plugin.current.stop}
         onMouseLeave={plugin.current.reset}
       >
         <CarouselContent>
-          {banners.map((banner, index) => (
+          {displayItems.map((banner, index) => (
             <CarouselItem key={index}>
               <div
                 className={`relative h-[550px] md:h-[600px] w-full ${banner.bgColor} overflow-hidden group/slide`}
@@ -80,13 +132,13 @@ export function HeroCarousel() {
                     </div>
 
                     {/* Title */}
-                    <h2 className="text-4xl md:text-6xl font-bold font-sans leading-[1.1] drop-shadow-sm tracking-tight">
+                    <h2 className="text-4xl md:text-6xl font-bold font-sans leading-[1.1] drop-shadow-sm tracking-tight line-clamp-2">
                       {banner.title}
                     </h2>
 
                     {/* Description Box */}
                     <div className="relative group/box">
-                      <p className="relative text-lg md:text-xl font-medium font-sans max-w-md bg-[#F8F5F0] text-[#5c4033] p-5 md:p-6 rounded-2xl border-2 border-[#5c4033]/20 shadow-sm transition-all duration-300 group-hover/box:shadow-md group-hover/box:-translate-y-1">
+                      <p className="relative text-lg md:text-xl font-medium font-sans max-w-md bg-[#F8F5F0] text-[#5c4033] p-5 md:p-6 rounded-2xl border-2 border-[#5c4033]/20 shadow-sm transition-all duration-300 group-hover/box:shadow-md group-hover/box:-translate-y-1 line-clamp-3">
                         {banner.description}
                       </p>
                     </div>
@@ -94,6 +146,7 @@ export function HeroCarousel() {
                     {/* CTA Button */}
                     <Button
                       size="lg"
+                      onClick={() => navigate(banner.linkTo)}
                       className="bg-[#5c4033] text-[#F8F5F0] hover:bg-[#8A9A7A] hover:text-[#F8F5F0] pixel-button text-xl px-10 h-14 group/btn mt-4 relative overflow-hidden rounded-full shadow-md"
                     >
                       <span className="relative z-10 flex items-center gap-3">
@@ -111,7 +164,7 @@ export function HeroCarousel() {
                     <div className="relative">
                       <img
                         src={banner.image}
-                        className="relative w-[300px] h-[300px] md:w-[450px] md:h-[450px] object-cover rounded-full border-8 border-white/20 z-10 shadow-xl"
+                        className="relative w-[300px] h-[300px] md:w-[450px] md:h-[450px] object-cover rounded-3xl border-8 border-white/20 z-10 shadow-xl bg-white/80"
                         alt={banner.title}
                       />
                     </div>

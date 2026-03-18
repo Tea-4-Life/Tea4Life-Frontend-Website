@@ -3,6 +3,7 @@ import type ApiResponse from "@/types/base/ApiResponse";
 import type PageResponse from "@/types/base/PageResponse";
 import type { ProductDetailResponse } from "@/types/product/ProductDetailResponse";
 import type { ProductSummaryResponse } from "@/types/product/ProductSummaryResponse";
+import type { PopularProductCardResponse } from "@/types/product/PopularProductCardResponse";
 
 import type { ProductQuery } from "@/types/product/ProductQuery";
 import type { ProductCategoryResponse } from "@/types/product-category/ProductCategoryResponse";
@@ -22,5 +23,12 @@ export const getProductCategoriesApi = async () => {
 export const getProductByIdApi = async (id: string) => {
   return await axiosClient.get<ApiResponse<ProductDetailResponse>>(
     `/product-service/public/products/${id}`,
+  );
+};
+
+export const getPopularProductsApi = async (limit?: number) => {
+  return await axiosClient.get<ApiResponse<PopularProductCardResponse[]>>(
+    "/product-service/public/products/popular",
+    { params: { limit } },
   );
 };
