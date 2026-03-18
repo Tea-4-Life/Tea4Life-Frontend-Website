@@ -101,6 +101,7 @@ export function HeroCarousel() {
   return (
     <section className="relative group rounded-3xl overflow-hidden pixel-border bg-[#F8F5F0] shadow-md transition-transform hover:-translate-y-1 duration-300">
       <Carousel
+        key={displayItems.length}
         plugins={[plugin.current]}
         className="w-full"
         onMouseEnter={plugin.current.stop}
@@ -163,7 +164,7 @@ export function HeroCarousel() {
                     <div className="relative">
                       <img
                         src={banner.image}
-                        className="relative w-[300px] h-[300px] md:w-[450px] md:h-[450px] object-cover rounded-full border-8 border-white/20 z-10 shadow-xl"
+                        className="relative w-[300px] h-[300px] md:w-[450px] md:h-[450px] object-cover rounded-3xl border-8 border-white/20 z-10 shadow-xl bg-white/80"
                         alt={banner.title}
                       />
                     </div>
