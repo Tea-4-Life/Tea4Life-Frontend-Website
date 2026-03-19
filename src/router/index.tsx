@@ -54,9 +54,6 @@ import AdminProductOptionsPage from "@/pages/admin-route-pages/product-options";
 import AdminPermissionsPage from "@/pages/admin-route-pages/permissions";
 import AdminRolesPage from "@/pages/admin-route-pages/roles";
 import AdminRoleCreatePage from "@/pages/admin-route-pages/roles/create";
-import AdminWorkflowDashboardPage from "@/pages/admin-route-pages/workflow-dashboard";
-import AdminWorkflowAdminPage from "@/pages/admin-route-pages/workflow-admin";
-import AdminWorkflowDiagramPage from "@/pages/admin-route-pages/workflow-diagram";
 
 // ========================================
 // DRIVER PAGES — lazy load theo cụm
@@ -115,12 +112,6 @@ const adminRoutes = [
   { path: "roles", element: <AdminRolesPage /> },
   { path: "roles/create", element: <AdminRoleCreatePage /> },
   { path: "roles/edit/:id", element: <AdminRoleCreatePage /> },
-  { path: "workflow-dashboard", element: <AdminWorkflowDashboardPage /> },
-  { path: "workflow-admin", element: <AdminWorkflowAdminPage /> },
-  {
-    path: "workflow-admin/diagram/:bpmnProcessId/:version",
-    element: <AdminWorkflowDiagramPage />,
-  },
 ];
 
 // --- 4. NHÓM ROUTE TÀI XẾ (DRIVER) ---
