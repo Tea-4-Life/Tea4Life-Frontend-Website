@@ -54,7 +54,10 @@ const adminGroups: SidebarGroup[] = [
   },
   {
     label: "Kinh doanh",
-    links: [{ name: "Đơn hàng", href: "/admin/orders", icon: ShoppingCart }],
+    links: [
+      { name: "Đơn hàng", href: "/admin/orders", icon: ShoppingCart },
+      { name: "Phiếu giảm giá", href: "/admin/vouchers", icon: Package },
+    ],
   },
 ];
 
