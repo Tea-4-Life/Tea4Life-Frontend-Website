@@ -32,9 +32,9 @@ export default function VoucherFormModal({
   onSubmit,
 }: VoucherFormModalProps) {
   const [description, setDescription] = useState("");
-  const [discountPercentage, setDiscountPercentage] = useState<number>(0);
-  const [minOrderAmount, setMinOrderAmount] = useState<number>(0);
-  const [maxDiscountAmount, setMaxDiscountAmount] = useState<number>(0);
+  const [discountPercentage, setDiscountPercentage] = useState<string>("");
+  const [minOrderAmount, setMinOrderAmount] = useState<string>("");
+  const [maxDiscountAmount, setMaxDiscountAmount] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
 
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -50,9 +50,9 @@ export default function VoucherFormModal({
     }
 
     setDescription(initialData?.description || "");
-    setDiscountPercentage(initialData?.discountPercentage || 0);
-    setMinOrderAmount(Number(initialData?.minOrderAmount || 0));
-    setMaxDiscountAmount(Number(initialData?.maxDiscountAmount || 0));
+    setDiscountPercentage(initialData?.discountPercentage?.toString() ?? "");
+    setMinOrderAmount(initialData?.minOrderAmount?.toString() ?? "");
+    setMaxDiscountAmount(initialData?.maxDiscountAmount?.toString() ?? "");
 
     setImagePreview(initialData?.imgUrl ? getMediaUrl(initialData.imgUrl) : null);
     setImageFile(null);
@@ -91,15 +91,19 @@ export default function VoucherFormModal({
       setError("Mô tả không được để trống.");
       return;
     }
-    if (discountPercentage <= 0 || discountPercentage > 100) {
+    const parsedDiscount = parseInt(discountPercentage, 10);
+    const parsedMinOrder = parseInt(minOrderAmount, 10);
+    const parsedMaxDiscount = parseInt(maxDiscountAmount, 10);
+
+    if (isNaN(parsedDiscount) || parsedDiscount <= 0 || parsedDiscount > 100) {
       setError("Phần trăm giảm giá phải nằm trong khoảng 1 đến 100.");
       return;
     }
-    if (minOrderAmount < 0) {
+    if (isNaN(parsedMinOrder) || parsedMinOrder < 0) {
       setError("Giá trị đơn tối thiểu không hợp lệ.");
       return;
     }
-    if (maxDiscountAmount < 0) {
+    if (isNaN(parsedMaxDiscount) || parsedMaxDiscount < 0) {
       setError("Mức giảm tối đa không hợp lệ.");
       return;
     }
@@ -126,9 +130,9 @@ export default function VoucherFormModal({
         {
           id: initialData?.id,
           description: description.trim(),
-          discountPercentage: Number(discountPercentage),
-          minOrderAmount: Number(minOrderAmount),
-          maxDiscountAmount: Number(maxDiscountAmount),
+          discountPercentage: parsedDiscount,
+          minOrderAmount: parsedMinOrder,
+          maxDiscountAmount: parsedMaxDiscount,
           imgKey: finalImageKey,
         },
         initialData?.id,
@@ -182,13 +186,13 @@ export default function VoucherFormModal({
             <div className="grid gap-2">
               <Label className="text-slate-700 font-medium">Phần trăm giảm (%)</Label>
               <Input
-                type="number"
+                type="text"
+                inputMode="numeric"
                 value={discountPercentage}
-                onChange={(e) => setDiscountPercentage(Number(e.target.value))}
+                onChange={(e) => setDiscountPercentage(e.target.value.replace(/[^0-9]/g, ""))}
                 disabled={loading || uploadingImage}
                 className="rounded-lg focus-visible:ring-emerald-500"
-                min="1"
-                max="100"
+                placeholder="VD: 10"
               />
             </div>
           </div>
@@ -197,21 +201,25 @@ export default function VoucherFormModal({
             <div className="grid gap-2">
               <Label className="text-slate-700 font-medium">Đơn tối thiểu (VNĐ)</Label>
               <Input
-                type="number"
+                type="text"
+                inputMode="numeric"
                 value={minOrderAmount}
-                onChange={(e) => setMinOrderAmount(Number(e.target.value))}
+                onChange={(e) => setMinOrderAmount(e.target.value.replace(/[^0-9]/g, ""))}
                 disabled={loading || uploadingImage}
                 className="rounded-lg focus-visible:ring-emerald-500"
+                placeholder="VD: 100000"
               />
             </div>
             <div className="grid gap-2">
               <Label className="text-slate-700 font-medium">Giảm tối đa (VNĐ)</Label>
               <Input
-                type="number"
+                type="text"
+                inputMode="numeric"
                 value={maxDiscountAmount}
-                onChange={(e) => setMaxDiscountAmount(Number(e.target.value))}
+                onChange={(e) => setMaxDiscountAmount(e.target.value.replace(/[^0-9]/g, ""))}
                 disabled={loading || uploadingImage}
                 className="rounded-lg focus-visible:ring-emerald-500"
+                placeholder="VD: 50000"
               />
             </div>
           </div>
