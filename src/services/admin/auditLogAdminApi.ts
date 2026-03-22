@@ -1,4 +1,3 @@
-// src/services/admin/auditLogAdminApi.ts
 import axiosClient from "@/lib/axios-client";
 import type { AuditLog, SpringPage } from "@/types/audit-log/AuditLog";
 import type ApiResponse from "@/types/base/ApiResponse";
