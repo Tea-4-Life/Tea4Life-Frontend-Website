@@ -10,6 +10,7 @@ import {
   ChevronRight,
   Settings,
   LayoutGrid,
+  Activity,
   ShieldCheck,
   Lock,
   type LucideIcon,
@@ -57,6 +58,12 @@ const adminGroups: SidebarGroup[] = [
     links: [
       { name: "Đơn hàng", href: "/admin/orders", icon: ShoppingCart },
       { name: "Phiếu giảm giá", href: "/admin/vouchers", icon: Package },
+    ],
+  },
+  {
+    label: "Hệ thống",
+    links: [
+      { name: "Nhật ký hệ thống", href: "/admin/audit-logs", icon: Activity },
     ],
   },
 ];
