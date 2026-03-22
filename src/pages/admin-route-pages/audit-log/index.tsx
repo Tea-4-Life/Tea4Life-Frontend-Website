@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { toast } from "sonner";
 import { handleError } from "@/lib/utils";
 import AuditLogsTableSection from "./components/AuditLogsTableSection";
 import { getAllAuditLogsApi } from "@/services/admin/auditLogAdminApi";
