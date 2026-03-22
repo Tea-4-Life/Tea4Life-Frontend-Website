@@ -3,7 +3,7 @@ import axiosClient from "@/lib/axios-client";
 import type { AuditLog, SpringPage } from "@/types/audit-log/AuditLog";
 import type ApiResponse from "@/types/base/ApiResponse";
 
-const BASE_URL = "/audit-service/public/audit";
+const BASE_URL = "/audit-service/admin/audit";
 
 export const getAllAuditLogsApi = async (
   page: number = 0,
