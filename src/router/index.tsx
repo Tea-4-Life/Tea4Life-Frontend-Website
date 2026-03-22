@@ -68,6 +68,9 @@ const DriverOrders = Loadable(
 const DriverOrderDetail = Loadable(
   lazy(() => import("@/pages/driver-route-pages/order-details")),
 );
+const AdminAuditLogsPage = Loadable(
+  lazy(() => import("@/pages/admin-route-pages/audit-log")),
+);
 
 // --- 1. NHÓM ROUTE CÔNG KHAI (PUBLIC) ---
 const publicRoutes = [
@@ -114,6 +117,7 @@ const adminRoutes = [
   { path: "roles/create", element: <AdminRoleCreatePage /> },
   { path: "roles/edit/:id", element: <AdminRoleCreatePage /> },
   { path: "vouchers", element: <AdminVouchersPage /> },
+  { path: "audit-logs", element: <AdminAuditLogsPage /> },
 ];
 
 // --- 4. NHÓM ROUTE TÀI XẾ (DRIVER) ---
