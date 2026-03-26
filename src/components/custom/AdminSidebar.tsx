@@ -9,6 +9,7 @@ import {
   BarChart3,
   ChevronRight,
   LayoutGrid,
+  Activity,
   ShieldCheck,
   Lock,
   Settings,
@@ -38,12 +39,18 @@ const adminGroups: SidebarGroup[] = [
     ],
   },
   {
-    label: "Quản lý",
+    label: "Quản lý sản phẩm",
     links: [
       { name: "Sản phẩm", href: "/admin/products", icon: Package },
       { name: "Danh mục", href: "/admin/categories", icon: LayoutGrid },
       { name: "Tùy chọn SP", href: "/admin/product-options", icon: Settings },
+    ],
+  },
+  {
+    label: "Kinh doanh",
+    links: [
       { name: "Đơn hàng", href: "/admin/orders", icon: ShoppingCart },
+      { name: "Phiếu giảm giá", href: "/admin/vouchers", icon: Package },
     ],
   },
   {
@@ -52,6 +59,7 @@ const adminGroups: SidebarGroup[] = [
       { name: "Người dùng", href: "/admin/users", icon: Users },
       { name: "Phân quyền", href: "/admin/permissions", icon: ShieldCheck },
       { name: "Chức vụ", href: "/admin/roles", icon: Lock },
+      { name: "Nhật ký hệ thống", href: "/admin/audit-logs", icon: Activity },
     ],
   },
 ];

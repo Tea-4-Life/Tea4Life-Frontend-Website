@@ -54,6 +54,7 @@ import AdminProductOptionsPage from "@/pages/admin-route-pages/product-options";
 import AdminPermissionsPage from "@/pages/admin-route-pages/permissions";
 import AdminRolesPage from "@/pages/admin-route-pages/roles";
 import AdminRoleCreatePage from "@/pages/admin-route-pages/roles/create";
+import AdminVouchersPage from "@/pages/admin-route-pages/vouchers";
 
 // ========================================
 // DRIVER PAGES — lazy load theo cụm
@@ -66,6 +67,9 @@ const DriverOrders = Loadable(
 );
 const DriverOrderDetail = Loadable(
   lazy(() => import("@/pages/driver-route-pages/order-details")),
+);
+const AdminAuditLogsPage = Loadable(
+  lazy(() => import("@/pages/admin-route-pages/audit-log")),
 );
 
 // --- 1. NHÓM ROUTE CÔNG KHAI (PUBLIC) ---
@@ -112,6 +116,8 @@ const adminRoutes = [
   { path: "roles", element: <AdminRolesPage /> },
   { path: "roles/create", element: <AdminRoleCreatePage /> },
   { path: "roles/edit/:id", element: <AdminRoleCreatePage /> },
+  { path: "vouchers", element: <AdminVouchersPage /> },
+  { path: "audit-logs", element: <AdminAuditLogsPage /> },
 ];
 
 // --- 4. NHÓM ROUTE TÀI XẾ (DRIVER) ---
