@@ -13,8 +13,8 @@ import { handleError } from "@/lib/utils";
 import { toast } from "sonner";
 
 // Sub-components
-import HeaderSection from "./components/HeaderSection";
-import SearchSection from "./components/SearchSection";
+import AdminPageHeader from "@/components/custom/AdminPageHeader";
+import { Users } from "lucide-react";
 import TableSection from "./components/TableSection";
 import PaginationSection from "./components/PaginationSection";
 import UserDetailModal from "./components/UserDetailModal";
@@ -137,16 +137,15 @@ export default function AdminUsersPage() {
 
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
-      {/* 1. Header Section */}
-      <HeaderSection />
-
-      {/* 2. Search Section */}
-      <SearchSection
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
+      {/* 1. Page Header */}
+      <AdminPageHeader
+        icon={Users}
+        title="Quản lý người dùng"
+        description="Danh sách người dùng và quản lý tài khoản trong hệ thống."
+        searchPlaceholder="Tìm kiếm người dùng..."
+        searchValue={searchQuery}
+        onSearchChange={setSearchQuery}
       />
-
-      {/* 3. Table Section */}
       <TableSection
         loading={loading}
         data={data}

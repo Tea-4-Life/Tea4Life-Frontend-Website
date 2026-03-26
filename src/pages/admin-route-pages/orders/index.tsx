@@ -10,8 +10,10 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Eye } from "lucide-react";
+import { Eye, ShoppingCart } from "lucide-react";
 import { cn } from "@/lib/utils";
+import AdminPageHeader from "@/components/custom/AdminPageHeader";
+import { useState } from "react";
 
 const orders = [
   {
@@ -38,10 +40,21 @@ const orders = [
 ];
 
 export default function AdminOrdersPage() {
-  return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-slate-900">Danh sách đơn hàng</h1>
+  const [searchQuery, setSearchQuery] = useState("");
 
+  return (
+    <div className="space-y-6 animate-in fade-in duration-500">
+      {/* 1. Page Header */}
+      <AdminPageHeader
+        icon={ShoppingCart}
+        title="Danh sách đơn hàng"
+        description="Quản lý và theo dõi trạng thái các đơn hàng."
+        searchPlaceholder="Tìm kiếm đơn hàng..."
+        searchValue={searchQuery}
+        onSearchChange={setSearchQuery}
+      />
+
+      {/* 2. Table Section */}
       <div className="bg-white rounded-xl shadow-sm border overflow-hidden">
         <Table>
           <TableHeader>

@@ -11,8 +11,8 @@ import { toast } from "sonner";
 import { handleError } from "@/lib/utils";
 
 // Sub-components
-import HeaderSection from "./components/HeaderSection";
-import SearchSection from "./components/SearchSection";
+import AdminPageHeader from "@/components/custom/AdminPageHeader";
+import { LayoutGrid } from "lucide-react";
 import TableSection from "./components/TableSection";
 import CategoryFormModal from "./components/CategoryFormModal";
 import { ConfirmationDialog } from "@/components/custom/ConfirmationDialog";
@@ -116,14 +116,17 @@ export default function AdminCategoriesPage() {
 
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
-      <HeaderSection />
-
-      <SearchSection
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
+      {/* 1. Page Header */}
+      <AdminPageHeader
+        icon={LayoutGrid}
+        title="Quản lý danh mục"
+        description="Quản lý các danh mục sản phẩm trong hệ thống."
+        searchPlaceholder="Tìm kiếm danh mục..."
+        searchValue={searchQuery}
+        onSearchChange={setSearchQuery}
       />
 
-      {/* Table Content */}
+      {/* 3. Table Section */}
       <TableSection
         loading={loading}
         data={filteredData}

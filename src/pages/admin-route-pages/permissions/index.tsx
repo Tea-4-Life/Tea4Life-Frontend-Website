@@ -12,8 +12,8 @@ import { handleError } from "@/lib/utils";
 import { toast } from "sonner";
 
 // Sub-components
-import HeaderSection from "./components/HeaderSection";
-import SearchSection from "./components/SearchSection";
+import AdminPageHeader from "@/components/custom/AdminPageHeader";
+import { ShieldCheck } from "lucide-react";
 import TableSection from "./components/TableSection";
 import PaginationSection from "./components/PaginationSection";
 import PermissionModal from "./components/PermissionModal";
@@ -102,16 +102,15 @@ export default function AdminPermissionsPage() {
 
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
-      {/* 1. Header Section */}
-      <HeaderSection />
-
-      {/* 2. Search Section */}
-      <SearchSection
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
+      {/* 1. Page Header */}
+      <AdminPageHeader
+        icon={ShieldCheck}
+        title="Quản lý quyền hạn"
+        description="Thiết lập và quản lý các quyền hạn trong hệ thống."
+        searchPlaceholder="Tìm kiếm quyền hạn..."
+        searchValue={searchQuery}
+        onSearchChange={setSearchQuery}
       />
-
-      {/* 3. Table Section */}
       <TableSection
         loading={loading}
         data={data}

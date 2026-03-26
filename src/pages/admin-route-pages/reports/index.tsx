@@ -13,19 +13,27 @@ import {
   TrendingUp,
   ArrowUpRight,
   ArrowDownRight,
+  BarChart3,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import AdminPageHeader from "@/components/custom/AdminPageHeader";
 
 export default function AdminReportsPage() {
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-slate-900">Báo cáo doanh thu</h1>
-        <Button variant="outline" size="sm">
-          <Download className="h-4 w-4 mr-2" /> Xuất báo cáo (Excel)
-        </Button>
-      </div>
+    <div className="space-y-6 animate-in fade-in duration-500">
+      {/* 1. Page Header */}
+      <AdminPageHeader
+        icon={BarChart3}
+        title="Báo cáo doanh thu"
+        description="Xem và phân tích hiệu quả kinh doanh."
+        actions={
+          <Button variant="outline" size="sm" className="hidden sm:flex">
+            <Download className="h-4 w-4 mr-2" /> Xuất báo cáo (Excel)
+          </Button>
+        }
+      />
 
+      {/* 2. Stats Section */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card className="border-none shadow-sm bg-emerald-600 text-white">
           <CardHeader className="pb-2">
@@ -58,6 +66,7 @@ export default function AdminReportsPage() {
         </Card>
       </div>
 
+      {/* 3. Charts Section */}
       <Card className="border-none shadow-sm">
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle>Biểu đồ tăng trưởng</CardTitle>

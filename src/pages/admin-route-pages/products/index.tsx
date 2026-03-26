@@ -7,8 +7,8 @@ import { handleError } from "@/lib/utils";
 import { ConfirmationDialog } from "@/components/custom/ConfirmationDialog";
 import ProductFormModal from "./components/ProductFormModal";
 import ProductsTableSection from "./components/ProductsTableSection";
-import HeaderSection from "./components/HeaderSection";
-import SearchSection from "./components/SearchSection";
+import AdminPageHeader from "@/components/custom/AdminPageHeader";
+import { Package } from "lucide-react";
 import PaginationComponent from "@/components/custom/PaginationComponent";
 import {
   createAdminProductApi,
@@ -141,10 +141,15 @@ export default function AdminProductsPage() {
 
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
-      <HeaderSection />
-
-      <SearchSection keyword={keyword} setKeyword={setKeyword} />
-
+      {/* 1. Page Header */}
+      <AdminPageHeader
+        icon={Package}
+        title="Quản lý sản phẩm"
+        description="Quản lý các sản phẩm trong hệ thống."
+        searchPlaceholder="Tìm kiếm sản phẩm / danh mục..."
+        searchValue={keyword}
+        onSearchChange={setKeyword}
+      />
       <ProductsTableSection
         loading={loading}
         filtered={filtered}
@@ -153,6 +158,7 @@ export default function AdminProductsPage() {
         openDelete={openDelete}
       />
 
+      {/* 4. Pagination Section */}
       {totalElements > 0 && (
         <PaginationComponent
           currentPage={page}

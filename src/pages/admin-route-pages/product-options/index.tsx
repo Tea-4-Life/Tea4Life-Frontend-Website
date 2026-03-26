@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import HeaderSection from "./components/HeaderSection";
-import SearchSection from "./components/SearchSection";
+import AdminPageHeader from "@/components/custom/AdminPageHeader";
+import { Settings } from "lucide-react";
 import ProductOptionsTab from "./components/ProductOptionsTab";
 import ProductOptionValuesTab from "./components/ProductOptionValuesTab";
 
@@ -10,14 +10,17 @@ export default function AdminProductOptionsPage() {
 
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
-      <HeaderSection />
-
-      <SearchSection
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
+      {/* 1. Page Header */}
+      <AdminPageHeader
+        icon={Settings}
+        title="Tùy chọn sản phẩm"
+        description="Quản lý các tùy chọn và giá trị tùy chọn cho sản phẩm."
+        searchPlaceholder="Tìm kiếm tùy chọn..."
+        searchValue={searchQuery}
+        onSearchChange={setSearchQuery}
       />
 
-      {/* Tabs */}
+      {/* 3. Tabs Section */}
       <Tabs defaultValue="options" className="w-full">
         <TabsList className="bg-white border border-slate-200 shadow-sm rounded-xl p-1 h-auto">
           <TabsTrigger
