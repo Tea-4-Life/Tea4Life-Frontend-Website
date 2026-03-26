@@ -1,3 +1,5 @@
+/* eslint-disable react-refresh/only-export-components */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import LoadingScreen from "@/components/custom/LoadingScreen";
@@ -36,8 +38,6 @@ import SecurityPage from "@/pages/customer-route-pages/profile/security";
 // ========================================
 // ADMIN PAGES — lazy load theo cụm (admin ít khi dùng, tách chunk riêng)
 // ========================================
-/* eslint-disable react-refresh/only-export-components */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 const Loadable = (Component: any) => (props: any) => (
   <Suspense fallback={<LoadingScreen />}>
     <Component {...props} />

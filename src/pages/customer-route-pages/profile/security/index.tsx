@@ -70,6 +70,7 @@ export default function SecurityPage() {
       } else {
         toast.error(response.data.errorMessage || "Đã có lỗi xảy ra");
       }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       toast.error(
         error.response?.data?.errorMessage || "Cập nhật mật khẩu thất bại",

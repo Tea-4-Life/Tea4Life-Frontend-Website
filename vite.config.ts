@@ -17,6 +17,7 @@ export default defineConfig(({ mode }) => ({
   },
   esbuild:
     mode === "production"
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ? ({ drop: ["console", "debugger"] } as any)
       : undefined,
 }));

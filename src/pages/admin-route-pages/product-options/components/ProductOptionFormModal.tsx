@@ -38,6 +38,7 @@ export default function ProductOptionFormModal({
   useEffect(() => {
     if (isOpen) {
       if (initialData) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setName(initialData.name);
         setIsRequired(initialData.isRequired);
         setIsMultiSelect(initialData.isMultiSelect);
