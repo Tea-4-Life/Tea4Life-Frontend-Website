@@ -204,7 +204,6 @@ export default function ProductDetail() {
       };
 
       await addCartItemApi(requestData);
-      toast.success("Đã thêm vào giỏ hàng thành công!");
     } catch (error) {
       handleError(error, "Không thể thêm vào giỏ hàng");
     }
@@ -225,7 +224,6 @@ export default function ProductDetail() {
         unitPrice: p.basePrice,
         quantity: 1
       });
-      toast.success(`Đã thêm ${p.name} vào giỏ!`);
     } catch (error) {
       handleError(error, "Cần chọn thêm tuỳ chọn, hãy vào trang chi tiết nhé!");
     }

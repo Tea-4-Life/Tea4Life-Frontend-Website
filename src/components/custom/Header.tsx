@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { UserMenu } from "@/components/custom/UserMenu";
@@ -16,6 +16,9 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showLoginDialog, setShowLoginDialog] = useState(false);
   const [recentCart, setRecentCart] = useState<RecentCartItemsResponse | null>(null);
+  const [isBouncing, setIsBouncing] = useState(false);
+  const [showBubble, setShowBubble] = useState(false);
+  const bounceTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const { isAuthenticated, fullName, email, avatarUrl, initialized } =
     useAuth();
@@ -33,9 +36,21 @@ export default function Header() {
     if (isAuthenticated) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       fetchRecentCart();
-      const handleCartUpdate = () => fetchRecentCart();
+      const handleCartUpdate = () => {
+        fetchRecentCart();
+        setIsBouncing(true);
+        setShowBubble(true);
+        if (bounceTimeout.current) clearTimeout(bounceTimeout.current);
+        bounceTimeout.current = setTimeout(() => {
+          setIsBouncing(false);
+          setShowBubble(false);
+        }, 2000);
+      };
       window.addEventListener("cartUpdated", handleCartUpdate);
-      return () => window.removeEventListener("cartUpdated", handleCartUpdate);
+      return () => {
+        window.removeEventListener("cartUpdated", handleCartUpdate);
+        if (bounceTimeout.current) clearTimeout(bounceTimeout.current);
+      };
     } else {
       setRecentCart(null);
     }
@@ -101,7 +116,9 @@ export default function Header() {
                     setShowLoginDialog(true);
                   }
                 }}
-                className="relative p-2 text-[#1A4331] group-hover:bg-[#1A4331] group-hover:text-[#F8F5F0] border-2 border-transparent group-hover:border-[#1A4331] transition-colors z-10"
+                className={`relative p-2 text-[#1A4331] group-hover:bg-[#1A4331] group-hover:text-[#F8F5F0] border-2 border-transparent group-hover:border-[#1A4331] transition-colors z-10 ${
+                  isBouncing ? "animate-bounce" : ""
+                }`}
               >
                 <ShoppingCart className="h-6 w-6" />
                 {recentCart && recentCart.totalItems > 0 && (
@@ -110,6 +127,13 @@ export default function Header() {
                   </span>
                 )}
               </Link>
+              
+              {/* Bubble Add Success Message */}
+              {showBubble && (
+                <div className="absolute top-12 -right-2 bg-[#8A9A7A] text-[#F8F5F0] text-[11px] font-bold px-3 py-1.5 shadow-[2px_2px_0px_#1A4331] border-2 border-[#1A4331] z-60 animate-in fade-in zoom-in slide-in-from-top-2 duration-300 pointer-events-none whitespace-nowrap">
+                  + Đã thêm vào giỏ
+                </div>
+              )}
               
               {/* Dropdown Popover */}
               {isAuthenticated && recentCart && recentCart.totalItems > 0 && (

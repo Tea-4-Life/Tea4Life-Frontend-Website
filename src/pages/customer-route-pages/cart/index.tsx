@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, memo } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button.tsx";
 import { Input } from "@/components/ui/input.tsx";
@@ -14,10 +14,111 @@ import {
 } from "lucide-react";
 import { getCartApi, updateCartItemApi, removeCartItemApi } from "@/services/cartApi";
 import type { CartResponse } from "@/types/cart/CartResponse";
+import type { CartItemResponse } from "@/types/cart/CartItemResponse";
 import { getMediaUrl, handleError } from "@/lib/utils";
 import { toast } from "sonner";
 
-export default function CartPage() {
+const formatPrice = (price: number) => {
+  return new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+  }).format(price);
+};
+
+interface CartItemRowProps {
+  item: CartItemResponse;
+  isUpdating: boolean;
+  updateQuantity: (id: string, delta: number, currentQuantity: number) => void;
+  removeItem: (id: string) => void;
+}
+
+const CartItemRow = memo(
+  ({ item, isUpdating, updateQuantity, removeItem }: CartItemRowProps) => {
+    return (
+      <div
+        className={`bg-white border-2 border-[#1A4331]/15 p-4 flex flex-col sm:flex-row items-start sm:items-center gap-4 transition-all duration-200 hover:shadow-[2px_2px_0px_rgba(26,67,49,0.08)] ${
+          isUpdating ? "opacity-60 pointer-events-none" : ""
+        }`}
+      >
+        <img
+          src={
+            item.productImageUrl
+              ? getMediaUrl(item.productImageUrl)
+              : "/placeholder.svg"
+          }
+          alt={item.productName}
+          className="h-24 w-24 object-cover border border-[#1A4331]/10 shrink-0"
+        />
+        <div className="flex-1 w-full">
+          <h3 className="font-bold text-[#1A4331] text-lg">
+            {item.productName}
+          </h3>
+
+          {item.selectedOptions && item.selectedOptions.length > 0 && (
+            <div className="flex flex-wrap gap-1 mt-1 mb-3">
+              {item.selectedOptions.map((opt) => (
+                <span
+                  key={opt.productOptionValueId}
+                  className="bg-[#F8F5F0] text-[#1A4331] text-xs font-semibold px-2 py-0.5 rounded-sm border border-[#1A4331]/20"
+                >
+                  {opt.productOptionName}: {opt.productOptionValueName}
+                </span>
+              ))}
+            </div>
+          )}
+
+          <div className="flex items-center gap-0 mt-2">
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-8 w-8 border-2 border-[#1A4331]/20 text-[#1A4331] rounded-none hover:bg-[#1A4331] hover:text-[#F8F5F0]"
+              onClick={() => updateQuantity(item.id, -1, item.quantity)}
+              disabled={item.quantity <= 1 || isUpdating}
+            >
+              <Minus className="h-3 w-3" />
+            </Button>
+            <span className="w-10 h-8 flex items-center justify-center text-sm font-bold text-[#1A4331] border-y-2 border-[#1A4331]/20 bg-[#F8F5F0]">
+              {item.quantity}
+            </span>
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-8 w-8 border-2 border-[#1A4331]/20 text-[#1A4331] rounded-none hover:bg-[#1A4331] hover:text-[#F8F5F0]"
+              onClick={() => updateQuantity(item.id, 1, item.quantity)}
+              disabled={isUpdating}
+            >
+              <Plus className="h-3 w-3" />
+            </Button>
+          </div>
+        </div>
+        <div className="text-right flex flex-row sm:flex-col justify-between items-center sm:items-end w-full sm:w-auto h-full space-y-2 mt-4 sm:mt-0">
+          <p className="font-bold text-[#1A4331] text-lg">
+            {formatPrice(item.subTotal)}
+          </p>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-red-400 hover:text-red-700 hover:bg-red-50 rounded-none text-xs"
+            onClick={() => removeItem(item.id)}
+            disabled={isUpdating}
+          >
+            <Trash2 className="h-4 w-4 mr-1" /> Xóa
+          </Button>
+        </div>
+      </div>
+    );
+  },
+  (prev, next) => {
+    return (
+      prev.isUpdating === next.isUpdating &&
+      prev.item.id === next.item.id &&
+      prev.item.quantity === next.item.quantity &&
+      prev.item.subTotal === next.item.subTotal
+    );
+  }
+);
+
+const CartPage = () => {
   const [cart, setCart] = useState<CartResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [isUpdating, setIsUpdating] = useState(false);
@@ -38,14 +139,7 @@ export default function CartPage() {
     fetchCart();
   }, [fetchCart]);
 
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat("vi-VN", {
-      style: "currency",
-      currency: "VND",
-    }).format(price);
-  };
-
-  const updateQuantity = async (id: string, delta: number, currentQuantity: number) => {
+  const updateQuantity = useCallback(async (id: string, delta: number, currentQuantity: number) => {
     const newQuantity = currentQuantity + delta;
     if (newQuantity < 1) return;
     
@@ -58,9 +152,9 @@ export default function CartPage() {
     } finally {
       setIsUpdating(false);
     }
-  };
+  }, [fetchCart]);
 
-  const removeItem = async (id: string) => {
+  const removeItem = useCallback(async (id: string) => {
     try {
       setIsUpdating(true);
       await removeCartItemApi(id);
@@ -71,7 +165,7 @@ export default function CartPage() {
     } finally {
       setIsUpdating(false);
     }
-  };
+  }, [fetchCart]);
 
   const subtotal = cart?.totalAmount || 0;
   // Giả sử phí vận chuyển tĩnh hoặc miễn phí trên 500k
@@ -119,71 +213,13 @@ export default function CartPage() {
             {/* Danh sách sản phẩm */}
             <div className="lg:col-span-2 space-y-4">
               {cart?.items.map((item) => (
-                <div
+                <CartItemRow
                   key={item.id}
-                  className={`bg-white border-2 border-[#1A4331]/15 p-4 flex flex-col sm:flex-row items-start sm:items-center gap-4 transition-all duration-200 hover:shadow-[2px_2px_0px_rgba(26,67,49,0.08)] ${
-                    isUpdating ? "opacity-60 pointer-events-none" : ""
-                  }`}
-                >
-                  <img
-                    src={item.productImageUrl ? getMediaUrl(item.productImageUrl) : "/placeholder.svg"}
-                    alt={item.productName}
-                    className="h-24 w-24 object-cover border border-[#1A4331]/10 shrink-0"
-                  />
-                  <div className="flex-1 w-full">
-                    <h3 className="font-bold text-[#1A4331] text-lg">
-                      {item.productName}
-                    </h3>
-                    
-                    {item.selectedOptions && item.selectedOptions.length > 0 && (
-                      <div className="flex flex-wrap gap-1 mt-1 mb-3">
-                        {item.selectedOptions.map(opt => (
-                          <span key={opt.productOptionValueId} className="bg-[#F8F5F0] text-[#1A4331] text-xs font-semibold px-2 py-0.5 rounded-sm border border-[#1A4331]/20">
-                            {opt.productOptionName}: {opt.productOptionValueName}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-
-                    <div className="flex items-center gap-0 mt-2">
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        className="h-8 w-8 border-2 border-[#1A4331]/20 text-[#1A4331] rounded-none hover:bg-[#1A4331] hover:text-[#F8F5F0]"
-                        onClick={() => updateQuantity(item.id, -1, item.quantity)}
-                        disabled={item.quantity <= 1 || isUpdating}
-                      >
-                        <Minus className="h-3 w-3" />
-                      </Button>
-                      <span className="w-10 h-8 flex items-center justify-center text-sm font-bold text-[#1A4331] border-y-2 border-[#1A4331]/20 bg-[#F8F5F0]">
-                        {item.quantity}
-                      </span>
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        className="h-8 w-8 border-2 border-[#1A4331]/20 text-[#1A4331] rounded-none hover:bg-[#1A4331] hover:text-[#F8F5F0]"
-                        onClick={() => updateQuantity(item.id, 1, item.quantity)}
-                        disabled={isUpdating}
-                      >
-                        <Plus className="h-3 w-3" />
-                      </Button>
-                    </div>
-                  </div>
-                  <div className="text-right flex flex-row sm:flex-col justify-between items-center sm:items-end w-full sm:w-auto h-full space-y-2 mt-4 sm:mt-0">
-                    <p className="font-bold text-[#1A4331] text-lg">
-                      {formatPrice(item.subTotal)}
-                    </p>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="text-red-400 hover:text-red-700 hover:bg-red-50 rounded-none text-xs"
-                      onClick={() => removeItem(item.id)}
-                      disabled={isUpdating}
-                    >
-                      <Trash2 className="h-4 w-4 mr-1" /> Xóa
-                    </Button>
-                  </div>
-                </div>
+                  item={item}
+                  isUpdating={isUpdating}
+                  updateQuantity={updateQuantity}
+                  removeItem={removeItem}
+                />
               ))}
 
               <Link
@@ -282,4 +318,6 @@ export default function CartPage() {
       </div>
     </div>
   );
-}
+};
+
+export default memo(CartPage);

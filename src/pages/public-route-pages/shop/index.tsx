@@ -21,7 +21,6 @@ import { handleError, getMediaUrl } from "@/lib/utils";
 import { useAuth } from "@/features/auth/useAuth";
 import { RequireLoginDialog } from "@/components/custom/RequireLoginDialog";
 import { addCartItemApi } from "@/services/cartApi";
-import { toast } from "sonner";
 
 export default function ShopPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -138,7 +137,6 @@ export default function ShopPage() {
         unitPrice: p.basePrice,
         quantity: 1
       });
-      toast.success(`Đã thêm ${p.name} vào giỏ!`);
     } catch (error) {
       handleError(error, "Cần chọn thêm tuỳ chọn, hãy vào trang chi tiết nhé!");
     }
