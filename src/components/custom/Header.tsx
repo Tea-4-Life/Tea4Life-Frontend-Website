@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { UserMenu } from "@/components/custom/UserMenu";
 import { RequireLoginDialog } from "@/components/custom/RequireLoginDialog";
+import { getMyRecentCartItemsApi } from "@/services/cartApi";
+import type { RecentCartItemsResponse } from "@/types/cart/RecentCartItemsResponse";
 import { useAuth } from "@/features/auth/useAuth";
 import { getMediaUrl } from "@/lib/utils";
 import keycloak from "@/lib/keycloak";
@@ -13,9 +15,30 @@ const navLinks = [{ name: "[ TRANG CHỦ ]", href: "/" }];
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showLoginDialog, setShowLoginDialog] = useState(false);
+  const [recentCart, setRecentCart] = useState<RecentCartItemsResponse | null>(null);
+
   const { isAuthenticated, fullName, email, avatarUrl, initialized } =
     useAuth();
-  const cartCount = 0;
+
+  const fetchRecentCart = async () => {
+    try {
+      const res = await getMyRecentCartItemsApi();
+      setRecentCart(res.data.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchRecentCart();
+      const handleCartUpdate = () => fetchRecentCart();
+      window.addEventListener("cartUpdated", handleCartUpdate);
+      return () => window.removeEventListener("cartUpdated", handleCartUpdate);
+    } else {
+      setRecentCart(null);
+    }
+  }, [isAuthenticated]);
 
   const handleLogin = () => keycloak.login();
   const handleLogout = () =>
@@ -63,23 +86,63 @@ export default function Header() {
 
           {/* Actions Area */}
           <div className="flex items-center gap-4">
-            <Link
-              to="/cart"
-              onClick={(e) => {
-                if (!isAuthenticated) {
-                  e.preventDefault();
-                  setShowLoginDialog(true);
-                }
+            <div 
+              className="relative group flex items-center py-2 h-full"
+              onMouseEnter={() => {
+                if (isAuthenticated) fetchRecentCart();
               }}
-              className="relative p-2 text-[#1A4331] hover:bg-[#1A4331] hover:text-[#F8F5F0] border-2 border-transparent hover:border-[#1A4331]"
             >
-              <ShoppingCart className="h-6 w-6" />
-              {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center bg-[#8A9A7A] border-2 border-[#1A4331] text-[10px] font-bold text-[#F8F5F0]">
-                  {cartCount}
-                </span>
+              <Link
+                to="/cart"
+                onClick={(e) => {
+                  if (!isAuthenticated) {
+                    e.preventDefault();
+                    setShowLoginDialog(true);
+                  }
+                }}
+                className="relative p-2 text-[#1A4331] group-hover:bg-[#1A4331] group-hover:text-[#F8F5F0] border-2 border-transparent group-hover:border-[#1A4331] transition-colors z-10"
+              >
+                <ShoppingCart className="h-6 w-6" />
+                {recentCart && recentCart.totalItems > 0 && (
+                  <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center bg-[#8A9A7A] border-2 border-[#1A4331] text-[10px] font-bold text-[#F8F5F0]">
+                    {recentCart.totalItems}
+                  </span>
+                )}
+              </Link>
+              
+              {/* Dropdown Popover */}
+              {isAuthenticated && recentCart && recentCart.totalItems > 0 && (
+                <div className="absolute top-12 right-0 mt-2 w-[320px] bg-white border-2 border-[#1A4331] shadow-[4px_4px_0px_#1A4331] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 flex flex-col pointer-events-auto cursor-default">
+                  <div className="p-3 border-b-2 border-[#1A4331]/10 bg-[#F8F5F0]">
+                    <p className="text-xs font-bold text-[#1A4331] opacity-70 uppercase tracking-wide">Sản phẩm mới thêm</p>
+                  </div>
+                  <div className="flex flex-col">
+                    {recentCart.items.slice(0, 3).map(item => (
+                      <div key={item.id} className="flex gap-3 p-3 border-b border-[#1A4331]/5 hover:bg-[#F8F5F0] transition-colors">
+                        <img src={item.productImageUrl ? getMediaUrl(item.productImageUrl) : "/placeholder.svg"} alt={item.productName} className="w-12 h-12 object-cover border border-[#1A4331]/10 bg-white" />
+                        <div className="flex-1 min-w-0">
+                          <p className="text-[13px] font-bold text-[#1A4331] truncate">{item.productName}</p>
+                          <p className="text-xs font-semibold text-[#8A9A7A] mt-1 flex justify-between">
+                            <span>{new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(item.subTotal)}</span>
+                            <span className="text-[#1A4331]">x{item.quantity}</span>
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  {recentCart.totalItems > 3 && (
+                    <div className="p-2 text-center bg-[#F8F5F0] border-t border-[#1A4331]/10">
+                      <p className="text-[11px] font-bold text-[#8A9A7A]">Xem thêm {recentCart.totalItems - 3} món trong giỏ...</p>
+                    </div>
+                  )}
+                  <div className="p-3">
+                    <Link to="/cart" className="block w-full py-2 bg-[#1A4331] text-white text-center text-sm font-bold hover:bg-[#8A9A7A] transition-colors cursor-pointer border-2 border-transparent hover:border-[#1A4331]">
+                      XEM THÊM GIỎ HÀNG
+                    </Link>
+                  </div>
+                </div>
               )}
-            </Link>
+            </div>
 
             {/* PHẦN THAY ĐỔI: Login Button vs UserMenu  */}
             <div className="hidden sm:block">

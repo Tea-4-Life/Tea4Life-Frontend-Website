@@ -51,7 +51,7 @@ export default function CartPage() {
     
     try {
       setIsUpdating(true);
-      await updateCartItemApi(Number(id), { quantity: newQuantity });
+      await updateCartItemApi(id, { quantity: newQuantity });
       await fetchCart();
     } catch (error) {
       handleError(error, "Không thể cập nhật số lượng.");
@@ -63,7 +63,7 @@ export default function CartPage() {
   const removeItem = async (id: string) => {
     try {
       setIsUpdating(true);
-      await removeCartItemApi(Number(id));
+      await removeCartItemApi(id);
       toast.success("Đã xóa sản phẩm khỏi giỏ hàng");
       await fetchCart();
     } catch (error) {
