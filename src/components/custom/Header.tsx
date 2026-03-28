@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { UserMenu } from "@/components/custom/UserMenu";
@@ -20,17 +20,18 @@ export default function Header() {
   const { isAuthenticated, fullName, email, avatarUrl, initialized } =
     useAuth();
 
-  const fetchRecentCart = async () => {
+  const fetchRecentCart = useCallback(async () => {
     try {
       const res = await getMyRecentCartItemsApi();
       setRecentCart(res.data.data);
     } catch (err) {
       console.error(err);
     }
-  };
+  }, []);
 
   useEffect(() => {
     if (isAuthenticated) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       fetchRecentCart();
       const handleCartUpdate = () => fetchRecentCart();
       window.addEventListener("cartUpdated", handleCartUpdate);
@@ -38,7 +39,7 @@ export default function Header() {
     } else {
       setRecentCart(null);
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, fetchRecentCart]);
 
   const handleLogin = () => keycloak.login();
   const handleLogout = () =>
