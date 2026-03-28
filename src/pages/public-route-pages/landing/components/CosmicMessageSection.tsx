@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Sparkles, Star } from "lucide-react";
+import { Sparkles, Star, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button.tsx";
 import { getRandomProductsApi } from "@/services/productApi";
 import type { ProductSummaryResponse } from "@/types/product/ProductSummaryResponse";
@@ -49,9 +49,32 @@ export function CosmicMessageSection() {
         <h3 className="text-4xl md:text-5xl font-bold font-sans text-[#5c4033] leading-tight">
           Chọn đại hay được chọn?
         </h3>
-        <p className="mt-4 text-[#5c4033]/70 font-medium max-w-2xl mx-auto">
+        <p className="mt-4 text-[#5c4033]/70 font-medium max-w-2xl mx-auto mb-8">
           Cảm thấy bối rối trước menu đồ uống? Đừng lo, vũ trụ đã sắp xếp sẵn những hương vị tuyệt vời này dành riêng cho bạn hôm nay. Thử ngay xem sao!
         </p>
+        <Button 
+          onClick={() => {
+            const fetchRandomProducts = async () => {
+              try {
+                setLoading(true);
+                const res = await getRandomProductsApi();
+                if (res.data?.data) {
+                  setRandomProducts(res.data.data);
+                }
+              } catch (error) {
+                console.error("Lỗi khi tải thông điệp vũ trụ:", error);
+              } finally {
+                setLoading(false);
+              }
+            };
+            fetchRandomProducts();
+          }}
+          disabled={loading}
+          className="bg-transparent border-2 border-[#d97743] text-[#d97743] hover:bg-[#d97743] hover:text-white rounded-full px-8 font-bold gap-2 transition-all"
+        >
+          <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+          BỐC QUẺ MỚI
+        </Button>
       </div>
 
       {loading ? (
