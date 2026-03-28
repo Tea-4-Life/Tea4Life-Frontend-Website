@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { UserMenu } from "@/components/custom/UserMenu";
+import { RequireLoginDialog } from "@/components/custom/RequireLoginDialog";
 import { useAuth } from "@/features/auth/useAuth";
 import { getMediaUrl } from "@/lib/utils";
 import keycloak from "@/lib/keycloak";
@@ -11,6 +12,7 @@ const navLinks = [{ name: "[ TRANG CHỦ ]", href: "/" }];
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [showLoginDialog, setShowLoginDialog] = useState(false);
   const { isAuthenticated, fullName, email, avatarUrl, initialized } =
     useAuth();
   const cartCount = 0;
@@ -63,6 +65,12 @@ export default function Header() {
           <div className="flex items-center gap-4">
             <Link
               to="/cart"
+              onClick={(e) => {
+                if (!isAuthenticated) {
+                  e.preventDefault();
+                  setShowLoginDialog(true);
+                }
+              }}
               className="relative p-2 text-[#1A4331] hover:bg-[#1A4331] hover:text-[#F8F5F0] border-2 border-transparent hover:border-[#1A4331]"
             >
               <ShoppingCart className="h-6 w-6" />
@@ -158,6 +166,13 @@ export default function Header() {
           </div>
         )}
       </div>
+
+      <RequireLoginDialog
+        isOpen={showLoginDialog}
+        onOpenChange={setShowLoginDialog}
+        title="Yêu cầu đăng nhập"
+        description="Vui lòng đăng nhập để xem giỏ hàng của bạn nhé!"
+      />
     </header>
   );
 }

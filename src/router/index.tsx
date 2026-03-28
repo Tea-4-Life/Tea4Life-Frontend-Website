@@ -17,7 +17,6 @@ import DriverLayout from "@/layouts/DriverLayout";
 import LandingPage from "@/pages/public-route-pages/landing";
 import ShopPage from "@/pages/public-route-pages/shop";
 import ProductDetail from "@/pages/public-route-pages/product-details/index.tsx";
-import CartPage from "@/pages/public-route-pages/cart";
 import BrandsListPage from "@/pages/public-route-pages/brands";
 import CategoriesPage from "@/pages/public-route-pages/categories";
 import AboutPage from "@/pages/public-route-pages/about";
@@ -28,6 +27,7 @@ import AboutPage from "@/pages/public-route-pages/about";
 import ProfileLayout from "@/pages/customer-route-pages/profile/layout";
 import OrderPage from "@/pages/customer-route-pages/orders";
 import OrderDetailPage from "@/pages/customer-route-pages/order-details";
+import CartPage from "@/pages/customer-route-pages/cart";
 import CheckoutPage from "@/pages/customer-route-pages/checkout";
 import GeneralPage from "@/pages/customer-route-pages/profile/general";
 import AddressPage from "@/pages/customer-route-pages/profile/address";
@@ -77,7 +77,6 @@ const publicRoutes = [
   { index: true, element: <LandingPage /> },
   { path: "shop", element: <ShopPage /> },
   { path: "shop/products/:id", element: <ProductDetail /> },
-  { path: "cart", element: <CartPage /> },
   { path: "brands", element: <BrandsListPage /> },
   { path: "categories", element: <CategoriesPage /> },
   { path: "about", element: <AboutPage /> },
@@ -85,6 +84,7 @@ const publicRoutes = [
 
 // --- 2. NHÓM ROUTE KHÁCH HÀNG (CUSTOMER) ---
 const customerRoutes = [
+  { path: "cart", element: <CartPage /> },
   { path: "order", element: <OrderPage /> },
   { path: "order/:id", element: <OrderDetailPage /> },
   { path: "checkout", element: <CheckoutPage /> },

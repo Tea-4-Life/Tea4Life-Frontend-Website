@@ -26,6 +26,8 @@ import { getProductByIdApi, getProductsApi } from "@/services/productApi";
 import type { ProductDetailResponse } from "@/types/product/ProductDetailResponse";
 import type { ProductSummaryResponse } from "@/types/product/ProductSummaryResponse";
 import { getMediaUrl, handleError } from "@/lib/utils";
+import { useAuth } from "@/features/auth/useAuth";
+import { RequireLoginDialog } from "@/components/custom/RequireLoginDialog";
 
 export default function ProductDetail() {
   const { id } = useParams<{ id: string }>();
@@ -35,6 +37,9 @@ export default function ProductDetail() {
   const [relatedProducts, setRelatedProducts] = useState<
     ProductSummaryResponse[]
   >([]);
+
+  const { isAuthenticated } = useAuth();
+  const [showLoginDialog, setShowLoginDialog] = useState(false);
 
   const [quantity, setQuantity] = useState(1);
   const [isFavorite, setIsFavorite] = useState(false);
@@ -230,7 +235,7 @@ export default function ProductDetail() {
                       : "/placeholder.svg"
                   }
                   alt={product.name}
-                  className="h-full w-full object-cover aspect-[4/5] md:aspect-square hover:scale-105 transition-transform duration-700"
+                  className="h-full w-full object-cover aspect-4/5 md:aspect-square hover:scale-105 transition-transform duration-700"
                 />
               </div>
               {product.productCategory && (
@@ -398,6 +403,13 @@ export default function ProductDetail() {
               <div className="flex gap-4 flex-1 w-full relative">
                 <Button
                   size="lg"
+                  onClick={() => {
+                    if (!isAuthenticated) {
+                      setShowLoginDialog(true);
+                      return;
+                    }
+                    // Handle actual add to cart later
+                  }}
                   className="flex-1 bg-[#5c4033] text-white hover:bg-[#d97743] hover:shadow-lg shadow-md transition-all rounded-full h-14 font-semibold text-base border-none"
                 >
                   <ShoppingCart className="h-5 w-5 mr-3" />
@@ -407,7 +419,7 @@ export default function ProductDetail() {
                   variant="outline"
                   size="icon"
                   onClick={() => setIsFavorite(!isFavorite)}
-                  className={`rounded-full w-14 h-14 border border-[#5c4033]/10 flex-shrink-0 transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5 ${
+                  className={`rounded-full w-14 h-14 border border-[#5c4033]/10 shrink-0 transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5 ${
                     isFavorite
                       ? "bg-red-50 text-red-500 border-red-200"
                       : "bg-white text-[#5c4033] hover:bg-slate-50"
@@ -521,6 +533,13 @@ export default function ProductDetail() {
           </div>
         )}
       </div>
+
+      <RequireLoginDialog
+        isOpen={showLoginDialog}
+        onOpenChange={setShowLoginDialog}
+        title="Yêu cầu đăng nhập"
+        description="Bạn cần đăng nhập để thêm món vào giỏ hàng nhé!"
+      />
     </div>
   );
 }
