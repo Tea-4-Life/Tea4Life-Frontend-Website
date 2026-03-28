@@ -195,7 +195,7 @@ export default function ProductDetail() {
 
     try {
       const requestData = {
-        productId: Number(product.id),
+        productId: String(product.id),
         productName: product.name,
         productImageUrl: product.imageUrl,
         selectedOptions: optionsPayload,
@@ -218,7 +218,7 @@ export default function ProductDetail() {
     }
     try {
       await addCartItemApi({
-        productId: Number(p.id),
+        productId: String(p.id),
         productName: p.name,
         productImageUrl: p.imageUrl,
         selectedOptions: [], 

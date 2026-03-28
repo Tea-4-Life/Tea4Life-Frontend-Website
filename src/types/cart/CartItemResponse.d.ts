@@ -2,7 +2,7 @@ import { CartItemOptionSelectionResponse } from "./CartItemOptionSelectionRespon
 
 export interface CartItemResponse {
   id: string;
-  productId: number;
+  productId: string;
   productName: string;
   productImageUrl?: string;
   selectedOptions?: CartItemOptionSelectionResponse[];
