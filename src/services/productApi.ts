@@ -35,6 +35,6 @@ export const getPopularProductsApi = async (limit?: number) => {
 
 export const getRandomProductsApi = async () => {
   return await axiosClient.get<ApiResponse<ProductSummaryResponse[]>>(
-    "/product-service/public/products/random",
+    "/product-service/public/products/random-items",
   );
 };

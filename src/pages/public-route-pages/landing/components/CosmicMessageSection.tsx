@@ -8,16 +8,20 @@ import { getMediaUrl } from "@/lib/utils";
 
 export function CosmicMessageSection() {
   const [randomProducts, setRandomProducts] = useState<ProductSummaryResponse[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchRandomProducts = async () => {
       try {
+        setLoading(true);
         const res = await getRandomProductsApi();
         if (res.data?.data) {
           setRandomProducts(res.data.data);
         }
       } catch (error) {
         console.error("Lỗi khi tải thông điệp vũ trụ:", error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchRandomProducts();
@@ -29,8 +33,6 @@ export function CosmicMessageSection() {
       currency: "VND",
     }).format(price);
   };
-
-  if (randomProducts.length === 0) return null;
 
   return (
     <section className="space-y-12 pb-8 relative mt-20">
@@ -52,8 +54,18 @@ export function CosmicMessageSection() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 relative z-10">
-        {randomProducts.map((product) => (
+      {loading ? (
+        <div className="flex flex-col items-center py-20 text-[#d97743] relative z-10">
+          <Sparkles className="w-12 h-12 animate-pulse mb-4" />
+          <p className="font-bold text-lg">Đang kết nối tín hiệu vũ trụ...</p>
+        </div>
+      ) : randomProducts.length === 0 ? (
+        <div className="flex flex-col items-center py-10 text-[#5c4033]/60 relative z-10">
+          <p className="font-medium">Chưa nhận được thông điệp nào từ vũ trụ hôm nay.</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 relative z-10">
+          {randomProducts.map((product) => (
           <div
             key={product.id}
             className="group bg-white rounded-3xl p-4 flex flex-col relative transition-all duration-300 hover:-translate-y-2 shadow-sm hover:shadow-xl border border-[#5c4033]/5 overflow-hidden"
@@ -97,6 +109,7 @@ export function CosmicMessageSection() {
           </div>
         ))}
       </div>
+      )}
     </section>
   );
 }
