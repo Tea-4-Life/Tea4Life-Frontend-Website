@@ -21,12 +21,15 @@ import { handleError, getMediaUrl } from "@/lib/utils";
 import { useAuth } from "@/features/auth/useAuth";
 import { RequireLoginDialog } from "@/components/custom/RequireLoginDialog";
 import { addCartItemApi } from "@/services/cartApi";
+import { useAppDispatch } from "@/features/store";
+import { fetchCart, setLastAction } from "@/features/cart/cartSlice";
 
 export default function ShopPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [showMobileFilter, setShowMobileFilter] = useState(false);
 
   const { isAuthenticated } = useAuth();
+  const dispatch = useAppDispatch();
   const [showLoginDialog, setShowLoginDialog] = useState(false);
 
   // States for products from API
@@ -137,6 +140,8 @@ export default function ShopPage() {
         unitPrice: p.basePrice,
         quantity: 1
       });
+      dispatch(setLastAction("add"));
+      dispatch(fetchCart());
     } catch (error) {
       handleError(error, "Cần chọn thêm tuỳ chọn, hãy vào trang chi tiết nhé!");
     }

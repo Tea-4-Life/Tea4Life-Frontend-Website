@@ -12,8 +12,9 @@ import {
   Leaf,
   Loader2,
 } from "lucide-react";
-import { getCartApi, updateCartItemApi, removeCartItemApi } from "@/services/cartApi";
-import type { CartResponse } from "@/types/cart/CartResponse";
+import { useAppDispatch, useAppSelector } from "@/features/store";
+import { fetchCart, setLastAction } from "@/features/cart/cartSlice";
+import { updateCartItemApi, removeCartItemApi, clearCartApi } from "@/services/cartApi";
 import type { CartItemResponse } from "@/types/cart/CartItemResponse";
 import { getMediaUrl, handleError } from "@/lib/utils";
 import { toast } from "sonner";
@@ -119,25 +120,13 @@ const CartItemRow = memo(
 );
 
 const CartPage = () => {
-  const [cart, setCart] = useState<CartResponse | null>(null);
-  const [loading, setLoading] = useState(true);
+  const dispatch = useAppDispatch();
+  const { cart, loading } = useAppSelector((state) => state.cart);
   const [isUpdating, setIsUpdating] = useState(false);
 
-  const fetchCart = useCallback(async () => {
-    try {
-      setLoading(true);
-      const res = await getCartApi();
-      setCart(res.data.data);
-    } catch (error) {
-      handleError(error, "Không thể tải giỏ hàng.");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
   useEffect(() => {
-    fetchCart();
-  }, [fetchCart]);
+    dispatch(fetchCart());
+  }, [dispatch]);
 
   const updateQuantity = useCallback(async (id: string, delta: number, currentQuantity: number) => {
     const newQuantity = currentQuantity + delta;
@@ -146,26 +135,46 @@ const CartPage = () => {
     try {
       setIsUpdating(true);
       await updateCartItemApi(id, { quantity: newQuantity });
-      await fetchCart();
+      dispatch(setLastAction("update"));
+      dispatch(fetchCart());
     } catch (error) {
       handleError(error, "Không thể cập nhật số lượng.");
     } finally {
       setIsUpdating(false);
     }
-  }, [fetchCart]);
+  }, [dispatch]);
 
   const removeItem = useCallback(async (id: string) => {
     try {
       setIsUpdating(true);
       await removeCartItemApi(id);
       toast.success("Đã xóa sản phẩm khỏi giỏ hàng");
-      await fetchCart();
+      dispatch(setLastAction("remove"));
+      dispatch(fetchCart());
     } catch (error) {
       handleError(error, "Không thể xóa sản phẩm.");
     } finally {
       setIsUpdating(false);
     }
-  }, [fetchCart]);
+  }, [dispatch]);
+
+  const clearCart = useCallback(async () => {
+    if (!window.confirm("Bạn có chắc chắn muốn xóa toàn bộ giỏ hàng không?")) {
+      return;
+    }
+    
+    try {
+      setIsUpdating(true);
+      await clearCartApi();
+      toast.success("Đã xóa toàn bộ giỏ hàng");
+      dispatch(setLastAction("clear"));
+      dispatch(fetchCart());
+    } catch (error) {
+      handleError(error, "Không thể xóa giỏ hàng.");
+    } finally {
+      setIsUpdating(false);
+    }
+  }, [dispatch]);
 
   const subtotal = cart?.totalAmount || 0;
   // Giả sử phí vận chuyển tĩnh hoặc miễn phí trên 500k
@@ -222,12 +231,23 @@ const CartPage = () => {
                 />
               ))}
 
-              <Link
-                to="/shop"
-                className="inline-flex items-center text-[#8A9A7A] hover:text-[#1A4331] font-bold text-sm mt-4 transition-colors"
-              >
-                <ChevronLeft className="h-4 w-4 mr-1" /> Tiếp tục mua sắm
-              </Link>
+              <div className="flex justify-between items-center mt-4">
+                <Link
+                  to="/shop"
+                  className="inline-flex items-center text-[#8A9A7A] hover:text-[#1A4331] font-bold text-sm transition-colors"
+                >
+                  <ChevronLeft className="h-4 w-4 mr-1" /> Tiếp tục mua sắm
+                </Link>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={clearCart}
+                  disabled={isUpdating}
+                  className="text-red-400 hover:text-red-700 hover:bg-red-50 font-bold text-xs h-auto py-1 px-2 rounded-none"
+                >
+                  <Trash2 className="h-3.5 w-3.5 mr-1" /> Xóa toàn bộ giỏ hàng
+                </Button>
+              </div>
             </div>
 
             {/* Tóm tắt đơn hàng */}

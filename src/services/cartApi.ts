@@ -10,38 +10,30 @@ export const getCartApi = async () => {
 };
 
 export const addCartItemApi = async (data: AddCartItemRequest) => {
-  const res = await axiosClient.post<ApiResponse<CartResponse>>(
+  return await axiosClient.post<ApiResponse<CartResponse>>(
     "/order-service/cart/me/items",
     data,
   );
-  window.dispatchEvent(new Event("cartUpdated"));
-  return res;
 };
 
 export const updateCartItemApi = async (
   cartItemId: string,
   data: UpdateCartItemRequest,
 ) => {
-  const res = await axiosClient.put<ApiResponse<CartResponse>>(
+  return await axiosClient.put<ApiResponse<CartResponse>>(
     `/order-service/cart/me/items/${cartItemId}`,
     data,
   );
-  window.dispatchEvent(new Event("cartUpdated"));
-  return res;
 };
 
 export const removeCartItemApi = async (cartItemId: string) => {
-  const res = await axiosClient.delete<ApiResponse<void>>(
+  return await axiosClient.delete<ApiResponse<void>>(
     `/order-service/cart/me/items/${cartItemId}`,
   );
-  window.dispatchEvent(new Event("cartUpdated"));
-  return res;
 };
 
 export const clearCartApi = async () => {
-  const res = await axiosClient.delete<ApiResponse<void>>("/order-service/cart/me/items");
-  window.dispatchEvent(new Event("cartUpdated"));
-  return res;
+  return await axiosClient.delete<ApiResponse<void>>("/order-service/cart/me/items");
 };
 
 export const getMyRecentCartItemsApi = async () => {

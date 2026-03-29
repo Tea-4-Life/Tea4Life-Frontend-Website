@@ -5,10 +5,12 @@ import {
   useSelector,
 } from "react-redux";
 import authReducer, { setAuthFailure, clearAuth } from "./auth/authSlice";
+import cartReducer from "./cart/cartSlice";
 
 export const store = configureStore({
   reducer: {
     auth: authReducer,
+    cart: cartReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

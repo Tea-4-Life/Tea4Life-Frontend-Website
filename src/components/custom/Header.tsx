@@ -1,60 +1,66 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { UserMenu } from "@/components/custom/UserMenu";
 import { RequireLoginDialog } from "@/components/custom/RequireLoginDialog";
-import { getMyRecentCartItemsApi } from "@/services/cartApi";
-import type { RecentCartItemsResponse } from "@/types/cart/RecentCartItemsResponse";
 import { useAuth } from "@/features/auth/useAuth";
 import { getMediaUrl } from "@/lib/utils";
 import keycloak from "@/lib/keycloak";
 import { Menu, X, ShoppingCart, Store, UserCircle, LogOut } from "lucide-react";
+import { useAppDispatch, useAppSelector } from "@/features/store";
+import { fetchCart, clearLastAction } from "@/features/cart/cartSlice";
 
 const navLinks = [{ name: "[ TRANG CHỦ ]", href: "/" }];
 
 export default function Header() {
+  const dispatch = useAppDispatch();
+  const { cart, lastAction } = useAppSelector((state) => state.cart);
+  
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showLoginDialog, setShowLoginDialog] = useState(false);
-  const [recentCart, setRecentCart] = useState<RecentCartItemsResponse | null>(null);
   const [isBouncing, setIsBouncing] = useState(false);
-  const [showBubble, setShowBubble] = useState(false);
+  const [bubbleMessage, setBubbleMessage] = useState<string | null>(null);
   const bounceTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const { isAuthenticated, fullName, email, avatarUrl, initialized } =
     useAuth();
 
-  const fetchRecentCart = useCallback(async () => {
-    try {
-      const res = await getMyRecentCartItemsApi();
-      setRecentCart(res.data.data);
-    } catch (err) {
-      console.error(err);
-    }
-  }, []);
-
   useEffect(() => {
     if (isAuthenticated) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      fetchRecentCart();
-      const handleCartUpdate = () => {
-        fetchRecentCart();
-        setIsBouncing(true);
-        setShowBubble(true);
-        if (bounceTimeout.current) clearTimeout(bounceTimeout.current);
-        bounceTimeout.current = setTimeout(() => {
-          setIsBouncing(false);
-          setShowBubble(false);
-        }, 2000);
-      };
-      window.addEventListener("cartUpdated", handleCartUpdate);
-      return () => {
-        window.removeEventListener("cartUpdated", handleCartUpdate);
-        if (bounceTimeout.current) clearTimeout(bounceTimeout.current);
-      };
-    } else {
-      setRecentCart(null);
+      dispatch(fetchCart());
     }
-  }, [isAuthenticated, fetchRecentCart]);
+  }, [isAuthenticated, dispatch]);
+
+  useEffect(() => {
+    if (lastAction.type) {
+      const type = lastAction.type;
+      
+      // Use setTimeout to avoid synchronous cascading renders
+      const timer = setTimeout(() => {
+        if (type === "add") {
+          setIsBouncing(true);
+        }
+        
+        const messages = {
+          add: "+ Đã thêm vào giỏ",
+          remove: "- Đã xóa món",
+          clear: "× Đã làm trống giỏ",
+          update: "✓ Đã cập nhật",
+        };
+        
+        setBubbleMessage(messages[type] || null);
+      }, 0);
+
+      if (bounceTimeout.current) clearTimeout(bounceTimeout.current);
+      bounceTimeout.current = setTimeout(() => {
+        setIsBouncing(false);
+        setBubbleMessage(null);
+        dispatch(clearLastAction());
+      }, 2000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [lastAction.timestamp, lastAction.type, dispatch]);
 
   const handleLogin = () => keycloak.login();
   const handleLogout = () =>
@@ -105,7 +111,7 @@ export default function Header() {
             <div 
               className="relative group flex items-center py-2 h-full"
               onMouseEnter={() => {
-                if (isAuthenticated) fetchRecentCart();
+                if (isAuthenticated) dispatch(fetchCart());
               }}
             >
               <Link
@@ -121,28 +127,28 @@ export default function Header() {
                 }`}
               >
                 <ShoppingCart className="h-6 w-6" />
-                {recentCart && recentCart.totalItems > 0 && (
+                {cart && cart.totalItems > 0 && (
                   <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center bg-[#8A9A7A] border-2 border-[#1A4331] text-[10px] font-bold text-[#F8F5F0]">
-                    {recentCart.totalItems}
+                    {cart.totalItems}
                   </span>
                 )}
               </Link>
               
-              {/* Bubble Add Success Message */}
-              {showBubble && (
-                <div className="absolute top-12 -right-2 bg-[#8A9A7A] text-[#F8F5F0] text-[11px] font-bold px-3 py-1.5 shadow-[2px_2px_0px_#1A4331] border-2 border-[#1A4331] z-60 animate-in fade-in zoom-in slide-in-from-top-2 duration-300 pointer-events-none whitespace-nowrap">
-                  + Đã thêm vào giỏ
+              {/* Bubble Feedback Message */}
+              {bubbleMessage && (
+                <div className="absolute top-12 -right-2 bg-[#8A9A7A] text-[#F8F5F0] text-[11px] font-bold px-3 py-1.5 shadow-[2px_2px_0px_#1A4331] border-2 border-[#1A4331] z-60 animate-in fade-in zoom-in slide-in-from-top-2 duration-300 pointer-events-none whitespace-nowrap uppercase tracking-tighter">
+                  {bubbleMessage}
                 </div>
               )}
               
               {/* Dropdown Popover */}
-              {isAuthenticated && recentCart && recentCart.totalItems > 0 && (
+              {isAuthenticated && cart && cart.totalItems > 0 && (
                 <div className="absolute top-12 right-0 mt-2 w-[320px] bg-white border-2 border-[#1A4331] shadow-[4px_4px_0px_#1A4331] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 flex flex-col pointer-events-auto cursor-default">
                   <div className="p-3 border-b-2 border-[#1A4331]/10 bg-[#F8F5F0]">
                     <p className="text-xs font-bold text-[#1A4331] opacity-70 uppercase tracking-wide">Sản phẩm mới thêm</p>
                   </div>
                   <div className="flex flex-col">
-                    {recentCart.items.slice(0, 3).map(item => (
+                    {cart.items.slice(0, 3).map(item => (
                       <div key={item.id} className="flex gap-3 p-3 border-b border-[#1A4331]/5 hover:bg-[#F8F5F0] transition-colors">
                         <img src={item.productImageUrl ? getMediaUrl(item.productImageUrl) : "/placeholder.svg"} alt={item.productName} className="w-12 h-12 object-cover border border-[#1A4331]/10 bg-white" />
                         <div className="flex-1 min-w-0">
@@ -155,9 +161,9 @@ export default function Header() {
                       </div>
                     ))}
                   </div>
-                  {recentCart.totalItems > 3 && (
+                  {cart.totalItems > 3 && (
                     <div className="p-2 text-center bg-[#F8F5F0] border-t border-[#1A4331]/10">
-                      <p className="text-[11px] font-bold text-[#8A9A7A]">Xem thêm {recentCart.totalItems - 3} món trong giỏ...</p>
+                      <p className="text-[11px] font-bold text-[#8A9A7A]">Xem thêm {cart.totalItems - 3} món trong giỏ...</p>
                     </div>
                   )}
                   <div className="p-3">

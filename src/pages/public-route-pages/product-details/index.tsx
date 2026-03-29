@@ -31,6 +31,8 @@ import { RequireLoginDialog } from "@/components/custom/RequireLoginDialog";
 import { addCartItemApi } from "@/services/cartApi";
 import type { CartItemOptionSelectionRequest } from "@/types/cart/CartItemOptionSelectionRequest";
 import { toast } from "sonner";
+import { useAppDispatch } from "@/features/store";
+import { fetchCart, setLastAction } from "@/features/cart/cartSlice";
 
 export default function ProductDetail() {
   const { id } = useParams<{ id: string }>();
@@ -42,6 +44,7 @@ export default function ProductDetail() {
   >([]);
 
   const { isAuthenticated } = useAuth();
+  const dispatch = useAppDispatch();
   const [showLoginDialog, setShowLoginDialog] = useState(false);
 
   const [quantity, setQuantity] = useState(1);
@@ -204,6 +207,8 @@ export default function ProductDetail() {
       };
 
       await addCartItemApi(requestData);
+      dispatch(setLastAction("add"));
+      dispatch(fetchCart());
     } catch (error) {
       handleError(error, "Không thể thêm vào giỏ hàng");
     }
@@ -224,6 +229,8 @@ export default function ProductDetail() {
         unitPrice: p.basePrice,
         quantity: 1
       });
+      dispatch(setLastAction("add"));
+      dispatch(fetchCart());
     } catch (error) {
       handleError(error, "Cần chọn thêm tuỳ chọn, hãy vào trang chi tiết nhé!");
     }

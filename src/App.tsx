@@ -1,7 +1,7 @@
 import { RouterProvider } from "react-router-dom";
 import { router } from "@/router";
 import { useAppSelector } from "@/features/store";
-import OnboardingPage from "@/pages/onboarding";
+import OnboardingPage from "@/pages/onboarding-route-page";
 import { Toaster } from "@/components/ui/sonner";
 
 function App() {
