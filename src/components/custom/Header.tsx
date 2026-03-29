@@ -10,7 +10,13 @@ import { Menu, X, ShoppingCart, Store, UserCircle, LogOut } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/features/store";
 import { fetchCart, clearLastAction } from "@/features/cart/cartSlice";
 
-const navLinks = [{ name: "[ TRANG CHỦ ]", href: "/" }];
+const navLinks = [
+  { name: "TRANG CHỦ", href: "/" },
+  { name: "GIỚI THIỆU", href: "/about" },
+  { name: "SẢN PHẨM", href: "/shop", isButton: true },
+  { name: "TIN TỨC", href: "/news" },
+  { name: "CỬA HÀNG", href: "/stores" },
+];
 
 export default function Header() {
   const dispatch = useAppDispatch();
@@ -85,25 +91,22 @@ export default function Header() {
           {/* Desktop Navigation */}
           <nav className="hidden items-center gap-6 lg:gap-8 md:flex">
             {navLinks.map((link) => (
-              <Link
-                key={link.name}
-                to={link.href}
-                className="text-sm font-bold text-[#1A4331] hover:bg-[#1A4331] hover:text-[#F8F5F0] px-2 py-1 transition-colors"
-              >
-                {link.name}
-              </Link>
+              link.isButton ? (
+                <Link key={link.name} to={link.href}>
+                  <Button className="bg-[#1A4331] text-white hover:bg-[#8A9A7A] hover:text-[#1A4331] pixel-button flex gap-2">
+                    <Store className="h-4 w-4" /> {link.name}
+                  </Button>
+                </Link>
+              ) : (
+                <Link
+                  key={link.name}
+                  to={link.href}
+                  className="text-sm font-bold text-[#1A4331] hover:bg-[#1A4331] hover:text-[#F8F5F0] px-2 py-1 transition-colors"
+                >
+                  {link.name}
+                </Link>
+              )
             ))}
-            <Link to="/shop">
-              <Button className="bg-[#1A4331] text-white hover:bg-[#8A9A7A] hover:text-[#1A4331] pixel-button flex gap-2">
-                <Store className="h-4 w-4" /> THỰC ĐƠN
-              </Button>
-            </Link>
-            <Link
-              to="/about"
-              className="text-sm font-bold text-[#1A4331] hover:bg-[#1A4331] hover:text-[#F8F5F0] px-2 py-1 transition-colors"
-            >
-              [ VỀ CHÚNG TÔI ]
-            </Link>
           </nav>
 
           {/* Actions Area */}
@@ -232,6 +235,7 @@ export default function Header() {
                   className="px-4 py-2 flex items-center gap-3 text-sm font-bold text-[#1A4331] hover:bg-[#1A4331] hover:text-[#F8F5F0] uppercase border-l-4 border-transparent hover:border-[#1A4331]"
                   onClick={() => setMobileMenuOpen(false)}
                 >
+                  {link.isButton && <Store className="h-5 w-5" />}
                   {link.name}
                 </Link>
               ))}

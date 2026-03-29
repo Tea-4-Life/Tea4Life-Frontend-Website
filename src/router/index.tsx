@@ -80,6 +80,8 @@ const publicRoutes = [
   { path: "brands", element: <BrandsListPage /> },
   { path: "categories", element: <CategoriesPage /> },
   { path: "about", element: <AboutPage /> },
+  { path: "news", element: <LandingPage /> },
+  { path: "stores", element: <LandingPage /> },
 ];
 
 // --- 2. NHÓM ROUTE KHÁCH HÀNG (CUSTOMER) ---
