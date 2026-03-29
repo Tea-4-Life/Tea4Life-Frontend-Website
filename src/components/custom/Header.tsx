@@ -6,16 +6,28 @@ import { RequireLoginDialog } from "@/components/custom/RequireLoginDialog";
 import { useAuth } from "@/features/auth/useAuth";
 import { getMediaUrl } from "@/lib/utils";
 import keycloak from "@/lib/keycloak";
-import { Menu, X, ShoppingCart, Store, UserCircle, LogOut, ShoppingBag } from "lucide-react";
+import { Menu, X, ShoppingCart, Store, UserCircle, LogOut, ShoppingBag, Home, Info, Newspaper } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/features/store";
 import { fetchCart, clearLastAction } from "@/features/cart/cartSlice";
 
 const navLinks = [
-  { name: "[ TRANG CHỦ ]", href: "/" },
-  { name: "[ GIỚI THIỆU ]", href: "/about" },
-  { name: "[ SẢN PHẨM ]", href: "/shop", icon: ShoppingBag },
-  { name: "[ TIN TỨC ]", href: "/news" },
-  { name: "[ CỬA HÀNG ]", href: "/stores", icon: Store },
+  { name: "Trang chủ", href: "/", icon: Home },
+  { name: "Giới thiệu", href: "/about", icon: Info },
+  { 
+    name: "Sản phẩm", 
+    href: "/shop", 
+    isButton: true, 
+    icon: ShoppingBag,
+    color: "bg-[#1A4331] text-white hover:bg-[#1A4331]/90 shadow-[#1A4331]/20",
+  },
+  { name: "Tin tức", href: "/news", icon: Newspaper },
+  { 
+    name: "Cửa hàng", 
+    href: "/stores", 
+    isButton: true, 
+    icon: Store,
+    color: "bg-primary text-primary-foreground hover:bg-primary/90 shadow-primary/20",
+  },
 ];
 
 export default function Header() {
@@ -73,32 +85,52 @@ export default function Header() {
     keycloak.logout({ redirectUri: window.location.origin });
 
   return (
-    <header className="sticky top-0 z-50 border-b-4 border-[#1A4331] bg-[#F8F5F0] font-mono">
+    <header className="sticky top-0 z-50 backdrop-blur-md bg-background/95 border-b border-border shadow-sm transition-all duration-300">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between">
-          {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 shrink-0 group">
-            <img
-              src="/logo/logo.png"
-              alt="Tea4Life Logo"
-              className="h-10 w-10 object-contain rounded-md"
-            />
-            <span className="text-2xl font-bold text-[#1A4331] tracking-tight pixel-text uppercase">
-              Tea4Life
-            </span>
+        <div className="flex h-20 items-center justify-between">
+          {/* Logo Section */}
+          <Link to="/" className="flex items-center gap-3 shrink-0 group">
+            <div className="relative">
+              <div className="absolute -inset-1 bg-primary/20 rounded-full blur opacity-25 group-hover:opacity-50 transition duration-300" />
+              <img
+                src="/logo/logo.png"
+                alt="Tea4Life Logo"
+                className="relative h-12 w-12 object-contain rounded-xl shadow-sm border border-border/10"
+              />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-xl font-black text-[#1A4331] leading-none tracking-tight">
+                Tea4Life
+              </span>
+              <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] mt-1">
+                Premium Tea
+              </span>
+            </div>
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden items-center gap-4 lg:gap-6 md:flex">
+          <nav className="hidden items-center gap-1 lg:gap-2 md:flex p-1.5 rounded-full bg-secondary/20">
             {navLinks.map((link) => (
-              <Link
-                key={link.name}
-                to={link.href}
-                className="text-xs lg:text-sm font-bold text-[#1A4331] hover:bg-[#1A4331] hover:text-[#F8F5F0] px-2 py-1 transition-colors flex items-center gap-1.5"
-              >
-                {link.icon && <link.icon className="h-4 w-4 opacity-70" />}
-                {link.name}
-              </Link>
+              link.isButton ? (
+                <Link key={link.name} to={link.href} className="group/btn">
+                  <div className={`flex items-center gap-2 px-6 py-2.5 rounded-full ${link.color} text-sm font-bold shadow-lg hover:scale-105 active:scale-95 transition-all duration-300`}>
+                    {link.icon && <link.icon className="h-4 w-4" />}
+                    {link.name}
+                  </div>
+                </Link>
+              ) : (
+                <Link
+                  key={link.name}
+                  to={link.href}
+                  className="relative px-5 py-2.5 rounded-full text-sm font-semibold text-muted-foreground hover:text-[#1A4331] hover:bg-white/50 transition-all duration-300 group"
+                >
+                  <div className="flex items-center gap-2">
+                    {link.icon && <link.icon className="h-4 w-4 opacity-50 group-hover:opacity-100 transition-opacity" />}
+                    {link.name}
+                  </div>
+                  <span className="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-[#1A4331] opacity-0 group-hover:opacity-100 transition-opacity" />
+                </Link>
+              )
             ))}
           </nav>
 
@@ -225,11 +257,20 @@ export default function Header() {
                 <Link
                   key={link.name}
                   to={link.href}
-                  className="px-4 py-3 flex items-center gap-3 text-sm font-bold text-[#1A4331] hover:bg-[#1A4331] hover:text-[#F8F5F0] uppercase border-l-4 border-transparent hover:border-[#1A4331] transition-all"
+                  className={`mx-4 px-4 py-4 flex items-center gap-4 text-base font-bold rounded-2xl transition-all ${
+                    link.isButton 
+                      ? `${link.color} text-white shadow-lg shadow-primary/10` 
+                      : "text-foreground hover:bg-[#1A4331]/5"
+                  }`}
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  {link.icon && <link.icon className="h-5 w-5 opacity-70" />}
-                  {link.name}
+                  <div className={`p-2 rounded-xl scale-110 ${link.isButton ? "bg-white/10" : "bg-[#1A4331]/5 text-[#1A4331]"}`}>
+                    {link.icon && <link.icon className="h-6 w-6" />}
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="leading-none">{link.name}</span>
+                    <span className="text-[10px] text-muted-foreground font-medium mt-1 uppercase tracking-widest">Khám phá ngay</span>
+                  </div>
                 </Link>
               ))}
 
