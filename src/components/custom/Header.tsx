@@ -6,16 +6,16 @@ import { RequireLoginDialog } from "@/components/custom/RequireLoginDialog";
 import { useAuth } from "@/features/auth/useAuth";
 import { getMediaUrl } from "@/lib/utils";
 import keycloak from "@/lib/keycloak";
-import { Menu, X, ShoppingCart, Store, UserCircle, LogOut } from "lucide-react";
+import { Menu, X, ShoppingCart, Store, UserCircle, LogOut, ShoppingBag } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/features/store";
 import { fetchCart, clearLastAction } from "@/features/cart/cartSlice";
 
 const navLinks = [
-  { name: "TRANG CHỦ", href: "/" },
-  { name: "GIỚI THIỆU", href: "/about" },
-  { name: "SẢN PHẨM", href: "/shop", isButton: true },
-  { name: "TIN TỨC", href: "/news" },
-  { name: "CỬA HÀNG", href: "/stores" },
+  { name: "[ TRANG CHỦ ]", href: "/" },
+  { name: "[ GIỚI THIỆU ]", href: "/about" },
+  { name: "[ SẢN PHẨM ]", href: "/shop", icon: ShoppingBag },
+  { name: "[ TIN TỨC ]", href: "/news" },
+  { name: "[ CỬA HÀNG ]", href: "/stores", icon: Store },
 ];
 
 export default function Header() {
@@ -89,23 +89,16 @@ export default function Header() {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden items-center gap-6 lg:gap-8 md:flex">
+          <nav className="hidden items-center gap-4 lg:gap-6 md:flex">
             {navLinks.map((link) => (
-              link.isButton ? (
-                <Link key={link.name} to={link.href}>
-                  <Button className="bg-[#1A4331] text-white hover:bg-[#8A9A7A] hover:text-[#1A4331] pixel-button flex gap-2">
-                    <Store className="h-4 w-4" /> {link.name}
-                  </Button>
-                </Link>
-              ) : (
-                <Link
-                  key={link.name}
-                  to={link.href}
-                  className="text-sm font-bold text-[#1A4331] hover:bg-[#1A4331] hover:text-[#F8F5F0] px-2 py-1 transition-colors"
-                >
-                  {link.name}
-                </Link>
-              )
+              <Link
+                key={link.name}
+                to={link.href}
+                className="text-xs lg:text-sm font-bold text-[#1A4331] hover:bg-[#1A4331] hover:text-[#F8F5F0] px-2 py-1 transition-colors flex items-center gap-1.5"
+              >
+                {link.icon && <link.icon className="h-4 w-4 opacity-70" />}
+                {link.name}
+              </Link>
             ))}
           </nav>
 
@@ -232,10 +225,10 @@ export default function Header() {
                 <Link
                   key={link.name}
                   to={link.href}
-                  className="px-4 py-2 flex items-center gap-3 text-sm font-bold text-[#1A4331] hover:bg-[#1A4331] hover:text-[#F8F5F0] uppercase border-l-4 border-transparent hover:border-[#1A4331]"
+                  className="px-4 py-3 flex items-center gap-3 text-sm font-bold text-[#1A4331] hover:bg-[#1A4331] hover:text-[#F8F5F0] uppercase border-l-4 border-transparent hover:border-[#1A4331] transition-all"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  {link.isButton && <Store className="h-5 w-5" />}
+                  {link.icon && <link.icon className="h-5 w-5 opacity-70" />}
                   {link.name}
                 </Link>
               ))}
