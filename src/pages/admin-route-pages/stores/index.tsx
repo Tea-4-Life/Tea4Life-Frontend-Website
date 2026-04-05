@@ -2,7 +2,8 @@
 
 import { useState, useCallback, useEffect } from "react";
 import AdminPageHeader from "@/pages/admin-route-pages/components/AdminPageHeader";
-import { Store } from "lucide-react";
+import { Store, Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { ConfirmationDialog } from "@/components/custom/ConfirmationDialog";
 import { toast } from "sonner";
 import { handleError } from "@/lib/utils";
@@ -115,6 +116,11 @@ export default function AdminStoresPage() {
         searchPlaceholder="Tìm kiếm tên, địa chỉ..."
         searchValue={keyword}
         onSearchChange={setKeyword}
+        actions={
+          <Button onClick={handleOpenCreate} className="gap-2">
+            <Plus className="h-4 w-4" /> Thêm cửa hàng
+          </Button>
+        }
       />
 
       <StoresTableSection

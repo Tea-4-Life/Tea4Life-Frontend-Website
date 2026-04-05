@@ -7,10 +7,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Edit, Plus, Trash2, MapPin } from "lucide-react";
+import { Edit, Trash2, MapPin } from "lucide-react";
 import type { StoreResponse } from "@/types/store/StoreResponse";
 import EmptyState from "@/components/custom/EmptyState";
-import LoadingScreen from "@/components/custom/LoadingScreen";
 
 interface Props {
   loading: boolean;
@@ -28,7 +27,11 @@ export default function StoresTableSection({
   onOpenDelete,
 }: Props) {
   if (loading) {
-    return <LoadingScreen isEmbedded={true} />;
+    return (
+      <div className="py-12 text-center text-emerald-600/60 font-medium">
+        Đang tải dữ liệu cửa hàng...
+      </div>
+    );
   }
 
   if (!items.length) {
@@ -36,7 +39,7 @@ export default function StoresTableSection({
       <EmptyState
         title="Chưa có cửa hàng nào"
         description="Bắt đầu thêm chi nhánh đầu tiên của bạn quản lý trên hệ thống."
-        buttonText="Thêm cửa hàng"
+        actionLabel="Thêm cửa hàng"
         onAction={onOpenCreate}
       />
     );
@@ -44,12 +47,6 @@ export default function StoresTableSection({
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-end">
-        <Button onClick={onOpenCreate} className="gap-2">
-          <Plus className="h-4 w-4" /> Thêm cửa hàng
-        </Button>
-      </div>
-
       <div className="bg-white rounded-xl shadow-sm border overflow-hidden">
         <Table>
           <TableHeader>
