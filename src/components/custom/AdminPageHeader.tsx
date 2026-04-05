@@ -29,15 +29,15 @@ export default function AdminPageHeader({
   actions,
 }: AdminPageHeaderProps) {
   return (
-    <div className="bg-white rounded-xl border border-slate-100 shadow-sm">
+    <div className="bg-white rounded-xl border border-slate-200/60 shadow-sm">
       {/* Top row: icon + title + actions */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 px-5 pt-5 pb-3">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-5 pt-4 pb-3">
         <div className="flex items-center gap-3">
-          <div className="p-2.5 rounded-xl bg-emerald-50 text-emerald-600 shrink-0">
+          <div className="p-2 rounded-xl bg-emerald-50 text-emerald-600 shrink-0 ring-1 ring-emerald-100">
             <Icon className="h-5 w-5" />
           </div>
           <div>
-            <h1 className="text-lg font-bold text-slate-800 leading-tight">
+            <h1 className="text-lg font-bold text-slate-800 leading-tight tracking-tight">
               {title}
             </h1>
             <p className="text-xs text-slate-500 mt-0.5">{description}</p>
@@ -53,7 +53,9 @@ export default function AdminPageHeader({
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
             <Input
               placeholder={searchPlaceholder}
-              className="pl-10 h-9 text-sm bg-slate-50 border-slate-200 rounded-lg focus-visible:ring-emerald-500/20 focus-visible:border-emerald-400"
+              className="pl-10 h-9 text-sm bg-slate-50/80 border-slate-200 rounded-lg 
+                         focus-visible:ring-emerald-500/20 focus-visible:border-emerald-400
+                         transition-colors"
               value={searchValue}
               onChange={(e) => onSearchChange(e.target.value)}
             />

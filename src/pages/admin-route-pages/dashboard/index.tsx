@@ -37,6 +37,7 @@ const stats = [
     trend: "up" as const,
     icon: DollarSign,
     iconBg: "bg-emerald-500",
+    iconShadow: "shadow-emerald-500/25",
     description: "So với tháng trước",
   },
   {
@@ -46,6 +47,7 @@ const stats = [
     trend: "up" as const,
     icon: ShoppingBag,
     iconBg: "bg-blue-500",
+    iconShadow: "shadow-blue-500/25",
     description: "Trong tháng này",
   },
   {
@@ -55,6 +57,7 @@ const stats = [
     trend: "up" as const,
     icon: Users,
     iconBg: "bg-violet-500",
+    iconShadow: "shadow-violet-500/25",
     description: "Đăng ký mới",
   },
   {
@@ -64,6 +67,7 @@ const stats = [
     trend: "down" as const,
     icon: TrendingUp,
     iconBg: "bg-amber-500",
+    iconShadow: "shadow-amber-500/25",
     description: "Đơn hàng thành công",
   },
 ];
@@ -112,11 +116,11 @@ const recentOrders = [
 ];
 
 const topProducts = [
-  { name: "Trà Oolong Cao Sơn", sold: 156, revenue: "49.920.000đ", trend: "+23%" },
-  { name: "Trà Sen Tây Hồ", sold: 134, revenue: "60.300.000đ", trend: "+15%" },
-  { name: "Trà Lài Premium", sold: 98, revenue: "17.640.000đ", trend: "+8%" },
-  { name: "Bộ trà Tứ Quý", sold: 45, revenue: "54.000.000đ", trend: "+31%" },
-  { name: "Trà Thái Nguyên", sold: 210, revenue: "19.950.000đ", trend: "+5%" },
+  { name: "Trà Oolong Cao Sơn", sold: 156, revenue: "49.9M", trend: "+23%" },
+  { name: "Trà Sen Tây Hồ", sold: 134, revenue: "60.3M", trend: "+15%" },
+  { name: "Trà Lài Premium", sold: 98, revenue: "17.6M", trend: "+8%" },
+  { name: "Bộ trà Tứ Quý", sold: 45, revenue: "54.0M", trend: "+31%" },
+  { name: "Trà Thái Nguyên", sold: 210, revenue: "19.9M", trend: "+5%" },
 ];
 
 // Dữ liệu biểu đồ giả lập (7 ngày)
@@ -167,11 +171,11 @@ export default function AdminDashboard() {
           return (
             <Card
               key={s.label}
-              className="border border-slate-100 shadow-sm hover:shadow-md transition-shadow duration-300 bg-white"
+              className="border border-slate-200/60 shadow-sm hover:shadow-md transition-shadow duration-300 bg-white"
             >
               <CardContent className="p-5">
                 <div className="flex items-start justify-between mb-3">
-                  <div className={cn("p-2.5 rounded-xl", s.iconBg)}>
+                  <div className={cn("p-2.5 rounded-xl shadow-lg", s.iconBg, s.iconShadow)}>
                     <Icon className="h-5 w-5 text-white" />
                   </div>
                   <div
@@ -201,9 +205,9 @@ export default function AdminDashboard() {
       </div>
 
       {/* 3. Charts + Top Products Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Revenue Chart */}
-        <Card className="lg:col-span-2 border border-slate-100 shadow-sm bg-white">
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+        {/* Revenue Chart - 3 columns */}
+        <Card className="lg:col-span-3 border border-slate-200/60 shadow-sm bg-white">
           <CardHeader className="pb-2">
             <div className="flex items-center justify-between">
               <div>
@@ -211,7 +215,7 @@ export default function AdminDashboard() {
                   Doanh thu 7 ngày qua
                 </CardTitle>
                 <p className="text-xs text-slate-500 mt-0.5">
-                  Tổng: 37.300.000đ · Trung bình: 5.328.571đ/ngày
+                  Tổng: 37.300.000đ · TB: 5.3M/ngày
                 </p>
               </div>
               <Badge variant="outline" className="text-emerald-600 border-emerald-200 bg-emerald-50 text-xs">
@@ -251,8 +255,8 @@ export default function AdminDashboard() {
           </CardContent>
         </Card>
 
-        {/* Top Products */}
-        <Card className="border border-slate-100 shadow-sm bg-white">
+        {/* Top Products - 2 columns */}
+        <Card className="lg:col-span-2 border border-slate-200/60 shadow-sm bg-white">
           <CardHeader className="pb-2">
             <div className="flex items-center justify-between">
               <CardTitle className="text-base font-semibold text-slate-800">
@@ -262,24 +266,24 @@ export default function AdminDashboard() {
             </div>
           </CardHeader>
           <CardContent className="pt-2">
-            <div className="space-y-3">
+            <div className="space-y-2">
               {topProducts.map((product, i) => (
                 <div
                   key={product.name}
                   className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 transition-colors group"
                 >
-                  <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-emerald-100 to-emerald-50 flex items-center justify-center text-emerald-700 text-xs font-bold border border-emerald-200/60">
+                  <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-emerald-100 to-emerald-50 flex items-center justify-center text-emerald-700 text-[11px] font-bold border border-emerald-200/60 shrink-0">
                     {i + 1}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-slate-700 truncate">
+                    <p className="text-[13px] font-medium text-slate-700 truncate">
                       {product.name}
                     </p>
                     <p className="text-[11px] text-slate-400">
                       {product.sold} đã bán
                     </p>
                   </div>
-                  <div className="text-right">
+                  <div className="text-right shrink-0">
                     <p className="text-xs font-semibold text-slate-700">
                       {product.revenue}
                     </p>
@@ -295,7 +299,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* 4. Recent Orders Table */}
-      <Card className="border border-slate-100 shadow-sm bg-white">
+      <Card className="border border-slate-200/60 shadow-sm bg-white">
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
             <div>
@@ -321,7 +325,7 @@ export default function AdminDashboard() {
                 <TableHead className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
                   Khách hàng
                 </TableHead>
-                <TableHead className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                <TableHead className="text-xs font-semibold text-slate-500 uppercase tracking-wider hidden md:table-cell">
                   Sản phẩm
                 </TableHead>
                 <TableHead className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
@@ -330,7 +334,7 @@ export default function AdminDashboard() {
                 <TableHead className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
                   Trạng thái
                 </TableHead>
-                <TableHead className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                <TableHead className="text-xs font-semibold text-slate-500 uppercase tracking-wider hidden sm:table-cell">
                   Thời gian
                 </TableHead>
                 <TableHead className="text-xs font-semibold text-slate-500 uppercase tracking-wider text-right">
@@ -353,7 +357,7 @@ export default function AdminDashboard() {
                     <TableCell className="text-sm text-slate-600">
                       {order.customer}
                     </TableCell>
-                    <TableCell className="text-sm text-slate-600">
+                    <TableCell className="text-sm text-slate-600 hidden md:table-cell">
                       {order.product}
                     </TableCell>
                     <TableCell className="text-sm font-medium text-slate-800">
@@ -371,14 +375,14 @@ export default function AdminDashboard() {
                         {order.status}
                       </div>
                     </TableCell>
-                    <TableCell className="text-xs text-slate-500">
+                    <TableCell className="text-xs text-slate-500 hidden sm:table-cell">
                       {order.date}
                     </TableCell>
                     <TableCell className="text-right">
                       <Button
                         variant="ghost"
-                        size="icon-xs"
-                        className="rounded-lg hover:bg-emerald-50 hover:text-emerald-600"
+                        size="sm"
+                        className="rounded-lg hover:bg-emerald-50 hover:text-emerald-600 h-8 w-8 p-0"
                       >
                         <Eye className="h-3.5 w-3.5" />
                       </Button>
@@ -394,17 +398,17 @@ export default function AdminDashboard() {
       {/* 5. Quick Stats Footer */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {[
-          { label: "Đơn chờ xử lý", value: "12", color: "text-amber-600", bg: "bg-amber-50" },
-          { label: "Đang giao hàng", value: "8", color: "text-blue-600", bg: "bg-blue-50" },
-          { label: "Hoàn thành hôm nay", value: "23", color: "text-emerald-600", bg: "bg-emerald-50" },
-          { label: "Đã hủy hôm nay", value: "2", color: "text-red-600", bg: "bg-red-50" },
+          { label: "Đơn chờ xử lý", value: "12", color: "text-amber-600", bg: "bg-amber-50", border: "border-amber-100" },
+          { label: "Đang giao hàng", value: "8", color: "text-blue-600", bg: "bg-blue-50", border: "border-blue-100" },
+          { label: "Hoàn thành hôm nay", value: "23", color: "text-emerald-600", bg: "bg-emerald-50", border: "border-emerald-100" },
+          { label: "Đã hủy hôm nay", value: "2", color: "text-red-600", bg: "bg-red-50", border: "border-red-100" },
         ].map((item) => (
           <div
             key={item.label}
             className={cn(
               "flex items-center gap-3 p-4 rounded-xl border",
               item.bg,
-              "border-transparent"
+              item.border
             )}
           >
             <div className={cn("text-3xl font-bold", item.color)}>
