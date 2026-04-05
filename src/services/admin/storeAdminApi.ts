@@ -5,7 +5,7 @@ import type { UpsertStoreRequest } from "@/types/store/UpsertStoreRequest";
 
 export const findAllStoresApi = async () => {
   return await axiosClient.get<ApiResponse<StoreResponse[]>>(
-    "/order-service/admin/stores"
+    "/order-service/public/stores"
   );
 };
 
