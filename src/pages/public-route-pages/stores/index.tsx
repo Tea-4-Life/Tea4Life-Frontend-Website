@@ -85,8 +85,21 @@ export default function StoresPage() {
     });
 
     if (hasBounds) {
-      map.fitBounds(bounds, { padding: 50, maxZoom: 15 });
+      // Fit bounds and resize when map is fully loaded to prevent partial render
+      map.on('load', () => {
+        map.resize();
+        map.fitBounds(bounds, { padding: 50, maxZoom: 15 });
+      });
+    } else {
+      map.on('load', () => {
+        map.resize();
+      });
     }
+
+    // Backup resize in case map loads too fast before DOM settles
+    setTimeout(() => {
+      map.resize();
+    }, 200);
 
     mapInsRef.current = map;
 
@@ -202,7 +215,7 @@ export default function StoresPage() {
 
             {/* Map Container */}
             <div className="w-full lg:w-[65%] xl:w-[70%] h-[400px] lg:h-[600px] relative bg-[#e5e3df] shrink-0">
-              <div className="absolute inset-0 z-0" ref={mapContainerRef} />
+              <div className="w-full h-full z-0 relative" ref={mapContainerRef} />
             </div>
           </div>
         )}
