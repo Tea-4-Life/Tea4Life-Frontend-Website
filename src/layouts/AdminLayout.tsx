@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { Outlet } from "react-router-dom";
-import AdminSidebar from "@/components/custom/AdminSidebar";
-import AdminTopbar from "@/components/custom/AdminTopbar";
+import AdminSidebar from "@/pages/admin-route-pages/component/AdminSidebar";
+import AdminTopbar from "@/pages/admin-route-pages/component/AdminTopbar";
 
 export default function AdminLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);

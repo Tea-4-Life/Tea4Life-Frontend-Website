@@ -13,7 +13,7 @@ import { handleError } from "@/lib/utils";
 import { toast } from "sonner";
 
 // Sub-components
-import AdminPageHeader from "@/components/custom/AdminPageHeader";
+import AdminPageHeader from "@/pages/admin-route-pages/component/AdminPageHeader";
 import { Users } from "lucide-react";
 import TableSection from "./components/TableSection";
 import PaginationSection from "./components/PaginationSection";

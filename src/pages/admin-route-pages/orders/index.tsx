@@ -12,7 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Eye, ShoppingCart } from "lucide-react";
 import { cn } from "@/lib/utils";
-import AdminPageHeader from "@/components/custom/AdminPageHeader";
+import AdminPageHeader from "@/pages/admin-route-pages/component/AdminPageHeader";
 import { useState } from "react";
 
 const orders = [

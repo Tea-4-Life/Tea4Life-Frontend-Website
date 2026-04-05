@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { handleError } from "@/lib/utils";
 import AuditLogsTableSection from "./components/AuditLogsTableSection";
-import AdminPageHeader from "@/components/custom/AdminPageHeader";
+import AdminPageHeader from "@/pages/admin-route-pages/component/AdminPageHeader";
 import { getAllAuditLogsApi } from "@/services/admin/auditLogAdminApi";
 import type { AuditLog } from "@/types/audit-log/AuditLog";
 import { Activity, Filter } from "lucide-react";

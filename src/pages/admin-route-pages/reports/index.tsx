@@ -17,7 +17,7 @@ import {
   ShoppingBag,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import AdminPageHeader from "@/components/custom/AdminPageHeader";
+import AdminPageHeader from "@/pages/admin-route-pages/component/AdminPageHeader";
 
 export default function AdminReportsPage() {
   return (
