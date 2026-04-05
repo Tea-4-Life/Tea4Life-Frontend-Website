@@ -6,7 +6,7 @@ import { handleError } from "@/lib/utils";
 import { ConfirmationDialog } from "@/components/custom/ConfirmationDialog";
 import VoucherFormModal from "./components/VoucherFormModal";
 import VouchersTableSection from "./components/VouchersTableSection";
-import AdminPageHeader from "@/pages/admin-route-pages/component/AdminPageHeader";
+import AdminPageHeader from "@/pages/admin-route-pages/components/AdminPageHeader";
 import { Ticket } from "lucide-react";
 import {
   getAllAdminVouchersApi,

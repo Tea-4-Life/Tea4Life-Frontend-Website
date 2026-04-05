@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 
 // Sub-components
-import AdminPageHeader from "@/pages/admin-route-pages/component/AdminPageHeader";
+import AdminPageHeader from "@/pages/admin-route-pages/components/AdminPageHeader";
 import { Lock } from "lucide-react";
 import TableSection from "./components/TableSection";
 import PaginationSection from "./components/PaginationSection";

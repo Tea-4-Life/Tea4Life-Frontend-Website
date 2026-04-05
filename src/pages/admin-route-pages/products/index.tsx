@@ -7,7 +7,7 @@ import { handleError } from "@/lib/utils";
 import { ConfirmationDialog } from "@/components/custom/ConfirmationDialog";
 import ProductFormModal from "./components/ProductFormModal";
 import ProductsTableSection from "./components/ProductsTableSection";
-import AdminPageHeader from "@/pages/admin-route-pages/component/AdminPageHeader";
+import AdminPageHeader from "@/pages/admin-route-pages/components/AdminPageHeader";
 import { Package } from "lucide-react";
 import PaginationComponent from "@/components/custom/PaginationComponent";
 import {

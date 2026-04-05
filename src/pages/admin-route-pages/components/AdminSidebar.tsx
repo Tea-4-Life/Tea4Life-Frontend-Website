@@ -15,6 +15,7 @@ import {
   Settings,
   LogOut,
   Ticket,
+  Store,
   X,
   type LucideIcon,
 } from "lucide-react";
@@ -41,7 +42,14 @@ const adminGroups: SidebarGroup[] = [
     ],
   },
   {
-    label: "Quản lý sản phẩm",
+    label: "Bán hàng",
+    links: [
+      { name: "Đơn hàng", href: "/admin/orders", icon: ShoppingCart },
+      { name: "Phiếu giảm giá", href: "/admin/vouchers", icon: Ticket },
+    ],
+  },
+  {
+    label: "Sản phẩm",
     links: [
       { name: "Sản phẩm", href: "/admin/products", icon: Package },
       { name: "Danh mục", href: "/admin/categories", icon: LayoutGrid },
@@ -49,15 +57,9 @@ const adminGroups: SidebarGroup[] = [
     ],
   },
   {
-    label: "Kinh doanh",
-    links: [
-      { name: "Đơn hàng", href: "/admin/orders", icon: ShoppingCart },
-      { name: "Phiếu giảm giá", href: "/admin/vouchers", icon: Ticket },
-    ],
-  },
-  {
     label: "Hệ thống",
     links: [
+      { name: "Cửa hàng", href: "/admin/stores", icon: Store },
       { name: "Người dùng", href: "/admin/users", icon: Users },
       { name: "Phân quyền", href: "/admin/permissions", icon: ShieldCheck },
       { name: "Chức vụ", href: "/admin/roles", icon: Lock },

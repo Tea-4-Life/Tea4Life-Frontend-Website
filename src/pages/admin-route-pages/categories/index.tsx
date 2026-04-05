@@ -11,7 +11,7 @@ import { toast } from "sonner";
 import { handleError } from "@/lib/utils";
 
 // Sub-components
-import AdminPageHeader from "@/pages/admin-route-pages/component/AdminPageHeader";
+import AdminPageHeader from "@/pages/admin-route-pages/components/AdminPageHeader";
 import { LayoutGrid } from "lucide-react";
 import TableSection from "./components/TableSection";
 import CategoryFormModal from "./components/CategoryFormModal";

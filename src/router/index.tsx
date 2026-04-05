@@ -55,6 +55,7 @@ import AdminPermissionsPage from "@/pages/admin-route-pages/permissions";
 import AdminRolesPage from "@/pages/admin-route-pages/roles";
 import AdminRoleCreatePage from "@/pages/admin-route-pages/roles/create";
 import AdminVouchersPage from "@/pages/admin-route-pages/vouchers";
+import AdminStoresPage from "@/pages/admin-route-pages/stores";
 
 // ========================================
 // DRIVER PAGES — lazy load theo cụm
@@ -120,6 +121,7 @@ const adminRoutes = [
   { path: "roles/edit/:id", element: <AdminRoleCreatePage /> },
   { path: "vouchers", element: <AdminVouchersPage /> },
   { path: "audit-logs", element: <AdminAuditLogsPage /> },
+  { path: "stores", element: <AdminStoresPage /> },
 ];
 
 // --- 4. NHÓM ROUTE TÀI XẾ (DRIVER) ---

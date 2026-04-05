@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import AdminPageHeader from "@/pages/admin-route-pages/component/AdminPageHeader";
+import AdminPageHeader from "@/pages/admin-route-pages/components/AdminPageHeader";
 import { Settings } from "lucide-react";
 import ProductOptionsTab from "./components/ProductOptionsTab";
 import ProductOptionValuesTab from "./components/ProductOptionValuesTab";
