@@ -65,37 +65,6 @@ export default function StoreFormModal({
 
         <div className="p-6 flex-1 overflow-y-auto space-y-6">
           <form id="store-form" onSubmit={handleSubmit} className="space-y-6">
-            <div className="space-y-3">
-              <div className="h-[450px]">
-                <AddressMapPicker
-                  initialLatitude={formData.latitude || undefined}
-                  initialLongitude={formData.longitude || undefined}
-                  onLocationSelect={(data) => {
-                    setFormData((prev) => ({
-                      ...prev,
-                      address: data.addressText,
-                      latitude: data.latitude,
-                      longitude: data.longitude,
-                    }));
-                  }}
-                />
-              </div>
-              <div className="bg-emerald-50/50 px-4 py-2.5 rounded-xl border border-emerald-100 text-sm flex items-center gap-3">
-                <div className="relative flex h-3 w-3 shrink-0">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
-                </div>
-                <div>
-                  <p className="font-bold text-emerald-950 text-[13px] uppercase tracking-wider">
-                    Ghim vị trí của cửa hàng
-                  </p>
-                  <p className="text-xs text-muted-foreground mt-0.5 font-medium">
-                    Kéo thả ghim hoặc tìm kiếm để tự động điền địa chỉ tọa độ.
-                  </p>
-                </div>
-              </div>
-            </div>
-
             <div className="grid grid-cols-1 gap-6">
               <div className="space-y-2">
                 <Label className="text-emerald-900 font-semibold" htmlFor="name">
@@ -160,6 +129,37 @@ export default function StoreFormModal({
                         : formData.longitude
                     }
                   />
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              <div className="h-[450px]">
+                <AddressMapPicker
+                  initialLatitude={formData.latitude || undefined}
+                  initialLongitude={formData.longitude || undefined}
+                  onLocationSelect={(data) => {
+                    setFormData((prev) => ({
+                      ...prev,
+                      address: data.addressText,
+                      latitude: data.latitude,
+                      longitude: data.longitude,
+                    }));
+                  }}
+                />
+              </div>
+              <div className="bg-emerald-50/50 px-4 py-2.5 rounded-xl border border-emerald-100 text-sm flex items-center gap-3">
+                <div className="relative flex h-3 w-3 shrink-0">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+                </div>
+                <div>
+                  <p className="font-bold text-emerald-950 text-[13px] uppercase tracking-wider">
+                    Ghim vị trí của cửa hàng
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-0.5 font-medium">
+                    Kéo thả ghim hoặc tìm kiếm trên bản đồ để tự động điền địa chỉ và tọa độ phía trên.
+                  </p>
                 </div>
               </div>
             </div>
