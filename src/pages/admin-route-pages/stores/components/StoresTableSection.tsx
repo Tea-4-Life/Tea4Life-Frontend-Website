@@ -73,8 +73,11 @@ export default function StoresTableSection({
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center text-xs text-gray-500 gap-1">
-                    <MapPin className="h-3 w-3" />
-                    {item.latitude}, {item.longitude}
+                    <MapPin className="h-3 w-3 shrink-0" />
+                    <span title={`${item.latitude}, ${item.longitude}`}>
+                      {item.latitude ? Number(item.latitude).toFixed(4) : 0},{" "}
+                      {item.longitude ? Number(item.longitude).toFixed(4) : 0}
+                    </span>
                   </div>
                 </TableCell>
                 <TableCell>

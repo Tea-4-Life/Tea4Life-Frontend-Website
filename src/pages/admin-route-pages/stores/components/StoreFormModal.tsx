@@ -137,7 +137,11 @@ export default function StoreFormModal({
                     step="any"
                     readOnly
                     className="border-none bg-emerald-50 text-emerald-800 focus-visible:ring-0 cursor-default"
-                    value={formData.latitude}
+                    value={
+                      formData.latitude
+                        ? Number(formData.latitude).toFixed(4)
+                        : formData.latitude
+                    }
                   />
                 </div>
                 <div className="space-y-2">
@@ -150,7 +154,11 @@ export default function StoreFormModal({
                     step="any"
                     readOnly
                     className="border-none bg-emerald-50 text-emerald-800 focus-visible:ring-0 cursor-default"
-                    value={formData.longitude}
+                    value={
+                      formData.longitude
+                        ? Number(formData.longitude).toFixed(4)
+                        : formData.longitude
+                    }
                   />
                 </div>
               </div>
