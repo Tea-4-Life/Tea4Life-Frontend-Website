@@ -20,6 +20,7 @@ import ProductDetail from "@/pages/public-route-pages/product-details/index.tsx"
 import BrandsListPage from "@/pages/public-route-pages/brands";
 import CategoriesPage from "@/pages/public-route-pages/categories";
 import AboutPage from "@/pages/public-route-pages/about";
+import StoresPage from "@/pages/public-route-pages/stores";
 
 // ========================================
 // CUSTOMER PAGES — import trực tiếp (không lazy)
@@ -82,7 +83,7 @@ const publicRoutes = [
   { path: "categories", element: <CategoriesPage /> },
   { path: "about", element: <AboutPage /> },
   { path: "news", element: <LandingPage /> },
-  { path: "stores", element: <LandingPage /> },
+  { path: "stores", element: <StoresPage /> },
 ];
 
 // --- 2. NHÓM ROUTE KHÁCH HÀNG (CUSTOMER) ---
