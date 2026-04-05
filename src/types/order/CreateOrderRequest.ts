@@ -21,6 +21,8 @@ export interface CreateOrderRequest {
   province: string;
   ward: string;
   detail: string;
+  latitude?: number;
+  longitude?: number;
   paymentMethod: "COD" | "BANKING";
   voucherCode?: string;
   items: OrderItemRequest[];
