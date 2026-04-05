@@ -1,22 +1,148 @@
+"use client";
+
+import { useState, useCallback, useEffect } from "react";
 import AdminPageHeader from "@/pages/admin-route-pages/components/AdminPageHeader";
 import { Store } from "lucide-react";
+import { ConfirmationDialog } from "@/components/custom/ConfirmationDialog";
+import { toast } from "sonner";
+import { handleError } from "@/lib/utils";
+
+import {
+  findAllStoresApi,
+  createStoreApi,
+  updateStoreApi,
+  deleteStoreApi,
+} from "@/services/admin/storeAdminApi";
+import type { StoreResponse } from "@/types/store/StoreResponse";
+import type { UpsertStoreRequest } from "@/types/store/UpsertStoreRequest";
+
+import StoreFormModal from "./components/StoreFormModal";
+import StoresTableSection from "./components/StoresTableSection";
 
 export default function AdminStoresPage() {
+  const [items, setItems] = useState<StoreResponse[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [keyword, setKeyword] = useState("");
+
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalLoading, setModalLoading] = useState(false);
+  const [current, setCurrent] = useState<StoreResponse | null>(null);
+
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<StoreResponse | null>(null);
+
+  const fetchStores = useCallback(async () => {
+    setLoading(true);
+    try {
+      const res = await findAllStoresApi();
+      setItems(res.data.data || []);
+    } catch (error) {
+      handleError(error, "Không thể tải danh sách cửa hàng.");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchStores();
+  }, [fetchStores]);
+
+  const filtered = items.filter((v) => {
+    if (!keyword.trim()) return true;
+    const kw = keyword.toLowerCase();
+    return (
+      v.name?.toLowerCase().includes(kw) || v.address?.toLowerCase().includes(kw)
+    );
+  });
+
+  const handleOpenCreate = () => {
+    setCurrent(null);
+    setModalOpen(true);
+  };
+
+  const handleOpenEdit = (item: StoreResponse) => {
+    setCurrent(item);
+    setModalOpen(true);
+  };
+
+  const handleSubmit = async (data: UpsertStoreRequest, id?: string | number) => {
+    setModalLoading(true);
+    try {
+      if (id) {
+        await updateStoreApi(id, data);
+        toast.success("Cập nhật cửa hàng thành công.");
+      } else {
+        await createStoreApi(data);
+        toast.success("Thêm mới cửa hàng thành công.");
+      }
+      setModalOpen(false);
+      await fetchStores();
+    } catch (error) {
+      handleError(error, "Lưu cửa hàng thất bại.");
+    } finally {
+      setModalLoading(false);
+    }
+  };
+
+  const handleOpenDelete = (item: StoreResponse) => {
+    setDeleteTarget(item);
+    setDeleteOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteTarget) return;
+    setDeleteLoading(true);
+    try {
+      await deleteStoreApi(deleteTarget.id);
+      toast.success("Đã xóa cửa hàng.");
+      setDeleteOpen(false);
+      setDeleteTarget(null);
+      await fetchStores();
+    } catch (error) {
+      handleError(error, "Xóa cửa hàng thất bại.");
+    } finally {
+      setDeleteLoading(false);
+    }
+  };
+
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
       <AdminPageHeader
         title="Quản lý cửa hàng"
-        description="Quản lý các chi nhánh và cửa hàng của hệ thống"
+        description="Quản lý danh sách các chi nhánh và cửa hàng của hệ thống."
         icon={Store}
+        searchPlaceholder="Tìm kiếm tên, địa chỉ..."
+        searchValue={keyword}
+        onSearchChange={setKeyword}
       />
-      
-      <div className="bg-white/5 border border-emerald-800/30 rounded-xl p-8 text-center flex flex-col items-center justify-center min-h-[400px]">
-        <Store className="h-12 w-12 text-emerald-500/50 mb-4" />
-        <h3 className="text-xl font-medium text-emerald-100 mb-2">Đang phát triển</h3>
-        <p className="text-emerald-200/60 max-w-sm mx-auto">
-          Tính năng quản lý cửa hàng đang được xây dựng và sẽ sớm ra mắt.
-        </p>
-      </div>
+
+      <StoresTableSection
+        loading={loading}
+        items={filtered}
+        onOpenCreate={handleOpenCreate}
+        onOpenEdit={handleOpenEdit}
+        onOpenDelete={handleOpenDelete}
+      />
+
+      <StoreFormModal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        loading={modalLoading}
+        initialData={current}
+        onSubmit={handleSubmit}
+      />
+
+      <ConfirmationDialog
+        isOpen={deleteOpen}
+        onOpenChange={setDeleteOpen}
+        title="Xác nhận xóa cửa hàng"
+        description={`Bạn có chắc muốn xóa cửa hàng "${deleteTarget?.name}" không? Thao tác này có thể ảnh hưởng đến các dữ liệu liên quan.`}
+        confirmLabel="Xóa"
+        cancelLabel="Hủy"
+        onConfirm={confirmDelete}
+        isLoading={deleteLoading}
+      />
     </div>
   );
 }

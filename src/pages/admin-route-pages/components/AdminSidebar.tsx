@@ -126,7 +126,7 @@ export default function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
         <nav className="space-y-5">
           {adminGroups.map((group) => (
             <div key={group.label} className="space-y-0.5">
-              <h3 className="px-3 mb-1.5 text-[10px] font-semibold text-emerald-300/50 uppercase tracking-[0.2em]">
+              <h3 className="px-3 mb-1.5 text-[10px] font-semibold text-white/50 uppercase tracking-[0.2em]">
                 {group.label}
               </h3>
               {group.links.map((link) => {
@@ -144,7 +144,7 @@ export default function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
                       "flex items-center justify-between px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 group relative",
                       isActive
                         ? "bg-white/15 text-white"
-                        : "text-emerald-100/60 hover:bg-white/8 hover:text-white"
+                        : "text-white/80 hover:bg-white/8 hover:text-white"
                     )}
                   >
                     <div className="flex items-center gap-2.5">
