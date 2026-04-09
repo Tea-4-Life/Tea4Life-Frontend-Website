@@ -9,7 +9,7 @@ export interface NewsChunkRequest {
 export interface NewsRequest {
   title: string;
   thumbnailUrl: string;
-  categoryId: number;
+  categoryId: string;
   chunks: NewsChunkRequest[];
 }
 

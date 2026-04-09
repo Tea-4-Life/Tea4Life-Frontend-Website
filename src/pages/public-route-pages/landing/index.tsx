@@ -3,8 +3,7 @@
 import { IntroVideo } from "./components/IntroVideo.tsx";
 import { HeroCarousel } from "./components/HeroCarousel.tsx";
 import { CategoriesSection } from "./components/CategoriesSection.tsx";
-import { CraftingProcessSection } from "./components/CraftingProcessSection.tsx";
-import { OurStorySection } from "./components/OurStorySection.tsx";
+import { CosmicMessageSection } from "./components/CosmicMessageSection.tsx";
 
 export default function LandingPage() {
   return (
@@ -23,9 +22,8 @@ export default function LandingPage() {
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-24 pt-16 md:pt-24 relative z-10">
         <HeroCarousel />
+        <CosmicMessageSection />
         <CategoriesSection />
-        <CraftingProcessSection />
-        <OurStorySection />
       </div>
     </div>
   );

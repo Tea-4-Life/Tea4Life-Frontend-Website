@@ -1,16 +1,121 @@
-"use client";
-
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { Label } from "@/components/ui/label.tsx";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group.tsx";
-import { CreditCard, MapPin, ChevronLeft, Leaf } from "lucide-react";
-import { Link } from "react-router-dom";
+import { CreditCard, MapPin, ChevronLeft, Leaf, Loader2 } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "@/features/auth/useAuth";
+import { getCartApi, clearCartApi } from "@/services/cartApi";
+import { createOrderApi } from "@/services/orderApi";
+import type { CartResponse } from "@/types/cart/CartResponse";
+import { handleError } from "@/lib/utils";
+import { toast } from "sonner";
 
 export default function CheckoutPage() {
+  const navigate = useNavigate();
+  const { fullName } = useAuth();
+  
+  const [cart, setCart] = useState<CartResponse | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  
+  const [formData, setFormData] = useState({
+    receiverName: "",
+    phone: "",
+    detail: "",
+    paymentMethod: "COD" as "COD" | "BANKING",
+  });
+
+  useEffect(() => {
+    setFormData(prev => ({
+      ...prev,
+      receiverName: fullName || "",
+    }));
+  }, [fullName]);
+
+  useEffect(() => {
+    const fetchCart = async () => {
+      try {
+        setLoading(true);
+        const res = await getCartApi();
+        setCart(res.data.data);
+        if (!res.data.data?.items?.length) {
+          toast.error("Giỏ hàng của bạn đang trống.");
+          navigate("/shop");
+        }
+      } catch (error) {
+        handleError(error, "Không thể tải giỏ hàng.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchCart();
+  }, [navigate]);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target;
+    setFormData(prev => ({ ...prev, [id]: value }));
+  };
+
+  const handlePaymentChange = (value: string) => {
+    setFormData(prev => ({ ...prev, paymentMethod: value as "COD" | "BANKING" }));
+  };
+
+  const handleSubmit = async () => {
+    if (!formData.receiverName || !formData.phone || !formData.detail) {
+      toast.error("Vui lòng điền đầy đủ thông tin giao hàng.");
+      return;
+    }
+
+    if (!cart?.items?.length) return;
+
+    try {
+      setSubmitting(true);
+      const res = await createOrderApi({
+        ...formData,
+        province: "-", // Giả định
+        ward: "-", // Giả định
+        items: cart.items.map(item => ({
+          productId: item.productId,
+          productName: item.productName,
+          selectedOptions: item.selectedOptions,
+          unitPrice: item.unitPrice,
+          quantity: item.quantity
+        }))
+      });
+
+      toast.success("Đặt hàng thành công!");
+      await clearCartApi();
+      navigate(`/order/${res.data.data.id}`);
+    } catch (error) {
+      handleError(error, "Không thể đặt hàng. Vui lòng thử lại.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const formatPrice = (price: number) => {
+    return new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    }).format(price);
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#F8F5F0] flex items-center justify-center">
+        <Loader2 className="h-10 w-10 animate-spin text-[#1A4331]" />
+      </div>
+    );
+  }
+
+  const subtotal = cart?.totalAmount || 0;
+  const shippingFee = subtotal > 500000 ? 0 : 30000;
+  const total = subtotal + (cart?.items?.length ? shippingFee : 0);
+
   return (
     <div className="min-h-screen bg-[#F8F5F0] text-[#1A4331] relative">
-      {/* Background Grid */}
       <div
         className="fixed inset-0 pointer-events-none opacity-[0.03] z-0"
         style={{
@@ -21,7 +126,6 @@ export default function CheckoutPage() {
       ></div>
 
       <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8 relative z-10">
-        {/* Back link */}
         <Link
           to="/cart"
           className="inline-flex items-center text-[#8A9A7A] hover:text-[#1A4331] font-bold text-sm mb-8 transition-colors"
@@ -29,7 +133,6 @@ export default function CheckoutPage() {
           <ChevronLeft className="h-4 w-4 mr-1" /> Quay lại giỏ hàng
         </Link>
 
-        {/* Header */}
         <div className="mb-10 border-b-2 border-[#1A4331]/10 pb-6">
           <div className="flex items-center gap-2 mb-2">
             <Leaf className="w-5 h-5 text-[#8A9A7A]" />
@@ -43,42 +146,48 @@ export default function CheckoutPage() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Thông tin giao hàng & Thanh toán */}
           <div className="lg:col-span-2 space-y-6">
-            {/* Shipping Info */}
             <div className="bg-white border-2 border-[#1A4331]/15">
               <div className="px-6 py-4 border-b-2 border-[#1A4331]/10">
                 <h2 className="flex items-center gap-2 text-[#1A4331] font-bold text-sm uppercase tracking-wider">
-                  <MapPin className="h-4 w-4 text-[#8A9A7A]" /> Thông tin giao
-                  hàng
+                  <MapPin className="h-4 w-4 text-[#8A9A7A]" /> Thông tin giao hàng
                 </h2>
               </div>
               <div className="p-6 space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label className="text-xs font-bold text-[#1A4331] uppercase tracking-wider">
+                    <Label htmlFor="receiverName" className="text-xs font-bold text-[#1A4331] uppercase tracking-wider">
                       Họ và tên
                     </Label>
                     <Input
+                      id="receiverName"
+                      value={formData.receiverName}
+                      onChange={handleInputChange}
                       placeholder="Nguyễn Văn A"
                       className="border-2 border-[#1A4331]/20 bg-[#F8F5F0] rounded-none focus-visible:ring-0 focus-visible:border-[#1A4331] text-sm"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-xs font-bold text-[#1A4331] uppercase tracking-wider">
+                    <Label htmlFor="phone" className="text-xs font-bold text-[#1A4331] uppercase tracking-wider">
                       Số điện thoại
                     </Label>
                     <Input
+                      id="phone"
+                      value={formData.phone}
+                      onChange={handleInputChange}
                       placeholder="0901234567"
                       className="border-2 border-[#1A4331]/20 bg-[#F8F5F0] rounded-none focus-visible:ring-0 focus-visible:border-[#1A4331] text-sm"
                     />
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-xs font-bold text-[#1A4331] uppercase tracking-wider">
+                  <Label htmlFor="detail" className="text-xs font-bold text-[#1A4331] uppercase tracking-wider">
                     Địa chỉ chi tiết
                   </Label>
                   <Input
+                    id="detail"
+                    value={formData.detail}
+                    onChange={handleInputChange}
                     placeholder="Số nhà, tên đường, phường/xã..."
                     className="border-2 border-[#1A4331]/20 bg-[#F8F5F0] rounded-none focus-visible:ring-0 focus-visible:border-[#1A4331] text-sm"
                   />
@@ -86,32 +195,30 @@ export default function CheckoutPage() {
               </div>
             </div>
 
-            {/* Payment Method */}
             <div className="bg-white border-2 border-[#1A4331]/15">
               <div className="px-6 py-4 border-b-2 border-[#1A4331]/10">
                 <h2 className="flex items-center gap-2 text-[#1A4331] font-bold text-sm uppercase tracking-wider">
-                  <CreditCard className="h-4 w-4 text-[#8A9A7A]" /> Phương thức
-                  thanh toán
+                  <CreditCard className="h-4 w-4 text-[#8A9A7A]" /> Phương thức thanh toán
                 </h2>
               </div>
               <div className="p-6">
-                <RadioGroup defaultValue="cod" className="space-y-3">
-                  <div className="flex items-center space-x-3 p-3 border-2 border-[#1A4331]/10 hover:border-[#1A4331]/30 transition-colors cursor-pointer">
-                    <RadioGroupItem value="cod" id="cod" />
-                    <Label
-                      htmlFor="cod"
-                      className="flex-1 cursor-pointer text-sm text-[#1A4331]"
-                    >
+                <RadioGroup value={formData.paymentMethod} onValueChange={handlePaymentChange} className="space-y-3">
+                  <div 
+                    onClick={() => handlePaymentChange("COD")}
+                    className={`flex items-center space-x-3 p-3 border-2 transition-colors cursor-pointer ${formData.paymentMethod === "COD" ? "border-[#1A4331] bg-[#1A4331]/5" : "border-[#1A4331]/10"}`}
+                  >
+                    <RadioGroupItem value="COD" id="COD" />
+                    <Label htmlFor="COD" className="flex-1 cursor-pointer text-sm text-[#1A4331] font-bold">
                       Thanh toán khi nhận hàng (COD)
                     </Label>
                   </div>
-                  <div className="flex items-center space-x-3 p-3 border-2 border-[#1A4331]/10 hover:border-[#1A4331]/30 transition-colors cursor-pointer">
-                    <RadioGroupItem value="bank" id="bank" />
-                    <Label
-                      htmlFor="bank"
-                      className="flex-1 cursor-pointer text-sm text-[#1A4331]"
-                    >
-                      Chuyển khoản ngân hàng
+                  <div 
+                    onClick={() => handlePaymentChange("BANKING")}
+                    className={`flex items-center space-x-3 p-3 border-2 transition-colors cursor-pointer ${formData.paymentMethod === "BANKING" ? "border-[#1A4331] bg-[#1A4331]/5" : "border-[#1A4331]/10"}`}
+                  >
+                    <RadioGroupItem value="BANKING" id="BANKING" />
+                    <Label htmlFor="BANKING" className="flex-1 cursor-pointer text-sm text-[#1A4331] font-bold">
+                      Chuyển khoản ngân hàng (BANKING)
                     </Label>
                   </div>
                 </RadioGroup>
@@ -119,7 +226,6 @@ export default function CheckoutPage() {
             </div>
           </div>
 
-          {/* Tóm tắt đơn hàng */}
           <div className="lg:col-span-1">
             <div className="bg-white border-2 border-[#1A4331]/15 sticky top-24">
               <div className="px-6 py-4 border-b-2 border-[#1A4331]/10">
@@ -130,28 +236,33 @@ export default function CheckoutPage() {
               <div className="p-6 space-y-4">
                 <div className="flex justify-between text-sm">
                   <span className="text-[#1A4331]/70">
-                    Tạm tính (3 sản phẩm)
+                    Tạm tính ({cart?.totalItems} sản phẩm)
                   </span>
-                  <span className="font-bold text-[#1A4331]">980.000đ</span>
+                  <span className="font-bold text-[#1A4331]">{formatPrice(subtotal)}</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-[#1A4331]/70">Phí vận chuyển</span>
-                  <span className="font-bold text-[#8A9A7A]">Miễn phí</span>
+                  <span className="font-bold text-[#8A9A7A]">
+                    {shippingFee === 0 ? "Miễn phí" : formatPrice(shippingFee)}
+                  </span>
                 </div>
 
                 <div className="border-t-2 border-dashed border-[#1A4331]/20 pt-4">
                   <div className="flex justify-between text-xl font-bold text-[#1A4331]">
                     <span>Tổng cộng</span>
-                    <span>980.000đ</span>
+                    <span>{formatPrice(total)}</span>
                   </div>
                 </div>
 
-                <Button className="w-full bg-[#1A4331] text-[#F8F5F0] hover:bg-[#8A9A7A] rounded-none h-12 text-base font-bold mt-4">
-                  Xác nhận Đặt hàng
+                <Button 
+                  onClick={handleSubmit}
+                  disabled={submitting}
+                  className="w-full bg-[#1A4331] text-[#F8F5F0] hover:bg-[#8A9A7A] rounded-none h-12 text-base font-bold mt-4"
+                >
+                  {submitting ? <Loader2 className="animate-spin h-5 w-5" /> : "Xác nhận Đặt hàng"}
                 </Button>
                 <p className="text-[10px] text-center text-[#8A9A7A] mt-2">
-                  Bằng cách nhấn Đặt hàng, bạn đồng ý với Điều khoản dịch vụ của
-                  Tea4Life.
+                  Bằng cách nhấn Đặt hàng, bạn đồng ý với Điều khoản dịch vụ của Tea4Life.
                 </p>
               </div>
             </div>

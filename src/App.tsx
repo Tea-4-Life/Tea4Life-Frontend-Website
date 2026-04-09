@@ -1,8 +1,8 @@
 import { RouterProvider } from "react-router-dom";
 import { router } from "@/router";
 import { useAppSelector } from "@/features/store";
-import OnboardingPage from "@/pages/onboarding";
-import { Toaster } from "sonner";
+import OnboardingPage from "@/pages/customer-route-pages/onboarding";
+import { Toaster } from "@/components/ui/sonner";
 
 function App() {
   const { isAuthenticated, onboarded } = useAppSelector((state) => state.auth);
@@ -10,7 +10,7 @@ function App() {
   if (isAuthenticated && !onboarded) {
     return (
       <>
-        <Toaster richColors position="top-right" />
+        <Toaster richColors position="bottom-right" duration={2500} />
         <OnboardingPage />
       </>
     );
@@ -18,7 +18,7 @@ function App() {
 
   return (
     <>
-      <Toaster richColors position="top-right" />
+      <Toaster richColors position="bottom-right" duration={2500} />
       <RouterProvider router={router} />
     </>
   );

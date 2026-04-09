@@ -26,6 +26,13 @@ import { getProductByIdApi, getProductsApi } from "@/services/productApi";
 import type { ProductDetailResponse } from "@/types/product/ProductDetailResponse";
 import type { ProductSummaryResponse } from "@/types/product/ProductSummaryResponse";
 import { getMediaUrl, handleError } from "@/lib/utils";
+import { useAuth } from "@/features/auth/useAuth";
+import { RequireLoginDialog } from "@/components/custom/RequireLoginDialog";
+import { addCartItemApi } from "@/services/cartApi";
+import type { CartItemOptionSelectionRequest } from "@/types/cart/CartItemOptionSelectionRequest";
+import { toast } from "sonner";
+import { useAppDispatch } from "@/features/store";
+import { fetchCart, setLastAction } from "@/features/cart/cartSlice";
 
 export default function ProductDetail() {
   const { id } = useParams<{ id: string }>();
@@ -35,6 +42,10 @@ export default function ProductDetail() {
   const [relatedProducts, setRelatedProducts] = useState<
     ProductSummaryResponse[]
   >([]);
+
+  const { isAuthenticated } = useAuth();
+  const dispatch = useAppDispatch();
+  const [showLoginDialog, setShowLoginDialog] = useState(false);
 
   const [quantity, setQuantity] = useState(1);
   const [isFavorite, setIsFavorite] = useState(false);
@@ -148,6 +159,83 @@ export default function ProductDetail() {
     return unitPrice * quantity;
   }, [product, selectedOptions, quantity]);
 
+  const handleAddToCart = async () => {
+    if (!isAuthenticated) {
+      setShowLoginDialog(true);
+      return;
+    }
+    
+    if (!product) return;
+
+    // Build selected options array
+    const optionsPayload: CartItemOptionSelectionRequest[] = [];
+    let hasMissingRequired = false;
+    
+    product.productOptions?.forEach(opt => {
+      const selectedIds = selectedOptions[opt.id] || [];
+      if (opt.isRequired && selectedIds.length === 0) {
+         hasMissingRequired = true;
+      }
+      
+      selectedIds.forEach(valId => {
+        const val = opt.productOptionValues?.find(v => v.id === valId);
+        if (val) {
+          optionsPayload.push({
+            productOptionId: opt.id,
+            productOptionName: opt.name,
+            productOptionValueId: val.id,
+            productOptionValueName: val.valueName,
+            extraPrice: val.extraPrice || 0
+          });
+        }
+      });
+    });
+
+    if (hasMissingRequired) {
+      toast.warning("Vui lòng chọn đầy đủ các tùy chọn bắt buộc!");
+      return;
+    }
+
+    try {
+      const requestData = {
+        productId: String(product.id),
+        productName: product.name,
+        productImageUrl: product.imageUrl,
+        selectedOptions: optionsPayload,
+        unitPrice: product.basePrice,
+        quantity: quantity
+      };
+
+      await addCartItemApi(requestData);
+      dispatch(setLastAction("add"));
+      dispatch(fetchCart());
+    } catch (error) {
+      handleError(error, "Không thể thêm vào giỏ hàng");
+    }
+  };
+
+  const handleQuickAdd = async (e: React.MouseEvent, p: ProductSummaryResponse) => {
+    e.preventDefault();
+    if (!isAuthenticated) {
+      setShowLoginDialog(true);
+      return;
+    }
+    try {
+      await addCartItemApi({
+        productId: String(p.id),
+        productName: p.name,
+        productImageUrl: p.imageUrl,
+        selectedOptions: [], 
+        unitPrice: p.basePrice,
+        quantity: 1
+      });
+      dispatch(setLastAction("add"));
+      dispatch(fetchCart());
+    } catch (error) {
+      handleError(error, "Cần chọn thêm tuỳ chọn, hãy vào trang chi tiết nhé!");
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-[#F8F5F0] flex items-center justify-center">
@@ -230,7 +318,7 @@ export default function ProductDetail() {
                       : "/placeholder.svg"
                   }
                   alt={product.name}
-                  className="h-full w-full object-cover aspect-[4/5] md:aspect-square hover:scale-105 transition-transform duration-700"
+                  className="h-full w-full object-cover aspect-4/5 md:aspect-square hover:scale-105 transition-transform duration-700"
                 />
               </div>
               {product.productCategory && (
@@ -398,6 +486,7 @@ export default function ProductDetail() {
               <div className="flex gap-4 flex-1 w-full relative">
                 <Button
                   size="lg"
+                  onClick={handleAddToCart}
                   className="flex-1 bg-[#5c4033] text-white hover:bg-[#d97743] hover:shadow-lg shadow-md transition-all rounded-full h-14 font-semibold text-base border-none"
                 >
                   <ShoppingCart className="h-5 w-5 mr-3" />
@@ -407,7 +496,7 @@ export default function ProductDetail() {
                   variant="outline"
                   size="icon"
                   onClick={() => setIsFavorite(!isFavorite)}
-                  className={`rounded-full w-14 h-14 border border-[#5c4033]/10 flex-shrink-0 transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5 ${
+                  className={`rounded-full w-14 h-14 border border-[#5c4033]/10 shrink-0 transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5 ${
                     isFavorite
                       ? "bg-red-50 text-red-500 border-red-200"
                       : "bg-white text-[#5c4033] hover:bg-slate-50"
@@ -503,7 +592,10 @@ export default function ProductDetail() {
                         <span className="text-xl font-bold text-[#5c4033]">
                           {formatPrice(p.basePrice)}
                         </span>
-                        <div className="w-10 h-10 bg-[#F8F5F0] text-[#5c4033] rounded-full flex items-center justify-center group-hover:bg-[#d97743] group-hover:text-white transition-colors border border-[#5c4033]/5 shadow-sm">
+                        <div 
+                          onClick={(e) => handleQuickAdd(e, p)}
+                          className="w-10 h-10 bg-[#F8F5F0] text-[#5c4033] rounded-full flex items-center justify-center group-hover:bg-[#d97743] group-hover:text-white transition-colors border border-[#5c4033]/5 shadow-sm"
+                        >
                           <Plus className="w-5 h-5 font-bold" />
                         </div>
                       </div>
@@ -521,6 +613,13 @@ export default function ProductDetail() {
           </div>
         )}
       </div>
+
+      <RequireLoginDialog
+        isOpen={showLoginDialog}
+        onOpenChange={setShowLoginDialog}
+        title="Yêu cầu đăng nhập"
+        description="Bạn cần đăng nhập để thêm món vào giỏ hàng nhé!"
+      />
     </div>
   );
 }

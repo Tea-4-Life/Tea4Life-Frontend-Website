@@ -6,8 +6,8 @@ import { handleError } from "@/lib/utils";
 import { ConfirmationDialog } from "@/components/custom/ConfirmationDialog";
 import VoucherFormModal from "./components/VoucherFormModal";
 import VouchersTableSection from "./components/VouchersTableSection";
-import HeaderSection from "./components/HeaderSection";
-import SearchSection from "./components/SearchSection";
+import AdminPageHeader from "@/pages/admin-route-pages/components/AdminPageHeader";
+import { Ticket } from "lucide-react";
 import {
   getAllAdminVouchersApi,
   createAdminVoucherApi,
@@ -104,9 +104,15 @@ export default function AdminVouchersPage() {
 
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
-      <HeaderSection />
-
-      <SearchSection keyword={keyword} setKeyword={setKeyword} />
+      {/* Standardized Page Header */}
+      <AdminPageHeader
+        icon={Ticket}
+        title="Quản lý phiếu giảm giá"
+        description="Kiểm soát voucher và khuyến mãi của cửa hàng."
+        searchPlaceholder="Tìm kiếm phiếu giảm giá..."
+        searchValue={keyword}
+        onSearchChange={setKeyword}
+      />
 
       <VouchersTableSection
         loading={loading}

@@ -7,9 +7,9 @@ import {
   Star,
   X,
   Filter,
-  Coffee,
   Leaf,
   Loader2,
+  ShoppingCart,
 } from "lucide-react";
 import FilterSidebar from "./components/FilterSidebar.tsx";
 import { priceRanges } from "./constants.ts";
@@ -18,10 +18,19 @@ import { getProductsApi, getProductCategoriesApi } from "@/services/productApi";
 import type { ProductSummaryResponse } from "@/types/product/ProductSummaryResponse";
 import type { ProductCategoryResponse } from "@/types/product-category/ProductCategoryResponse";
 import { handleError, getMediaUrl } from "@/lib/utils";
+import { useAuth } from "@/features/auth/useAuth";
+import { RequireLoginDialog } from "@/components/custom/RequireLoginDialog";
+import { addCartItemApi } from "@/services/cartApi";
+import { useAppDispatch } from "@/features/store";
+import { fetchCart, setLastAction } from "@/features/cart/cartSlice";
 
 export default function ShopPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [showMobileFilter, setShowMobileFilter] = useState(false);
+
+  const { isAuthenticated } = useAuth();
+  const dispatch = useAppDispatch();
+  const [showLoginDialog, setShowLoginDialog] = useState(false);
 
   // States for products from API
   const [products, setProducts] = useState<ProductSummaryResponse[]>([]);
@@ -114,6 +123,28 @@ export default function ShopPage() {
     setNameInput("");
     setPage(1);
     setSearchParams(new URLSearchParams());
+  };
+
+  const handleQuickAdd = async (e: React.MouseEvent, p: ProductSummaryResponse) => {
+    e.preventDefault();
+    if (!isAuthenticated) {
+      setShowLoginDialog(true);
+      return;
+    }
+    try {
+      await addCartItemApi({
+        productId: String(p.id),
+        productName: p.name,
+        productImageUrl: p.imageUrl,
+        selectedOptions: [], 
+        unitPrice: p.basePrice,
+        quantity: 1
+      });
+      dispatch(setLastAction("add"));
+      dispatch(fetchCart());
+    } catch (error) {
+      handleError(error, "Cần chọn thêm tuỳ chọn, hãy vào trang chi tiết nhé!");
+    }
   };
 
   const hasActiveFilters = !!(
@@ -342,16 +373,24 @@ export default function ShopPage() {
                         </p>
 
                         {/* Price + Button */}
-                        <div className="mt-auto pt-2 border-t border-[#1A4331]/10">
-                          <div className="text-base font-bold text-[#1A4331] mb-2">
+                        <div className="mt-auto pt-2 border-t border-[#1A4331]/10 flex flex-col gap-2">
+                          <div className="text-base font-bold text-[#1A4331]">
                             {formatPrice(product.basePrice)}
                           </div>
-                          <Link to={`/shop/products/${product.id}`}>
-                            <Button className="w-full bg-[#1A4331] text-[#F8F5F0] hover:bg-[#8A9A7A] rounded-none h-9 text-xs font-bold transition-colors">
-                              <Coffee className="w-3.5 h-3.5 mr-1.5" />
-                              Xem Chi Tiết
+                          <div className="flex gap-2">
+                            <Button
+                              onClick={(e) => handleQuickAdd(e, product)}
+                              className="flex-1 bg-[#D2A676] text-[#1A4331] hover:bg-[#B19470] rounded-none h-9 text-xs font-bold transition-colors"
+                            >
+                              <ShoppingCart className="w-3.5 h-3.5 -mt-px mr-1.5" />
+                              Đặt Ngay
                             </Button>
-                          </Link>
+                            <Link to={`/shop/products/${product.id}`} className="flex-1">
+                              <Button className="w-full bg-[#1A4331] text-[#F8F5F0] hover:bg-[#8A9A7A] rounded-none h-9 text-xs font-bold transition-colors">
+                                Chi Tiết
+                              </Button>
+                            </Link>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -394,6 +433,13 @@ export default function ShopPage() {
           </main>
         </div>
       </div>
+
+      <RequireLoginDialog
+        isOpen={showLoginDialog}
+        onOpenChange={setShowLoginDialog}
+        title="Yêu cầu đăng nhập"
+        description="Bạn cần đăng nhập để mua nhanh sản phẩm này nhé!"
+      />
     </div>
   );
 }

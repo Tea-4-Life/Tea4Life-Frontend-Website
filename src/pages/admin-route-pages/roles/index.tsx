@@ -7,8 +7,8 @@ import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 
 // Sub-components
-import HeaderSection from "./components/HeaderSection";
-import SearchSection from "./components/SearchSection";
+import AdminPageHeader from "@/pages/admin-route-pages/components/AdminPageHeader";
+import { Lock } from "lucide-react";
 import TableSection from "./components/TableSection";
 import PaginationSection from "./components/PaginationSection";
 
@@ -65,16 +65,15 @@ export default function AdminRolesPage() {
 
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
-      {/* 1. Header Section */}
-      <HeaderSection />
-
-      {/* 2. Search Section */}
-      <SearchSection
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
+      {/* 1. Page Header */}
+      <AdminPageHeader
+        icon={Lock}
+        title="Quản lý chức vụ"
+        description="Thiết lập và phân cấp các chức vụ trong hệ thống."
+        searchPlaceholder="Tìm kiếm chức vụ..."
+        searchValue={searchQuery}
+        onSearchChange={setSearchQuery}
       />
-
-      {/* 3. Table Section */}
       <TableSection
         loading={loading}
         data={data}

@@ -1,3 +1,5 @@
+/* eslint-disable react-refresh/only-export-components */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import LoadingScreen from "@/components/custom/LoadingScreen";
@@ -15,12 +17,12 @@ import DriverLayout from "@/layouts/DriverLayout";
 import LandingPage from "@/pages/public-route-pages/landing";
 import ShopPage from "@/pages/public-route-pages/shop";
 import ProductDetail from "@/pages/public-route-pages/product-details/index.tsx";
-import CartPage from "@/pages/public-route-pages/cart";
 import BrandsListPage from "@/pages/public-route-pages/brands";
 import CategoriesPage from "@/pages/public-route-pages/categories";
 import AboutPage from "@/pages/public-route-pages/about";
 import NewsPage from "@/pages/public-route-pages/news";
 import NewsDetailPage from "@/pages/public-route-pages/news/detail";
+import StoresPage from "@/pages/public-route-pages/stores";
 
 // ========================================
 // CUSTOMER PAGES — import trực tiếp (không lazy)
@@ -28,6 +30,7 @@ import NewsDetailPage from "@/pages/public-route-pages/news/detail";
 import ProfileLayout from "@/pages/customer-route-pages/profile/layout";
 import OrderPage from "@/pages/customer-route-pages/orders";
 import OrderDetailPage from "@/pages/customer-route-pages/order-details";
+import CartPage from "@/pages/customer-route-pages/cart";
 import CheckoutPage from "@/pages/customer-route-pages/checkout";
 import GeneralPage from "@/pages/customer-route-pages/profile/general";
 import AddressPage from "@/pages/customer-route-pages/profile/address";
@@ -38,8 +41,6 @@ import SecurityPage from "@/pages/customer-route-pages/profile/security";
 // ========================================
 // ADMIN PAGES — lazy load theo cụm (admin ít khi dùng, tách chunk riêng)
 // ========================================
-/* eslint-disable react-refresh/only-export-components */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 const Loadable = (Component: any) => (props: any) => (
   <Suspense fallback={<LoadingScreen />}>
     <Component {...props} />
@@ -57,6 +58,10 @@ import AdminPermissionsPage from "@/pages/admin-route-pages/permissions";
 import AdminRolesPage from "@/pages/admin-route-pages/roles";
 import AdminRoleCreatePage from "@/pages/admin-route-pages/roles/create";
 import AdminVouchersPage from "@/pages/admin-route-pages/vouchers";
+import AdminStoresPage from "@/pages/admin-route-pages/stores";
+import AdminNewsPage from "@/pages/admin-route-pages/news";
+import AdminNewsEditorPage from "@/pages/admin-route-pages/news/editor";
+import AdminNewsCategoriesPage from "@/pages/admin-route-pages/news-categories";
 
 // ========================================
 // DRIVER PAGES — lazy load theo cụm
@@ -70,23 +75,27 @@ const DriverOrders = Loadable(
 const DriverOrderDetail = Loadable(
   lazy(() => import("@/pages/driver-route-pages/order-details")),
 );
+const AdminAuditLogsPage = Loadable(
+  lazy(() => import("@/pages/admin-route-pages/audit-log")),
+);
 
 // --- 1. NHÓM ROUTE CÔNG KHAI (PUBLIC) ---
 const publicRoutes = [
   { index: true, element: <LandingPage /> },
   { path: "shop", element: <ShopPage /> },
   { path: "shop/products/:id", element: <ProductDetail /> },
-  { path: "cart", element: <CartPage /> },
   { path: "brands", element: <BrandsListPage /> },
   { path: "categories", element: <CategoriesPage /> },
   { path: "news", element: <NewsPage /> },
   { path: "news/category/:categorySlug", element: <NewsPage /> },
   { path: "news/:slug", element: <NewsDetailPage /> },
   { path: "about", element: <AboutPage /> },
+  { path: "stores", element: <StoresPage /> },
 ];
 
 // --- 2. NHÓM ROUTE KHÁCH HÀNG (CUSTOMER) ---
 const customerRoutes = [
+  { path: "cart", element: <CartPage /> },
   { path: "order", element: <OrderPage /> },
   { path: "order/:id", element: <OrderDetailPage /> },
   { path: "checkout", element: <CheckoutPage /> },
@@ -119,6 +128,12 @@ const adminRoutes = [
   { path: "roles/create", element: <AdminRoleCreatePage /> },
   { path: "roles/edit/:id", element: <AdminRoleCreatePage /> },
   { path: "vouchers", element: <AdminVouchersPage /> },
+  { path: "audit-logs", element: <AdminAuditLogsPage /> },
+  { path: "stores", element: <AdminStoresPage /> },
+  { path: "news", element: <AdminNewsPage /> },
+  { path: "news/create", element: <AdminNewsEditorPage /> },
+  { path: "news/edit/:id", element: <AdminNewsEditorPage /> },
+  { path: "news-categories", element: <AdminNewsCategoriesPage /> },
 ];
 
 // --- 4. NHÓM ROUTE TÀI XẾ (DRIVER) ---
