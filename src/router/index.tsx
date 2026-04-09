@@ -90,6 +90,7 @@ const publicRoutes = [
   { path: "news/category/:categorySlug", element: <NewsPage /> },
   { path: "news/:slug", element: <NewsDetailPage /> },
   { path: "about", element: <AboutPage /> },
+  { path: "news", element: <LandingPage /> },
   { path: "stores", element: <StoresPage /> },
 ];
 
