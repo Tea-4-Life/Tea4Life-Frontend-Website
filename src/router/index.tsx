@@ -20,6 +20,8 @@ import ProductDetail from "@/pages/public-route-pages/product-details/index.tsx"
 import BrandsListPage from "@/pages/public-route-pages/brands";
 import CategoriesPage from "@/pages/public-route-pages/categories";
 import AboutPage from "@/pages/public-route-pages/about";
+import NewsPage from "@/pages/public-route-pages/news";
+import NewsDetailPage from "@/pages/public-route-pages/news/detail";
 import StoresPage from "@/pages/public-route-pages/stores";
 
 // ========================================
@@ -57,6 +59,9 @@ import AdminRolesPage from "@/pages/admin-route-pages/roles";
 import AdminRoleCreatePage from "@/pages/admin-route-pages/roles/create";
 import AdminVouchersPage from "@/pages/admin-route-pages/vouchers";
 import AdminStoresPage from "@/pages/admin-route-pages/stores";
+import AdminNewsPage from "@/pages/admin-route-pages/news";
+import AdminNewsEditorPage from "@/pages/admin-route-pages/news/editor";
+import AdminNewsCategoriesPage from "@/pages/admin-route-pages/news-categories";
 
 // ========================================
 // DRIVER PAGES — lazy load theo cụm
@@ -81,6 +86,9 @@ const publicRoutes = [
   { path: "shop/products/:id", element: <ProductDetail /> },
   { path: "brands", element: <BrandsListPage /> },
   { path: "categories", element: <CategoriesPage /> },
+  { path: "news", element: <NewsPage /> },
+  { path: "news/category/:categorySlug", element: <NewsPage /> },
+  { path: "news/:slug", element: <NewsDetailPage /> },
   { path: "about", element: <AboutPage /> },
   { path: "news", element: <LandingPage /> },
   { path: "stores", element: <StoresPage /> },
@@ -123,6 +131,10 @@ const adminRoutes = [
   { path: "vouchers", element: <AdminVouchersPage /> },
   { path: "audit-logs", element: <AdminAuditLogsPage /> },
   { path: "stores", element: <AdminStoresPage /> },
+  { path: "news", element: <AdminNewsPage /> },
+  { path: "news/create", element: <AdminNewsEditorPage /> },
+  { path: "news/edit/:id", element: <AdminNewsEditorPage /> },
+  { path: "news-categories", element: <AdminNewsCategoriesPage /> },
 ];
 
 // --- 4. NHÓM ROUTE TÀI XẾ (DRIVER) ---
