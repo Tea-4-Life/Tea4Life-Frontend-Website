@@ -5,6 +5,7 @@ import { getNewsBySlugApi } from "@/services/newsApi";
 import type { NewsDetailResponse } from "@/types/news/NewsDetailResponse";
 import type { NewsChunkResponse } from "@/types/news/NewsChunkResponse";
 import { handleError, getMediaUrl } from "@/lib/utils";
+import DOMPurify from "dompurify";
 
 function formatDateTime(isoString: string): string {
   const date = new Date(isoString);
@@ -33,7 +34,9 @@ function ChunkRenderer({ chunk }: { chunk: NewsChunkResponse }) {
       return (
         <div
           className="text-[#1A4331]/80 leading-relaxed text-[15px] whitespace-pre-line"
-          dangerouslySetInnerHTML={{ __html: chunk.content }}
+          dangerouslySetInnerHTML={{ 
+            __html: DOMPurify.sanitize(chunk.content, { USE_PROFILES: { html: true } }) 
+          }}
         />
       );
     case "IMAGE":
