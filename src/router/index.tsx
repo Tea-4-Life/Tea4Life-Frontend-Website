@@ -19,6 +19,8 @@ import CartPage from "@/pages/public-route-pages/cart";
 import BrandsListPage from "@/pages/public-route-pages/brands";
 import CategoriesPage from "@/pages/public-route-pages/categories";
 import AboutPage from "@/pages/public-route-pages/about";
+import NewsPage from "@/pages/public-route-pages/news";
+import NewsDetailPage from "@/pages/public-route-pages/news/detail";
 
 // ========================================
 // CUSTOMER PAGES — import trực tiếp (không lazy)
@@ -77,6 +79,9 @@ const publicRoutes = [
   { path: "cart", element: <CartPage /> },
   { path: "brands", element: <BrandsListPage /> },
   { path: "categories", element: <CategoriesPage /> },
+  { path: "news", element: <NewsPage /> },
+  { path: "news/category/:categorySlug", element: <NewsPage /> },
+  { path: "news/:slug", element: <NewsDetailPage /> },
   { path: "about", element: <AboutPage /> },
 ];
 

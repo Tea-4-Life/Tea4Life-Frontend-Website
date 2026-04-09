@@ -5,7 +5,7 @@ import { UserMenu } from "@/components/custom/UserMenu";
 import { useAuth } from "@/features/auth/useAuth";
 import { getMediaUrl } from "@/lib/utils";
 import keycloak from "@/lib/keycloak";
-import { Menu, X, ShoppingCart, Store, UserCircle, LogOut } from "lucide-react";
+import { Menu, X, ShoppingCart, Store, UserCircle, LogOut, Newspaper } from "lucide-react";
 
 const navLinks = [{ name: "[ TRANG CHỦ ]", href: "/" }];
 
@@ -49,6 +49,11 @@ export default function Header() {
             <Link to="/shop">
               <Button className="bg-[#1A4331] text-white hover:bg-[#8A9A7A] hover:text-[#1A4331] pixel-button flex gap-2">
                 <Store className="h-4 w-4" /> THỰC ĐƠN
+              </Button>
+            </Link>
+            <Link to="/news">
+              <Button className="bg-transparent border-2 border-[#1A4331] text-[#1A4331] hover:bg-[#1A4331] hover:text-[#F8F5F0] pixel-button flex gap-2">
+                <Newspaper className="h-4 w-4" /> TIN TỨC
               </Button>
             </Link>
             <Link
