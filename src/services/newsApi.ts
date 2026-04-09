@@ -13,6 +13,13 @@ export const getNewsApi = async (params: { page?: number; size?: number }) => {
   );
 };
 
+// Lấy 3 tin tức mới nhất
+export const getLatestNewsApi = async () => {
+  return await axiosClient.get<ApiResponse<NewsSummaryResponse[]>>(
+    "/product-service/public/news/latest",
+  );
+};
+
 // Lấy chi tiết tin tức theo slug
 export const getNewsBySlugApi = async (slug: string) => {
   return await axiosClient.get<ApiResponse<NewsDetailResponse>>(
