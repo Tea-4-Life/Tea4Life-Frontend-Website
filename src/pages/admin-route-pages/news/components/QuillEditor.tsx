@@ -59,9 +59,9 @@ export const QuillEditor: React.FC<QuillEditorProps> = ({
 
       quillRef.current.on("text-change", () => {
         const rawHtml = quillRef.current?.root.innerHTML || "";
-        // Sử dụng DOMPurify để clean (Chống xss)
         const cleanHtml = DOMPurify.sanitize(rawHtml, {
           USE_PROFILES: { html: true }, // Cho phép các tag HTML tiêu chuẩn format text
+          FORBID_TAGS: ['img', 'figure', 'video', 'audio', 'iframe', 'object', 'embed', 'picture', 'source'],
         });
 
         // Chỉ notify onChange nếu thực sự nội dung được đổi (khi type)
