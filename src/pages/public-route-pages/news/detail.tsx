@@ -38,12 +38,12 @@ function ChunkRenderer({ chunk }: { chunk: NewsChunkResponse }) {
       );
     case "IMAGE":
       return (
-        <figure className="my-6">
-          <div className="border-2 border-[#1A4331]/10 overflow-hidden">
+        <figure className="my-8 flex justify-center">
+          <div className="overflow-hidden border border-[#1A4331]/10 shadow-[2px_2px_0px_rgba(26,67,49,0.1)] rounded-md inline-block">
             <img
               src={getMediaUrl(chunk.content)}
               alt="Minh hoạ bài viết"
-              className="w-full h-auto object-cover"
+              className="max-w-[100%] max-h-[300px] sm:max-h-[350px] object-contain block bg-[#1A4331]/5"
               loading="lazy"
             />
           </div>
@@ -66,7 +66,7 @@ export default function NewsDetailPage() {
       setLoading(true);
       setError(false);
       const res = await getNewsBySlugApi(slug);
-      setNews(res.data || null);
+      setNews(res.data.data || null);
     } catch (err) {
       setError(true);
       handleError(err, "Không thể tải bài viết");

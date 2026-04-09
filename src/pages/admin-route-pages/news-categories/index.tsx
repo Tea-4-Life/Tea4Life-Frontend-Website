@@ -34,7 +34,7 @@ export default function AdminNewsCategoriesPage() {
     setLoading(true);
     try {
       const res = await getAdminNewsCategoriesApi();
-      setItems(res.data || []); // the response format from BE for this API seems to be a List wrapped in DTO or directly list. We will handle generic response if wrapped 
+      setItems(res.data.data || []); // adjusted for ApiResponse wrapper
     } catch (error) {
       handleError(error, "Không thể tải danh sách danh mục tin tức.");
     } finally {

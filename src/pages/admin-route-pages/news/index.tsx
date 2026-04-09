@@ -40,8 +40,8 @@ export default function AdminNewsPage() {
     setLoading(true);
     try {
       const res = await getAdminNewsApi({ page: page - 1, size });
-      setItems(res.data?.content || []);
-      setTotalElements(res.data?.totalElements || 0);
+      setItems(res.data.data?.content || []);
+      setTotalElements(res.data.data?.totalElements || 0);
     } catch (error) {
       handleError(error, "Không thể tải danh sách tin tức.");
     } finally {

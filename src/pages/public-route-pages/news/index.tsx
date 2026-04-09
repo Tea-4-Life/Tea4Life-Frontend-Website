@@ -37,7 +37,7 @@ export default function NewsPage() {
     try {
       setCategoriesLoading(true);
       const res = await getNewsCategoriesApi();
-      setCategories(res.data || []);
+      setCategories(res.data.data || []);
     } catch (error) {
       handleError(error, "Không thể tải danh mục tin tức");
     } finally {
@@ -58,12 +58,12 @@ export default function NewsPage() {
           page: page - 1,
           size,
         });
-        setNewsList(res.data?.content || []);
-        setTotalElements(res.data?.totalElements || 0);
+        setNewsList(res.data.data?.content || []);
+        setTotalElements(res.data.data?.totalElements || 0);
       } else {
         const res = await getNewsApi({ page: page - 1, size });
-        setNewsList(res.data?.content || []);
-        setTotalElements(res.data?.totalElements || 0);
+        setNewsList(res.data.data?.content || []);
+        setTotalElements(res.data.data?.totalElements || 0);
       }
     } catch (error) {
       handleError(error, "Không thể tải tin tức");

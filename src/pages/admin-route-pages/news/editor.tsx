@@ -74,23 +74,17 @@ export default function AdminNewsEditorPage() {
       setLoading(true);
       try {
         const catRes = await getAdminNewsCategoriesApi();
-        setCategories(Array.isArray(catRes.data) ? catRes.data : ((catRes as any).data?.data || []));
+        setCategories(catRes.data.data || []);
 
         if (isEditMode && id) {
           const detailRes = await getAdminNewsByIdApi(id);
-          const data = detailRes.data || (detailRes as any); // depending on how generic api wraps
+          const data = detailRes.data.data;
           
           setTitle(data.title);
           setThumbnailUrl(data.thumbnailUrl);
           
-          // Match category by slug, or if they add IDs, we need to handle correctly. 
-          // NewsSummaryResponse/NewsDetailResponse has categoryName and categorySlug. 
-          // We need categoryId for updating. Let's find it.
-          const matchedCat = (Array.isArray(catRes.data) ? catRes.data : ((catRes as any).data?.data || [])).find(
-            (c: NewsCategoryResponse) => c.slug === data.categorySlug
-          );
-          if (matchedCat) {
-            setCategoryId(matchedCat.id.toString());
+          if (data.category?.id) {
+            setCategoryId(data.category.id.toString());
           }
 
           // Transform for Dnd-kit
