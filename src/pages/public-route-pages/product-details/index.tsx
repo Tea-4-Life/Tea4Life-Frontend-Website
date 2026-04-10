@@ -33,6 +33,7 @@ import type { CartItemOptionSelectionRequest } from "@/types/cart/CartItemOption
 import { toast } from "sonner";
 import { useAppDispatch } from "@/features/store";
 import { fetchCart, setLastAction } from "@/features/cart/cartSlice";
+import { QuickOrderModal } from "@/components/custom/QuickOrderModal.tsx";
 
 export default function ProductDetail() {
   const { id } = useParams<{ id: string }>();
@@ -46,6 +47,10 @@ export default function ProductDetail() {
   const { isAuthenticated } = useAuth();
   const dispatch = useAppDispatch();
   const [showLoginDialog, setShowLoginDialog] = useState(false);
+
+  // Quick Order Modal state for related products
+  const [showQuickOrderModal, setShowQuickOrderModal] = useState(false);
+  const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
 
   const [quantity, setQuantity] = useState(1);
   const [isFavorite, setIsFavorite] = useState(false);
@@ -220,20 +225,10 @@ export default function ProductDetail() {
       setShowLoginDialog(true);
       return;
     }
-    try {
-      await addCartItemApi({
-        productId: String(p.id),
-        productName: p.name,
-        productImageUrl: p.imageUrl,
-        selectedOptions: [], 
-        unitPrice: p.basePrice,
-        quantity: 1
-      });
-      dispatch(setLastAction("add"));
-      dispatch(fetchCart());
-    } catch (error) {
-      handleError(error, "Cần chọn thêm tuỳ chọn, hãy vào trang chi tiết nhé!");
-    }
+    
+    // Open Quick Order Modal instead of adding directly
+    setSelectedProductId(String(p.id));
+    setShowQuickOrderModal(true);
   };
 
   if (loading) {
@@ -619,6 +614,12 @@ export default function ProductDetail() {
         onOpenChange={setShowLoginDialog}
         title="Yêu cầu đăng nhập"
         description="Bạn cần đăng nhập để thêm món vào giỏ hàng nhé!"
+      />
+
+      <QuickOrderModal
+        productId={selectedProductId}
+        isOpen={showQuickOrderModal}
+        onClose={() => setShowQuickOrderModal(false)}
       />
     </div>
   );

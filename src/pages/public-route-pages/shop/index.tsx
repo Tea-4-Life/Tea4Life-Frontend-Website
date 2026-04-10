@@ -20,17 +20,18 @@ import type { ProductCategoryResponse } from "@/types/product-category/ProductCa
 import { handleError, getMediaUrl } from "@/lib/utils";
 import { useAuth } from "@/features/auth/useAuth";
 import { RequireLoginDialog } from "@/components/custom/RequireLoginDialog";
-import { addCartItemApi } from "@/services/cartApi";
-import { useAppDispatch } from "@/features/store";
-import { fetchCart, setLastAction } from "@/features/cart/cartSlice";
+import { QuickOrderModal } from "@/components/custom/QuickOrderModal.tsx";
 
 export default function ShopPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [showMobileFilter, setShowMobileFilter] = useState(false);
 
   const { isAuthenticated } = useAuth();
-  const dispatch = useAppDispatch();
   const [showLoginDialog, setShowLoginDialog] = useState(false);
+
+  // Quick Order Modal state
+  const [showQuickOrderModal, setShowQuickOrderModal] = useState(false);
+  const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
 
   // States for products from API
   const [products, setProducts] = useState<ProductSummaryResponse[]>([]);
@@ -131,20 +132,10 @@ export default function ShopPage() {
       setShowLoginDialog(true);
       return;
     }
-    try {
-      await addCartItemApi({
-        productId: String(p.id),
-        productName: p.name,
-        productImageUrl: p.imageUrl,
-        selectedOptions: [], 
-        unitPrice: p.basePrice,
-        quantity: 1
-      });
-      dispatch(setLastAction("add"));
-      dispatch(fetchCart());
-    } catch (error) {
-      handleError(error, "Cần chọn thêm tuỳ chọn, hãy vào trang chi tiết nhé!");
-    }
+    
+    // Open Quick Order Modal instead of adding directly
+    setSelectedProductId(String(p.id));
+    setShowQuickOrderModal(true);
   };
 
   const hasActiveFilters = !!(
@@ -439,6 +430,12 @@ export default function ShopPage() {
         onOpenChange={setShowLoginDialog}
         title="Yêu cầu đăng nhập"
         description="Bạn cần đăng nhập để mua nhanh sản phẩm này nhé!"
+      />
+
+      <QuickOrderModal
+        productId={selectedProductId}
+        isOpen={showQuickOrderModal}
+        onClose={() => setShowQuickOrderModal(false)}
       />
     </div>
   );
