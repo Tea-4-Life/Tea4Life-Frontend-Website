@@ -9,6 +9,7 @@ import { CosmicMessageSection } from "./components/CosmicMessageSection.tsx";
 import { LatestNewsSection } from "./components/LatestNewsSection.tsx";
 
 import { FloatingBackgroundObjects } from "./components/FloatingBackgroundObjects.tsx";
+import { PingMeFloatingBtn } from "./components/PingMeFloatingBtn.tsx";
 
 // Optimizing performance by memoizing static sections to prevent unnecessary repaints
 const MemoizedIntroVideo = memo(IntroVideo);
@@ -69,6 +70,9 @@ export default function LandingPage() {
 
       {/* Floating Leaves & Sparkles Background */}
       <FloatingBackgroundObjects />
+
+      {/* PingMe Floating Cross-Promo Button */}
+      <PingMeFloatingBtn />
 
       {/* 1. Cinematic Brand Break: Full-width Video (Hero clip) */}
       <motion.div 
