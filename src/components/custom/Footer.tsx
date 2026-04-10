@@ -37,8 +37,7 @@ export default function Footer() {
           {/* Contact */}
           <div className="md:col-span-1 flex flex-col space-y-4">
             <h3 className="text-lg font-bold uppercase tracking-wider mb-2">Liên hệ</h3>
-            <p className="text-sm text-[#1A4331]/80">Email: hello@tea4life.vn</p>
-            <p className="text-sm text-[#1A4331]/80">Hotline: 1900 1234</p>
+            <p className="text-sm text-[#1A4331]/80">Email: HuynhDucPhu2502@gmail.com</p>
             <p className="text-sm text-[#1A4331]/80">Giờ mở cửa: 08:00 - 22:00</p>
           </div>
         </div>

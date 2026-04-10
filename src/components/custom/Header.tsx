@@ -6,16 +6,17 @@ import { RequireLoginDialog } from "@/components/custom/RequireLoginDialog";
 import { useAuth } from "@/features/auth/useAuth";
 import { getMediaUrl } from "@/lib/utils";
 import keycloak from "@/lib/keycloak";
-import { Menu, X, ShoppingCart, Store, UserCircle, LogOut, ShoppingBag, Home, Info, Newspaper } from "lucide-react";
+import { Menu, X, ShoppingCart, Store, UserCircle, LogOut, ShoppingBag, Home, Info, Newspaper, ChevronDown } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/features/store";
 import { fetchCart, clearLastAction } from "@/features/cart/cartSlice";
 
 const navLinks = [
   { name: "Trang chủ", href: "/", icon: Home },
   { 
-    name: "Sản phẩm", 
+    name: "Thực đơn", 
     href: "/shop", 
     isButton: true, 
+    isHighlighted: true,
     icon: ShoppingBag,
     color: "bg-[#1A4331] text-white hover:bg-[#1A4331]/90 shadow-[#1A4331]/20",
   },
@@ -85,6 +86,25 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 backdrop-blur-md bg-background/95 border-b border-border shadow-sm transition-all duration-300">
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
+            @keyframes shimmer {
+              0% { transform: translateX(-150%) skewX(12deg); }
+              100% { transform: translateX(150%) skewX(12deg); }
+            }
+            @keyframes pulse-ring {
+              0% { transform: scale(0.95); opacity: 0.8; box-shadow: 0 0 0 0 rgba(210, 166, 118, 0.7); }
+              70% { transform: scale(1); opacity: 1; box-shadow: 0 0 0 10px rgba(210, 166, 118, 0); }
+              100% { transform: scale(0.95); opacity: 0.8; box-shadow: 0 0 0 0 rgba(210, 166, 118, 0); }
+            }
+            @keyframes bounce-hard {
+              0%, 100% { transform: translateY(-25%); animation-timing-function: cubic-bezier(0.8, 0, 1, 1); }
+              50% { transform: translateY(0); animation-timing-function: cubic-bezier(0, 0, 0.2, 1); }
+            }
+          `
+        }}
+      />
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-20 items-center justify-between">
           {/* Logo Section */}
@@ -111,10 +131,26 @@ export default function Header() {
           <nav className="hidden items-center gap-1 lg:gap-2 md:flex p-1.5 rounded-full bg-secondary/20">
             {navLinks.map((link) => (
               link.isButton ? (
-                <Link key={link.name} to={link.href} className="group/btn">
-                  <div className={`flex items-center gap-2 px-6 py-2.5 rounded-full ${link.color} text-sm font-bold shadow-lg hover:scale-105 active:scale-95 transition-all duration-300`}>
-                    {link.icon && <link.icon className="h-4 w-4" />}
-                    {link.name}
+                <Link key={link.name} to={link.href} className="group/btn relative inline-block mx-1">
+                  {/* Overdrive Background Pulse Ring */}
+                  {link.isHighlighted && (
+                    <div className="absolute inset-0 rounded-full animate-[pulse-ring_2s_infinite] bg-[#D2A676] opacity-30 blur-sm pointer-events-none" />
+                  )}
+
+                  <div className={`relative flex items-center gap-2 px-6 py-2.5 rounded-full ${link.isHighlighted ? 'bg-gradient-to-r from-[#1A4331] to-[#123023] shadow-[0_4px_15px_rgba(26,67,49,0.5)] border-[1.5px] border-[#D2A676]/40' : link.color} text-sm font-bold hover:scale-110 active:scale-95 transition-all duration-300 overflow-hidden`}>
+                    
+                    {/* Continuous Shimmer Effect */}
+                    {link.isHighlighted && (
+                       <>
+                         <div className="absolute inset-0 -translate-x-[150%] animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-12 z-0" />
+                         <div className="absolute inset-0 -translate-x-[150%] animate-[shimmer_2.5s_infinite_0.5s] bg-gradient-to-r from-transparent via-[#D2A676]/30 to-transparent skew-x-12 z-0" />
+                       </>
+                    )}
+                    
+                    {link.icon && <link.icon className={`h-4 w-4 relative z-10 ${link.isHighlighted ? 'text-[#D2A676]' : ''}`} />}
+                    <span className={`relative z-10 ${link.isHighlighted ? 'text-white tracking-wide' : ''}`}>
+                      {link.name}
+                    </span>
                   </div>
                 </Link>
               ) : (
