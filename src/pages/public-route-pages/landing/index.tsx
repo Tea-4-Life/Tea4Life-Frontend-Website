@@ -65,36 +65,41 @@ export default function LandingPage() {
         }}
       />
 
-      {/* Video Hero */}
+      {/* 1. Cinematic Brand Break: Full-width Video (Hero clip) */}
       <motion.div 
-        className="relative z-10 gpu-layer"
+        className="relative z-10 gpu-layer mb-20 md:mb-32"
         initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
+        whileInView={{ opacity: 1 }}
         transition={{ duration: 1 }}
+        viewport={{ once: true }}
       >
         <MemoizedIntroVideo />
       </motion.div>
 
-      {/* Content wrapper with framer-motion staggered entrance */}
+      {/* Main Content Wrapper - Ordered sections */}
       <motion.main 
-        className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-32 pt-20 md:pt-32 relative z-20"
+        className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-24 md:space-y-32 relative z-20"
         variants={containerVariants}
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: "-100px" }}
       >
+        {/* 2. Hero Carousel: Primary Promos & Top Sellers (Sản phẩm nổi bật) */}
         <motion.section variants={childVariants} className="gpu-layer group">
           <MemoizedHeroCarousel />
         </motion.section>
         
+        {/* 3. Cosmic Message: Random Products (Sản phẩm random) */}
         <motion.section variants={childVariants} className="gpu-layer relative">
           <MemoizedCosmicMessageSection />
         </motion.section>
         
+        {/* 4. Latest News / Updates (Tin tức) */}
         <motion.section variants={childVariants} className="gpu-layer">
           <MemoizedLatestNewsSection />
         </motion.section>
-        
+
+        {/* 5. Categories: Quick Navigation (Danh mục sản phẩm) */}
         <motion.section variants={childVariants} className="gpu-layer">
           <MemoizedCategoriesSection />
         </motion.section>

@@ -6,7 +6,7 @@ import { RequireLoginDialog } from "@/components/custom/RequireLoginDialog";
 import { useAuth } from "@/features/auth/useAuth";
 import { getMediaUrl } from "@/lib/utils";
 import keycloak from "@/lib/keycloak";
-import { Menu, X, ShoppingCart, Store, UserCircle, LogOut, ShoppingBag, Home, Info, Newspaper, ChevronDown } from "lucide-react";
+import { Menu, X, ShoppingCart, Store, UserCircle, LogOut, ShoppingBag, Home, Newspaper } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/features/store";
 import { fetchCart, clearLastAction } from "@/features/cart/cartSlice";
 

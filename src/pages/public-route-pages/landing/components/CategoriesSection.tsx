@@ -35,7 +35,6 @@ export function CategoriesSection() {
   return (
     <section className="space-y-12">
       {/* Section Header */}
-      {/* Section Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between border-b-2 border-[#5c4033]/20 pb-6 gap-4">
         <div>
           <p className="text-[#d97743] font-bold text-lg mb-2 flex items-center gap-2">

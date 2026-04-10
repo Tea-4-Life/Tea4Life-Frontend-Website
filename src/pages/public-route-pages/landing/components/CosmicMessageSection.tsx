@@ -35,7 +35,17 @@ export function CosmicMessageSection() {
   };
 
   return (
-    <section className="space-y-12 pb-8 relative mt-20">
+    <section className="space-y-12 relative">
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
+            @keyframes shimmer-btn {
+              0% { transform: translateX(-150%) skewX(12deg); }
+              100% { transform: translateX(150%) skewX(12deg); }
+            }
+          `
+        }}
+      />
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] bg-[#d97743]/10 blur-[100px] rounded-full pointer-events-none z-0" />
       
       <div className="flex flex-col items-center justify-center text-center border-b-2 border-[#5c4033]/10 pb-8 relative z-10">
@@ -52,29 +62,44 @@ export function CosmicMessageSection() {
         <p className="mt-4 text-[#5c4033]/70 font-medium max-w-2xl mx-auto mb-8">
           Cảm thấy bối rối trước menu đồ uống? Đừng lo, vũ trụ đã sắp xếp sẵn những hương vị tuyệt vời này dành riêng cho bạn hôm nay. Thử ngay xem sao!
         </p>
-        <Button 
-          onClick={() => {
-            const fetchRandomProducts = async () => {
-              try {
-                setLoading(true);
-                const res = await getRandomProductsApi();
-                if (res.data?.data) {
-                  setRandomProducts(res.data.data);
+
+        <div className="relative group/wrapper inline-flex items-center justify-center mt-4 mb-4">
+          {/* Action Lines Aura Concept */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[240px] md:w-[300px] aspect-square rounded-full overflow-hidden opacity-30 group-hover/wrapper:opacity-70 group-hover/wrapper:scale-[1.15] transition-all duration-700 pointer-events-none z-0 mix-blend-multiply">
+            <img 
+              src="/common/vector_effect.png" 
+              alt="Aura" 
+              className="w-full h-full object-cover animate-[spin_15s_linear_infinite]" 
+            />
+          </div>
+
+          <Button 
+            onClick={() => {
+              const fetchRandomProducts = async () => {
+                try {
+                  setLoading(true);
+                  const res = await getRandomProductsApi();
+                  if (res.data?.data) {
+                    setRandomProducts(res.data.data);
+                  }
+                } catch (error) {
+                  console.error("Lỗi khi tải thông điệp vũ trụ:", error);
+                } finally {
+                  setLoading(false);
                 }
-              } catch (error) {
-                console.error("Lỗi khi tải thông điệp vũ trụ:", error);
-              } finally {
-                setLoading(false);
-              }
-            };
-            fetchRandomProducts();
-          }}
-          disabled={loading}
-          className="bg-transparent border-2 border-[#d97743] text-[#d97743] hover:bg-[#d97743] hover:text-white rounded-full px-8 font-bold gap-2 transition-all"
-        >
-          <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
-          BỐC QUẺ MỚI
-        </Button>
+              };
+              fetchRandomProducts();
+            }}
+            disabled={loading}
+            className="relative z-10 overflow-hidden bg-gradient-to-r from-[#d97743] to-[#c25a22] text-white border border-white/20 rounded-full px-8 h-11 text-sm font-extrabold gap-2 transition-all duration-300 hover:scale-110 active:scale-95 shadow-[0_4px_20px_rgba(217,119,67,0.4)] hover:shadow-[0_8px_30px_rgba(217,119,67,0.7)]"
+          >
+            {/* Shimmer effect */}
+            <div className="absolute inset-0 -translate-x-[150%] animate-[shimmer-btn_2s_infinite] bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-12 z-0 pointer-events-none" />
+            
+            <RefreshCw className={`w-4 h-4 relative z-10 ${loading ? 'animate-spin' : 'group-hover/wrapper:rotate-180 transition-transform duration-700'}`} />
+            <span className="relative z-10 tracking-widest uppercase">BỐC QUẺ MỚI</span>
+          </Button>
+        </div>
       </div>
 
       {loading ? (

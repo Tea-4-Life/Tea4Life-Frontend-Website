@@ -40,7 +40,7 @@ export function LatestNewsSection() {
   }
 
   return (
-    <section className="space-y-12 pb-24 relative mt-20 pt-16 border-t border-[#1A4331]/10">
+    <section className="space-y-12 relative pt-16 border-t border-[#1A4331]/10">
       <div className="flex flex-col items-center justify-center text-center relative z-10">
         <div className="inline-flex items-center gap-2 bg-[#1A4331]/5 text-[#1A4331] px-5 py-2 rounded-full w-fit mb-6 shadow-sm border border-[#1A4331]/10">
           <Rss className="w-4 h-4" />
