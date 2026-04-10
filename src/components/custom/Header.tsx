@@ -12,7 +12,6 @@ import { fetchCart, clearLastAction } from "@/features/cart/cartSlice";
 
 const navLinks = [
   { name: "Trang chủ", href: "/", icon: Home },
-  { name: "Giới thiệu", href: "/about", icon: Info },
   { 
     name: "Sản phẩm", 
     href: "/shop", 

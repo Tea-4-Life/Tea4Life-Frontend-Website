@@ -10,7 +10,7 @@ export default function LoadingScreen({
   subtitle = "Đang pha chế ly trà sữa tuyệt hảo...",
 }: LoadingScreenProps) {
   return (
-    <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#E5F6DF] overflow-hidden font-sans">
+    <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#F8F5F0] overflow-hidden font-sans">
       <style
         dangerouslySetInnerHTML={{
           __html: `

@@ -19,7 +19,6 @@ import ShopPage from "@/pages/public-route-pages/shop";
 import ProductDetail from "@/pages/public-route-pages/product-details/index.tsx";
 import BrandsListPage from "@/pages/public-route-pages/brands";
 import CategoriesPage from "@/pages/public-route-pages/categories";
-import AboutPage from "@/pages/public-route-pages/about";
 import NewsPage from "@/pages/public-route-pages/news";
 import NewsDetailPage from "@/pages/public-route-pages/news/detail";
 import StoresPage from "@/pages/public-route-pages/stores";
@@ -89,7 +88,6 @@ const publicRoutes = [
   { path: "news", element: <NewsPage /> },
   { path: "news/category/:categorySlug", element: <NewsPage /> },
   { path: "news/:slug", element: <NewsDetailPage /> },
-  { path: "about", element: <AboutPage /> },
   { path: "news", element: <LandingPage /> },
   { path: "stores", element: <StoresPage /> },
 ];
