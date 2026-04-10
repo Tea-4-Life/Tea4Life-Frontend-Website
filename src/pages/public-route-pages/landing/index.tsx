@@ -8,6 +8,8 @@ import { CategoriesSection } from "./components/CategoriesSection.tsx";
 import { CosmicMessageSection } from "./components/CosmicMessageSection.tsx";
 import { LatestNewsSection } from "./components/LatestNewsSection.tsx";
 
+import { FloatingBackgroundObjects } from "./components/FloatingBackgroundObjects.tsx";
+
 // Optimizing performance by memoizing static sections to prevent unnecessary repaints
 const MemoizedIntroVideo = memo(IntroVideo);
 const MemoizedHeroCarousel = memo(HeroCarousel);
@@ -64,6 +66,9 @@ export default function LandingPage() {
           backgroundSize: "32px 32px",
         }}
       />
+
+      {/* Floating Leaves & Sparkles Background */}
+      <FloatingBackgroundObjects />
 
       {/* 1. Cinematic Brand Break: Full-width Video (Hero clip) */}
       <motion.div 
