@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Loader2, Minus, Plus, ShoppingCart, Info } from "lucide-react";
@@ -25,18 +25,7 @@ export function QuickOrderModal({ productId, isOpen, onClose }: QuickOrderModalP
   
   const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    if (isOpen && productId) {
-      fetchProductDetail(productId);
-    } else {
-      // Reset state on close
-      setProduct(null);
-      setQuantity(1);
-      setSelectedOptions({});
-    }
-  }, [isOpen, productId]);
-
-  const fetchProductDetail = async (id: string) => {
+  const fetchProductDetail = useCallback(async (id: string) => {
     try {
       setLoading(true);
       const res = await getProductByIdApi(id);
@@ -59,7 +48,18 @@ export function QuickOrderModal({ productId, isOpen, onClose }: QuickOrderModalP
     } finally {
       setLoading(false);
     }
-  };
+  }, [onClose]);
+
+  useEffect(() => {
+    if (isOpen && productId) {
+      fetchProductDetail(productId);
+    } else {
+      // Reset state on close
+      setProduct(null);
+      setQuantity(1);
+      setSelectedOptions({});
+    }
+  }, [isOpen, productId, fetchProductDetail]);
 
   const handleOptionToggle = (optionId: string, valueId: string, isMultiSelect: boolean) => {
     setSelectedOptions((prev) => {
@@ -149,7 +149,7 @@ export function QuickOrderModal({ productId, isOpen, onClose }: QuickOrderModalP
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:!max-w-3xl p-0 overflow-hidden bg-[#F8F5F0] border-none rounded-3xl" showCloseButton={true}>
+      <DialogContent className="w-[95vw] sm:w-[90vw] sm:!max-w-[90vw] md:!max-w-4xl lg:!max-w-5xl p-0 overflow-hidden bg-[#F8F5F0] border-none rounded-3xl" showCloseButton={true}>
         <DialogHeader className="sr-only">
           <DialogTitle>Đặt món nhanh</DialogTitle>
           <DialogDescription>Chọn tuỳ chọn</DialogDescription>
@@ -160,22 +160,24 @@ export function QuickOrderModal({ productId, isOpen, onClose }: QuickOrderModalP
             <Loader2 className="h-8 w-8 animate-spin text-[#1A4331]" />
           </div>
         ) : product ? (
-          <div className="flex flex-col h-[85vh] sm:h-[80vh] max-h-[700px]">
-             {/* Header Image */}
-            <div className="relative h-48 sm:h-56 shrink-0 bg-white">
+          <div className="flex flex-col md:flex-row h-[85vh] sm:h-[80vh] max-h-[800px]">
+             {/* Left Image Column */}
+            <div className="relative w-full md:w-2/5 lg:w-1/2 h-48 md:h-full shrink-0 bg-white border-b md:border-b-0 md:border-r border-[#1A4331]/10">
               <img 
                 src={product.imageUrl ? getMediaUrl(product.imageUrl) : "/placeholder.svg"} 
                 alt={product.name}
                 className="w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-5">
-                <h2 className="text-2xl font-bold font-sans text-white leading-tight drop-shadow-md lg:mr-8 pr-4">{product.name}</h2>
-                <p className="text-emerald-300 font-bold text-lg mt-1 drop-shadow-md">{formatPrice(product.basePrice)}</p>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent flex flex-col justify-end p-5 md:p-8">
+                <h2 className="text-2xl md:text-4xl font-bold font-sans text-white leading-tight drop-shadow-md pr-4">{product.name}</h2>
+                <p className="text-emerald-300 font-bold text-lg md:text-xl mt-2 drop-shadow-md">{formatPrice(product.basePrice)}</p>
               </div>
             </div>
 
-            {/* Scrollable Body */}
-            <div className="overflow-y-auto p-5 shrink bg-[#F8F5F0] customized-scrollbar flex-1">
+            {/* Right Scrollable Content Column */}
+            <div className="flex flex-col flex-1 min-w-0 bg-[#F8F5F0]">
+              {/* Scrollable Options */}
+              <div className="overflow-y-auto p-5 shrink md:p-8 customized-scrollbar flex-1">
                {product.description && (
                   <div className="mb-6 flex gap-3 text-sm text-[#5c4033]/80 bg-white p-4 rounded-2xl shadow-sm border border-[#1A4331]/5">
                     <Info className="w-5 h-5 shrink-0 text-[#8A9A7A]" />
@@ -256,7 +258,7 @@ export function QuickOrderModal({ productId, isOpen, onClose }: QuickOrderModalP
             </div>
 
             {/* Sticky Bottom Actions */}
-            <div className="p-5 border-t border-[#1A4331]/10 bg-white shrink-0 flex items-center gap-4">
+            <div className="p-5 md:px-8 md:py-6 border-t border-[#1A4331]/10 bg-white shrink-0 flex items-center gap-4">
               <div className="flex items-center bg-[#F8F5F0] border border-[#1A4331]/10 rounded-full overflow-hidden shrink-0">
                 <button
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
@@ -278,12 +280,14 @@ export function QuickOrderModal({ productId, isOpen, onClose }: QuickOrderModalP
               <Button
                 onClick={handleAddToCart}
                 disabled={loading}
-                className="flex-1 bg-[#1A4331] text-[#F8F5F0] hover:bg-[#8A9A7A] h-12 rounded-full font-bold text-sm transition-all shadow-md"
+                className="flex-1 bg-[#1A4331] text-[#F8F5F0] hover:bg-[#8A9A7A] h-12 md:h-14 rounded-full font-bold text-sm md:text-base transition-all shadow-md"
               >
-                {loading ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : <ShoppingCart className="w-4 h-4 mr-2" />}
+                {loading ? <Loader2 className="w-5 h-5 md:w-6 md:h-6 animate-spin mr-2" /> : <ShoppingCart className="w-4 h-4 md:w-5 md:h-5 mr-2" />}
                 Thêm • {formatPrice(totalPrice)}
               </Button>
             </div>
+            
+          </div>
           </div>
         ) : null}
       </DialogContent>

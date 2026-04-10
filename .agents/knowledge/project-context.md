@@ -56,3 +56,6 @@
     ```
 - **Error Handling:** ALWAYS call `handleError(error, "Error message")` from `@/lib/utils` rather than manually logging to console or invoking toast directly.
 - **Pagination:** Utilize the custom hook `usePaginationState()` (which returns `pagination`, `onPageChange`, `onSizeChange`) to supply pagination metrics into Table components.
+
+## 7. Custom Implementation Highlights
+- **Product Quick Order Flow:** Replaced direct API add-to-cart clicks with a unified `QuickOrderModal` UI. It integrates from list pages (like Shop or Related Products) to show a split 2-column layout (Image on left, Scrollable Options/Toppings on right) on desktop. This overrides default Shadcn UI constraints (`sm:!max-w-[90vw] md:!max-w-4xl lg:!max-w-5xl`) and provides a more immersive "Quick Add" experience without needing to navigate to the detailed product page.
