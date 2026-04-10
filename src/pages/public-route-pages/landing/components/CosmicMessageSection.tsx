@@ -64,12 +64,22 @@ export function CosmicMessageSection() {
         </p>
 
         <div className="relative group/wrapper inline-flex items-center justify-center mt-4 mb-4">
-          {/* Action Lines Aura Concept */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[240px] md:w-[300px] aspect-square rounded-full overflow-hidden opacity-30 group-hover/wrapper:opacity-70 group-hover/wrapper:scale-[1.15] transition-all duration-700 pointer-events-none z-0 mix-blend-multiply">
+          {/* Outer Aura (Large) */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[240px] md:w-[320px] aspect-square rounded-full overflow-hidden opacity-20 group-hover/wrapper:opacity-50 group-hover/wrapper:scale-[1.15] transition-all duration-700 pointer-events-none z-0 mix-blend-multiply">
             <img 
               src="/common/vector_effect.png" 
-              alt="Aura" 
-              className="w-full h-full object-cover animate-[spin_15s_linear_infinite]" 
+              alt="Aura Exterior" 
+              className="w-full h-full object-cover animate-[spin_20s_linear_infinite]" 
+            />
+          </div>
+
+          {/* Inner Aura (Small) */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[160px] md:w-[200px] aspect-square rounded-full overflow-hidden opacity-30 group-hover/wrapper:opacity-80 group-hover/wrapper:scale-[1.25] transition-all duration-500 pointer-events-none z-0 mix-blend-multiply">
+            <img 
+              src="/common/vector_effect.png" 
+              alt="Aura Interior" 
+              className="w-full h-full object-cover animate-[spin_12s_linear_infinite]" 
+              style={{ animationDirection: "reverse" }}
             />
           </div>
 
