@@ -63,7 +63,10 @@ export const getMyStoresApi = async () => {
 };
 
 /** List orders for a specific store, optionally filtered by status */
-export const getStoreOrdersApi = async (storeId: string | number, status?: string) => {
+export const getStoreOrdersApi = async (
+  storeId: string | number,
+  status?: string,
+) => {
   return await axiosClient.get<ApiResponse<StoreOrderResponse[]>>(
     `/order-service/stores/${storeId}/orders`,
     { params: status ? { status } : {} },
@@ -71,21 +74,30 @@ export const getStoreOrdersApi = async (storeId: string | number, status?: strin
 };
 
 /** Accept order: PENDING -> PREPARING */
-export const acceptStoreOrderApi = async (storeId: string | number, orderId: string) => {
+export const acceptStoreOrderApi = async (
+  storeId: string | number,
+  orderId: string,
+) => {
   return await axiosClient.post<ApiResponse<StoreOrderResponse>>(
     `/order-service/stores/${storeId}/orders/${orderId}/accept`,
   );
 };
 
 /** Mark ready for delivery: PREPARING -> READY_FOR_DELIVERY */
-export const readyStoreOrderApi = async (storeId: string | number, orderId: string) => {
+export const readyStoreOrderApi = async (
+  storeId: string | number,
+  orderId: string,
+) => {
   return await axiosClient.post<ApiResponse<StoreOrderResponse>>(
     `/order-service/stores/${storeId}/orders/${orderId}/ready-for-delivery`,
   );
 };
 
 /** Cancel order from store */
-export const cancelStoreOrderApi = async (storeId: string | number, orderId: string) => {
+export const cancelStoreOrderApi = async (
+  storeId: string | number,
+  orderId: string,
+) => {
   return await axiosClient.post<ApiResponse<StoreOrderResponse>>(
     `/order-service/stores/${storeId}/orders/${orderId}/cancel`,
   );
@@ -127,5 +139,23 @@ export const pickupDriverOrderApi = async (id: string) => {
 export const completeDriverOrderApi = async (id: string) => {
   return await axiosClient.post<ApiResponse<DeliveryOrderResponse>>(
     `/order-service/driver/orders/${id}/complete`,
+  );
+};
+
+/** Post driver location (driver -> server) */
+export const postDriverLocationApi = async (
+  id: string,
+  data: { latitude: number; longitude: number; accuracy?: number },
+) => {
+  return await axiosClient.post<ApiResponse<any>>(
+    `/order-service/driver/orders/${id}/location`,
+    data,
+  );
+};
+
+/** Get latest driver location for an order */
+export const getDriverLocationLatestApi = async (id: string) => {
+  return await axiosClient.get<ApiResponse<any>>(
+    `/order-service/driver/orders/${id}/location/latest`,
   );
 };

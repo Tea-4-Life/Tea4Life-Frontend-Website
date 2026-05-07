@@ -14,6 +14,8 @@ import {
   Banknote,
 } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
+import DriverLocationTracker from "@/components/driver/DriverLocationTracker";
+import OrderTrackingMap from "@/components/driver/OrderTrackingMap";
 import {
   getDriverOrderByIdApi,
   pickupDriverOrderApi,
@@ -30,6 +32,11 @@ export default function DriverOrderDetail() {
   const [order, setOrder] = useState<DeliveryOrderResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
+  const [driverLocation, setDriverLocation] = useState<{
+    latitude: number;
+    longitude: number;
+    accuracy?: number;
+  } | null>(null);
 
   useEffect(() => {
     if (!id) return;
@@ -110,7 +117,8 @@ export default function DriverOrderDetail() {
     .filter((s) => s && s !== "-")
     .join(", ");
 
-  const totalItems = order.items?.reduce((sum, item) => sum + item.quantity, 0) || 0;
+  const totalItems =
+    order.items?.reduce((sum, item) => sum + item.quantity, 0) || 0;
 
   return (
     <div className="relative min-h-screen bg-slate-50">
@@ -130,6 +138,18 @@ export default function DriverOrderDetail() {
       </div>
 
       <div className="p-4 space-y-4 pb-32">
+        {order && order.status === "DELIVERING" && order.id && (
+          <>
+            <OrderTrackingMap
+              deliveryAddress={deliveryAddress}
+              driverLocation={driverLocation}
+            />
+            <DriverLocationTracker
+              orderId={order.id}
+              onLocationUpdate={(location) => setDriverLocation(location)}
+            />
+          </>
+        )}
         {/* Card khách hàng */}
         <Card className="border-none shadow-sm rounded-3xl bg-white">
           <CardContent className="p-5 flex items-center justify-between">
@@ -209,12 +229,16 @@ export default function DriverOrderDetail() {
                   Thanh toán
                 </span>
               </div>
-              <span className={`text-xs font-bold px-3 py-1 rounded-full ${
-                order.paymentMethod === "COD"
-                  ? "bg-amber-50 text-amber-600"
-                  : "bg-blue-50 text-blue-600"
-              }`}>
-                {order.paymentMethod === "COD" ? "Thu tiền mặt" : "Đã chuyển khoản"}
+              <span
+                className={`text-xs font-bold px-3 py-1 rounded-full ${
+                  order.paymentMethod === "COD"
+                    ? "bg-amber-50 text-amber-600"
+                    : "bg-blue-50 text-blue-600"
+                }`}
+              >
+                {order.paymentMethod === "COD"
+                  ? "Thu tiền mặt"
+                  : "Đã chuyển khoản"}
               </span>
             </div>
             <p className="text-lg font-black text-slate-800 mt-2">
@@ -230,7 +254,10 @@ export default function DriverOrderDetail() {
               Kiểm tra đơn hàng ({totalItems} món)
             </p>
             {order.items?.map((item) => (
-              <div key={item.id} className="flex justify-between text-sm font-bold">
+              <div
+                key={item.id}
+                className="flex justify-between text-sm font-bold"
+              >
                 <span className="text-slate-600">
                   {item.quantity}x {item.productName}
                 </span>
@@ -246,8 +273,12 @@ export default function DriverOrderDetail() {
             <CardContent className="p-5 flex items-center gap-3">
               <CheckCircle2 className="h-6 w-6 text-emerald-600" />
               <div>
-                <p className="font-black text-emerald-700 text-sm">Đã hoàn thành</p>
-                <p className="text-xs text-emerald-600/70">Đơn hàng đã giao thành công.</p>
+                <p className="font-black text-emerald-700 text-sm">
+                  Đã hoàn thành
+                </p>
+                <p className="text-xs text-emerald-600/70">
+                  Đơn hàng đã giao thành công.
+                </p>
               </div>
             </CardContent>
           </Card>
