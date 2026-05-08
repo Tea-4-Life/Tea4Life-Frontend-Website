@@ -55,19 +55,19 @@ export default function GeneralPage() {
 
   return (
     <div className="bg-white border-2 border-[#1A4331]/15">
-      <div className="px-6 py-4 border-b-2 border-[#1A4331]/10">
-        <h2 className="text-[#1A4331] font-bold text-sm uppercase tracking-wider">
+      <div className="px-4 sm:px-6 py-4 border-b-2 border-[#1A4331]/10">
+        <h2 className="text-[#1A4331] font-bold text-xs sm:text-sm uppercase tracking-wider">
           Thông tin cơ bản
         </h2>
-        <p className="text-[#8A9A7A] text-xs mt-1">
+        <p className="text-[#8A9A7A] text-[11px] sm:text-xs mt-1">
           Cập nhật thông tin cá nhân của bạn để đồng bộ với hồ sơ hệ thống.
         </p>
       </div>
-      <div className="p-6 space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="p-4 sm:p-6 space-y-6">
+        <div className="grid grid-cols-1 gap-4 sm:gap-6">
           {/* Full Name */}
           <div className="space-y-2">
-            <Label htmlFor="fullname">
+            <Label htmlFor="fullname" className="text-xs sm:text-sm">
               Họ và tên <span className="text-red-500">*</span>
             </Label>
             <Input
@@ -75,13 +75,13 @@ export default function GeneralPage() {
               placeholder="Nhập họ và tên"
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
-              className="border-2 border-[#1A4331]/20 bg-[#F8F5F0] rounded-none focus-visible:ring-0 focus-visible:border-[#1A4331] text-sm"
+              className="border-2 border-[#1A4331]/20 bg-[#F8F5F0] rounded-none focus-visible:ring-0 focus-visible:border-[#1A4331] text-xs sm:text-sm"
             />
           </div>
 
           {/* Phone */}
           <div className="space-y-2">
-            <Label htmlFor="phone">
+            <Label htmlFor="phone" className="text-xs sm:text-sm">
               Số điện thoại <span className="text-red-500">*</span>
             </Label>
             <Input
@@ -89,13 +89,13 @@ export default function GeneralPage() {
               placeholder="Nhập số điện thoại"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              className="border-emerald-100 focus-visible:ring-emerald-500"
+              className="border-2 border-[#1A4331]/20 bg-[#F8F5F0] rounded-none focus-visible:ring-0 focus-visible:border-[#1A4331] text-xs sm:text-sm"
             />
           </div>
 
           {/* Date of Birth */}
           <div className="space-y-2">
-            <Label htmlFor="dob">
+            <Label htmlFor="dob" className="text-xs sm:text-sm">
               Ngày sinh <span className="text-red-500">*</span>
             </Label>
             <div className="relative">
@@ -105,7 +105,7 @@ export default function GeneralPage() {
                 max="2010-12-31"
                 value={dob}
                 onChange={(e) => setDob(e.target.value)}
-                className="border-2 border-[#1A4331]/20 bg-[#F8F5F0] rounded-none focus-visible:ring-0 focus-visible:border-[#1A4331] text-sm pl-10"
+                className="border-2 border-[#1A4331]/20 bg-[#F8F5F0] rounded-none focus-visible:ring-0 focus-visible:border-[#1A4331] text-xs sm:text-sm pl-10"
               />
               <CalendarIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#8A9A7A]" />
             </div>
@@ -113,7 +113,7 @@ export default function GeneralPage() {
 
           {/* Gender */}
           <div className="space-y-2">
-            <Label htmlFor="gender">
+            <Label htmlFor="gender" className="text-xs sm:text-sm">
               Giới tính <span className="text-red-500">*</span>
             </Label>
             <Select
@@ -122,7 +122,7 @@ export default function GeneralPage() {
                 setGender(val)
               }
             >
-              <SelectTrigger className="border-2 border-[#1A4331]/20 bg-[#F8F5F0] rounded-none text-sm focus:ring-0 focus:ring-offset-0">
+              <SelectTrigger className="border-2 border-[#1A4331]/20 bg-[#F8F5F0] rounded-none text-xs sm:text-sm focus:ring-0 focus:ring-offset-0">
                 <SelectValue placeholder="Chọn giới tính" />
               </SelectTrigger>
               <SelectContent>
@@ -136,11 +136,11 @@ export default function GeneralPage() {
 
         {/* Thông tin hệ thống */}
         {profile?.id && (
-          <div className="p-4 bg-[#F8F5F0] border border-[#1A4331]/10 space-y-2">
-            <p className="text-xs text-[#8A9A7A] font-bold uppercase tracking-wider">
+          <div className="p-3 sm:p-4 bg-[#F8F5F0] border border-[#1A4331]/10 space-y-2">
+            <p className="text-[10px] sm:text-xs text-[#8A9A7A] font-bold uppercase tracking-wider">
               Thông tin hệ thống
             </p>
-            <div className="grid grid-cols-2 text-sm">
+            <div className="grid grid-cols-2 text-xs sm:text-sm">
               <span className="text-[#1A4331]/70">Profile ID:</span>
               <span className="font-mono text-[#1A4331] text-right">
                 #{profile.id}
@@ -174,15 +174,16 @@ export default function GeneralPage() {
               setSaving(false);
             }
           }}
-          className="w-full md:w-auto bg-[#1A4331] hover:bg-[#8A9A7A] text-[#F8F5F0] rounded-none gap-2 font-bold"
+          className="w-full bg-[#1A4331] hover:bg-[#8A9A7A] text-[#F8F5F0] rounded-none gap-2 font-bold text-xs sm:text-sm"
         >
           {saving ? (
             <>
-              <Loader2 className="h-4 w-4 animate-spin" /> Đang lưu...
+              <Loader2 className="h-3 w-3 sm:h-4 sm:w-4 animate-spin" /> Đang
+              lưu...
             </>
           ) : (
             <>
-              <Save className="h-4 w-4" /> Lưu hồ sơ
+              <Save className="h-3 w-3 sm:h-4 sm:w-4" /> Lưu hồ sơ
             </>
           )}
         </Button>
