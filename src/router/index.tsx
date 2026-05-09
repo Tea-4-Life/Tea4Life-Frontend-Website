@@ -37,6 +37,7 @@ import AddressPage from "@/pages/customer-route-pages/profile/address";
 import CreateAddressPage from "@/pages/customer-route-pages/profile/address/create";
 import EditAddressPage from "@/pages/customer-route-pages/profile/address/edit";
 import SecurityPage from "@/pages/customer-route-pages/profile/security";
+import FavoritesPage from "@/pages/customer-route-pages/profile/favorites";
 
 // ========================================
 // ADMIN PAGES — lazy load theo cụm (admin ít khi dùng, tách chunk riêng)
@@ -120,6 +121,7 @@ const customerRoutes = [
       { path: "address/create", element: <CreateAddressPage /> },
       { path: "address/edit/:id", element: <EditAddressPage /> },
       { path: "security", element: <SecurityPage /> },
+      { path: "favorites", element: <FavoritesPage /> },
     ],
   },
 ];
