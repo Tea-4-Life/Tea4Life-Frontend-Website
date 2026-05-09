@@ -23,6 +23,7 @@ import CategoriesPage from "@/pages/public-route-pages/categories";
 import NewsPage from "@/pages/public-route-pages/news";
 import NewsDetailPage from "@/pages/public-route-pages/news/detail";
 import StoresPage from "@/pages/public-route-pages/stores";
+import BlogPage from "@/pages/public-route-pages/blog";
 
 // ========================================
 // CUSTOMER PAGES — import trực tiếp (không lazy)
@@ -37,6 +38,7 @@ import AddressPage from "@/pages/customer-route-pages/profile/address";
 import CreateAddressPage from "@/pages/customer-route-pages/profile/address/create";
 import EditAddressPage from "@/pages/customer-route-pages/profile/address/edit";
 import SecurityPage from "@/pages/customer-route-pages/profile/security";
+import MyBlogReviewsPage from "@/pages/customer-route-pages/blog-reviews";
 
 // ========================================
 // ADMIN PAGES — lazy load theo cụm (admin ít khi dùng, tách chunk riêng)
@@ -97,11 +99,12 @@ const publicRoutes = [
   { path: "shop/products/:id", element: <ProductDetail /> },
   { path: "brands", element: <BrandsListPage /> },
   { path: "categories", element: <CategoriesPage /> },
+  { path: "blog", element: <BlogPage /> },
   { path: "news", element: <NewsPage /> },
   { path: "news/category/:categorySlug", element: <NewsPage /> },
   { path: "news/:slug", element: <NewsDetailPage /> },
-  { path: "news", element: <LandingPage /> },
   { path: "places", element: <StoresPage /> },
+  { path: "stores", element: <StoresPage /> },
 ];
 
 // --- 2. NHÓM ROUTE KHÁCH HÀNG (CUSTOMER) ---
@@ -110,6 +113,7 @@ const customerRoutes = [
   { path: "order", element: <OrderPage /> },
   { path: "order/:id", element: <OrderDetailPage /> },
   { path: "checkout", element: <CheckoutPage /> },
+  { path: "my-reviews", element: <MyBlogReviewsPage /> },
   {
     path: "profile",
     element: <ProfileLayout />,

@@ -35,10 +35,6 @@ export function LatestNewsSection() {
     });
   };
 
-  if (loading || latestNews.length === 0) {
-    return null;
-  }
-
   return (
     <section className="space-y-12 relative pt-16 border-t border-[#1A4331]/10">
       <div className="flex flex-col items-center justify-center text-center relative z-10">
@@ -57,8 +53,47 @@ export function LatestNewsSection() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10 px-0 sm:px-4 lg:px-0">
-        {latestNews.map((news) => (
+      {loading ? (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10 px-0 sm:px-4 lg:px-0">
+          {Array.from({ length: 3 }).map((_, idx) => (
+            <div
+              key={idx}
+              className="bg-white border border-[#1A4331]/10 rounded-xl overflow-hidden animate-pulse"
+            >
+              <div className="aspect-[16/10] bg-[#1A4331]/5" />
+              <div className="p-6 space-y-3">
+                <div className="h-4 w-24 bg-[#1A4331]/10 rounded" />
+                <div className="h-5 w-full bg-[#1A4331]/10 rounded" />
+                <div className="h-5 w-2/3 bg-[#1A4331]/10 rounded" />
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : latestNews.length === 0 ? (
+        <div className="bg-white border border-dashed border-[#1A4331]/20 rounded-2xl p-10 text-center">
+          <p className="font-semibold text-[#1A4331]">Chưa có bài blog/tin tức nào</p>
+          <p className="text-sm text-[#8A9A7A] mt-2">
+            Bạn có thể vào menu sản phẩm và gửi review để tạo nội dung cộng đồng.
+          </p>
+          <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
+            <Link to="/news">
+              <Button className="bg-[#1A4331] hover:bg-[#8A9A7A] text-[#F8F5F0] rounded-full px-6 h-11 font-bold">
+                Đi tới Tin tức
+              </Button>
+            </Link>
+            <Link to="/shop">
+              <Button
+                variant="outline"
+                className="rounded-full px-6 h-11 border-[#1A4331]/20 text-[#1A4331]"
+              >
+                Đi tới Thực đơn
+              </Button>
+            </Link>
+          </div>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10 px-0 sm:px-4 lg:px-0">
+          {latestNews.map((news) => (
           <Link
             key={news.id}
             to={`/news/${news.slug}`}
@@ -101,16 +136,19 @@ export function LatestNewsSection() {
               </div>
             </div>
           </Link>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
 
-      <div className="flex justify-center mt-12 w-full relative z-10">
-        <Link to="/news">
-          <Button className="bg-[#1A4331] hover:bg-[#8A9A7A] text-[#F8F5F0] rounded-full px-8 h-12 font-bold gap-2 transition-all shadow-md active:scale-95">
-            XEM TẤT CẢ BÀI VIẾT
-          </Button>
-        </Link>
-      </div>
+      {!loading && latestNews.length > 0 && (
+        <div className="flex justify-center mt-12 w-full relative z-10">
+          <Link to="/news">
+            <Button className="bg-[#1A4331] hover:bg-[#8A9A7A] text-[#F8F5F0] rounded-full px-8 h-12 font-bold gap-2 transition-all shadow-md active:scale-95">
+              XEM TẤT CẢ BÀI VIẾT
+            </Button>
+          </Link>
+        </div>
+      )}
     </section>
   );
 }

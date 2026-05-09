@@ -16,6 +16,7 @@ import {
   ShoppingBag,
   Home,
   Newspaper,
+  BookOpenText,
   MapPin,
   PackageSearch,
 } from "lucide-react";
@@ -32,6 +33,7 @@ const navLinks = [
     icon: ShoppingBag,
     color: "bg-[#1A4331] text-white hover:bg-[#1A4331]/90 shadow-[#1A4331]/20",
   },
+  { name: "Blog", href: "/blog", icon: BookOpenText },
   { name: "Tin tức", href: "/news", icon: Newspaper },
   {
     name: "Cửa hàng",
