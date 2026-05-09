@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
-import { User, MapPin, Lock, Camera, Loader2, Heart } from "lucide-react";
+import { User, MapPin, Lock, Camera, Loader2, Heart, MessageSquareText } from "lucide-react";
 import { cn, getMediaUrl, getNameInitials } from "@/lib/utils";
 import { getUserProfileApi } from "@/services/userApi";
 import type { UserProfileResponse } from "@/types/user/UserProfileResponse";
@@ -14,6 +14,7 @@ const menuItems = [
   { name: "Địa chỉ", href: "/profile/address", icon: MapPin },
   { name: "Bảo mật", href: "/profile/security", icon: Lock },
   { name: "Sản phẩm yêu thích", href: "/profile/favorites", icon: Heart },
+  { name: "Đánh giá của tôi", href: "/my-reviews", icon: MessageSquareText },
 ];
 
 export default function ProfileLayout() {

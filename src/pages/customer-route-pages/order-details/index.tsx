@@ -14,6 +14,7 @@ import {
   Timer,
   X,
   AlertCircle,
+  MessageSquare,
 } from "lucide-react";
 import {
   getOrderByIdApi,
@@ -314,6 +315,20 @@ export default function OrderDetailPage() {
                         Số lượng: {item.quantity} ×{" "}
                         {formatPrice(item.unitPrice)}
                       </p>
+                      {order.status === "COMPLETED" && (
+                        <Link
+                          to={`/shop/products/${item.productId}`}
+                          className="mt-2 inline-flex"
+                        >
+                          <Button
+                            size="sm"
+                            className="h-8 bg-[#1A4331] hover:bg-[#8A9A7A] text-white rounded-none gap-1 text-xs font-bold"
+                          >
+                            <MessageSquare className="h-3.5 w-3.5" />
+                            Viết đánh giá
+                          </Button>
+                        </Link>
+                      )}
                     </div>
                     <p className="font-bold text-[#1A4331]">
                       {formatPrice(item.unitPrice * item.quantity)}
