@@ -315,7 +315,7 @@ export default function OrderDetailPage() {
                         Số lượng: {item.quantity} ×{" "}
                         {formatPrice(item.unitPrice)}
                       </p>
-                      {orderData.status === "Delivered" && (
+                      {order.status === "COMPLETED" && (
                         <Link
                           to={`/shop/products/${item.productId}`}
                           className="mt-2 inline-flex"
