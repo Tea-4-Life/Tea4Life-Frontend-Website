@@ -138,7 +138,7 @@ export default function CheckoutPage() {
   };
 
   const subtotal = cart?.totalAmount || 0;
-  const shippingFee = subtotal > 500000 ? 0 : 30000;
+  const shippingFee = 0; // subtotal > 500000 ? 0 : 30000;
   const total = subtotal + (cart?.items?.length ? shippingFee : 0);
 
   const handleSubmit = async () => {
