@@ -48,6 +48,7 @@ export interface OrderResponse {
   note?: string | null;
   createdAt: string;
   items: OrderItemResponse[];
+  checkoutUrl?: string | null; // PayOS payment link (only when paymentMethod === "BANKING")
 }
 
 // ============================================================

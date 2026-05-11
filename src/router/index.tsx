@@ -40,6 +40,8 @@ import EditAddressPage from "@/pages/customer-route-pages/profile/address/edit";
 import SecurityPage from "@/pages/customer-route-pages/profile/security";
 import FavoritesPage from "@/pages/customer-route-pages/profile/favorites";
 import MyBlogReviewsPage from "@/pages/customer-route-pages/blog-reviews";
+import PaymentSuccessPage from "@/pages/customer-route-pages/payment-success";
+import PaymentCancelPage from "@/pages/customer-route-pages/payment-cancel";
 
 // ========================================
 // ADMIN PAGES — lazy load theo cụm (admin ít khi dùng, tách chunk riêng)
@@ -115,6 +117,8 @@ const customerRoutes = [
   { path: "order/:id", element: <OrderDetailPage /> },
   { path: "checkout", element: <CheckoutPage /> },
   { path: "my-reviews", element: <MyBlogReviewsPage /> },
+  { path: "payment/success", element: <PaymentSuccessPage /> },
+  { path: "payment/cancel", element: <PaymentCancelPage /> },
   {
     path: "profile",
     element: <ProfileLayout />,
