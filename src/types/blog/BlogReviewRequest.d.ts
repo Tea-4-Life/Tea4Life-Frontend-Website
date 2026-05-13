@@ -23,3 +23,12 @@ export interface ModerateBlogReviewRequest {
   status: Exclude<BlogReviewStatus, "PENDING">;
   rejectionReason?: string;
 }
+
+export interface CreateBlogReviewCommentRequest {
+  content: string;
+  parentCommentId?: string;
+}
+
+export interface CreateBlogReviewShareRequest {
+  channel?: string;
+}

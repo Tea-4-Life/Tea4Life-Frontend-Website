@@ -59,6 +59,10 @@ axiosClient.interceptors.request.use(
       if (keycloak.token) {
         config.headers.Authorization = `Bearer ${keycloak.token}`;
       }
+      const fullName = store.getState().auth.fullName;
+      if (fullName) {
+        config.headers["X-User-FullName"] = fullName;
+      }
     } catch (err) {
       console.error("[Tea4Life] Request Interceptor Error:", err);
     }

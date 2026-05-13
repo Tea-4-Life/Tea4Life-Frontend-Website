@@ -40,6 +40,7 @@ import EditAddressPage from "@/pages/customer-route-pages/profile/address/edit";
 import SecurityPage from "@/pages/customer-route-pages/profile/security";
 import FavoritesPage from "@/pages/customer-route-pages/profile/favorites";
 import MyBlogReviewsPage from "@/pages/customer-route-pages/blog-reviews";
+import MyBlogReviewHistoryPage from "@/pages/customer-route-pages/blog-review-history";
 import PaymentSuccessPage from "@/pages/customer-route-pages/payment-success";
 import PaymentCancelPage from "@/pages/customer-route-pages/payment-cancel";
 
@@ -117,6 +118,7 @@ const customerRoutes = [
   { path: "order/:id", element: <OrderDetailPage /> },
   { path: "checkout", element: <CheckoutPage /> },
   { path: "my-reviews", element: <MyBlogReviewsPage /> },
+  { path: "my-review-history", element: <MyBlogReviewHistoryPage /> },
   { path: "payment/success", element: <PaymentSuccessPage /> },
   { path: "payment/cancel", element: <PaymentCancelPage /> },
   {
