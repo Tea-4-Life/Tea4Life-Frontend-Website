@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { UserMenu } from "@/components/custom/UserMenu";
 import { RequireLoginDialog } from "@/components/custom/RequireLoginDialog";
@@ -16,7 +16,7 @@ import {
   ShoppingBag,
   Home,
   Newspaper,
-  BookOpenText,
+  Users,
   MapPin,
   PackageSearch,
 } from "lucide-react";
@@ -29,11 +29,10 @@ const navLinks = [
     name: "Thực đơn",
     href: "/shop",
     isButton: true,
-    isHighlighted: true,
     icon: ShoppingBag,
     color: "bg-[#1A4331] text-white hover:bg-[#1A4331]/90 shadow-[#1A4331]/20",
   },
-  { name: "Blog", href: "/blog", icon: BookOpenText },
+  { name: "Cộng đồng", href: "/blog", icon: Users },
   { name: "Tin tức", href: "/news", icon: Newspaper },
   {
     name: "Cửa hàng",
@@ -46,6 +45,7 @@ const navLinks = [
 ];
 
 export default function Header() {
+  const { pathname } = useLocation();
   const dispatch = useAppDispatch();
   const { cart, lastAction } = useAppSelector((state) => state.cart);
 
@@ -99,6 +99,12 @@ export default function Header() {
   const handleLogout = () =>
     keycloak.logout({ redirectUri: window.location.origin });
 
+  const isLinkActive = (href: string) => {
+    if (href === "/") return pathname === "/";
+    if (href === "/places") return pathname.startsWith("/places") || pathname.startsWith("/stores");
+    return pathname === href || pathname.startsWith(`${href}/`);
+  };
+
   return (
     <header className="sticky top-0 z-50 backdrop-blur-md bg-background/95 border-b border-border shadow-sm transition-all duration-300">
       <style
@@ -144,23 +150,28 @@ export default function Header() {
 
           {/* Desktop Navigation */}
           <nav className="hidden items-center gap-1 lg:gap-2 md:flex p-1.5 rounded-full bg-secondary/20">
-            {navLinks.map((link) =>
-              link.isButton ? (
+            {navLinks.map((link) => {
+              const isActive = isLinkActive(link.href);
+              return link.isButton ? (
                 <Link
                   key={link.name}
                   to={link.href}
                   className="group/btn relative inline-block mx-1"
                 >
                   {/* Overdrive Background Pulse Ring */}
-                  {link.isHighlighted && (
+                  {isActive && (
                     <div className="absolute inset-0 rounded-full animate-[pulse-ring_2s_infinite] bg-[#D2A676] opacity-30 blur-sm pointer-events-none" />
                   )}
 
                   <div
-                    className={`relative flex items-center gap-2 px-6 py-2.5 rounded-full ${link.isHighlighted ? "bg-linear-to-r from-[#1A4331] to-[#123023] shadow-[0_4px_15px_rgba(26,67,49,0.5)] border-[1.5px] border-[#D2A676]/40" : link.color} text-sm font-bold hover:scale-110 active:scale-95 transition-all duration-300 overflow-hidden`}
+                    className={`relative flex items-center gap-2 px-6 py-2.5 rounded-full ${
+                      isActive
+                        ? "bg-linear-to-r from-[#1A4331] to-[#123023] shadow-[0_4px_15px_rgba(26,67,49,0.5)] border-[1.5px] border-[#D2A676]/40"
+                        : link.color
+                    } text-sm font-bold hover:scale-110 active:scale-95 transition-all duration-300 overflow-hidden`}
                   >
                     {/* Continuous Shimmer Effect */}
-                    {link.isHighlighted && (
+                    {isActive && (
                       <>
                         <div className="absolute inset-0 -translate-x-[150%] animate-[shimmer_2s_infinite] bg-linear-to-r from-transparent via-white/40 to-transparent skew-x-12 z-0" />
                         <div className="absolute inset-0 -translate-x-[150%] animate-[shimmer_2.5s_infinite_0.5s] bg-linear-to-r from-transparent via-[#D2A676]/30 to-transparent skew-x-12 z-0" />
@@ -169,11 +180,11 @@ export default function Header() {
 
                     {link.icon && (
                       <link.icon
-                        className={`h-4 w-4 relative z-10 ${link.isHighlighted ? "text-[#D2A676]" : ""}`}
+                        className={`h-4 w-4 relative z-10 ${isActive ? "text-[#D2A676]" : ""}`}
                       />
                     )}
                     <span
-                      className={`relative z-10 ${link.isHighlighted ? "text-white tracking-wide" : ""}`}
+                      className={`relative z-10 ${isActive ? "text-white tracking-wide" : ""}`}
                     >
                       {link.name}
                     </span>
@@ -183,7 +194,11 @@ export default function Header() {
                 <Link
                   key={link.name}
                   to={link.href}
-                  className="relative px-5 py-2.5 rounded-full text-sm font-semibold text-muted-foreground hover:text-[#1A4331] hover:bg-white/50 transition-all duration-300 group"
+                  className={`relative px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 group ${
+                    isActive
+                      ? "text-[#1A4331] bg-white/70"
+                      : "text-muted-foreground hover:text-[#1A4331] hover:bg-white/50"
+                  }`}
                 >
                   <div className="flex items-center gap-2">
                     {link.icon && (
@@ -191,10 +206,14 @@ export default function Header() {
                     )}
                     {link.name}
                   </div>
-                  <span className="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-[#1A4331] opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <span
+                    className={`absolute bottom-1.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-[#1A4331] transition-opacity ${
+                      isActive ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+                    }`}
+                  />
                 </Link>
-              ),
-            )}
+              );
+            })}
           </nav>
 
           {/* Actions Area */}
@@ -343,30 +362,39 @@ export default function Header() {
                 </Button>
               )}
 
-              {navLinks.map((link) => (
-                <Link
-                  key={link.name}
-                  to={link.href}
-                  className={`mx-4 px-4 py-4 flex items-center gap-4 text-base font-bold rounded-2xl transition-all ${
-                    link.isButton
-                      ? `${link.color} text-white shadow-lg shadow-primary/10`
-                      : "text-foreground hover:bg-[#1A4331]/5"
-                  }`}
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  <div
-                    className={`p-2 rounded-xl scale-110 ${link.isButton ? "bg-white/10" : "bg-[#1A4331]/5 text-[#1A4331]"}`}
+              {navLinks.map((link) => {
+                const isActive = isLinkActive(link.href);
+                return (
+                  <Link
+                    key={link.name}
+                    to={link.href}
+                    className={`mx-4 px-4 py-4 flex items-center gap-4 text-base font-bold rounded-2xl transition-all ${
+                      isActive
+                        ? "bg-[#1A4331] text-white shadow-lg shadow-primary/10"
+                        : "text-foreground hover:bg-[#1A4331]/5"
+                    }`}
+                    onClick={() => setMobileMenuOpen(false)}
                   >
-                    {link.icon && <link.icon className="h-6 w-6" />}
-                  </div>
-                  <div className="flex flex-col">
-                    <span className="leading-none">{link.name}</span>
-                    <span className="text-[10px] text-muted-foreground font-medium mt-1 uppercase tracking-widest">
-                      Khám phá ngay
-                    </span>
-                  </div>
-                </Link>
-              ))}
+                    <div
+                      className={`p-2 rounded-xl scale-110 ${
+                        isActive ? "bg-white/10" : "bg-[#1A4331]/5 text-[#1A4331]"
+                      }`}
+                    >
+                      {link.icon && <link.icon className="h-6 w-6" />}
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="leading-none">{link.name}</span>
+                      <span
+                        className={`text-[10px] font-medium mt-1 uppercase tracking-widest ${
+                          isActive ? "text-white/80" : "text-muted-foreground"
+                        }`}
+                      >
+                        Khám phá ngay
+                      </span>
+                    </div>
+                  </Link>
+                );
+              })}
 
               {isAuthenticated && (
                 <>
